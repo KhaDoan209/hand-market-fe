@@ -1,0 +1,32 @@
+@mixin styleText($color, $fs, $fw, $lh) {
+   color: $color;
+   font-size: $fs;
+   font-weight: $fw;
+   line-height: $lh;
+}
+
+@mixin button($pd, $fs) {
+   color: $color-white;
+   background-color: $bg-btn-primary;
+   padding: $pd;
+   font-size: $fs;
+}
+
+$breakpoints: (
+   'extra-large': 1200px,
+   'large': 992px,
+   'medium': 768px,
+   'small': 576px,
+);
+
+@mixin responsive($screen) {
+   @if (map-has-key($map: $breakpoints, $key: $screen)) {
+      $value: map-get(
+         $map: $breakpoints,
+         $key: $screen,
+      );
+      @media screen and (max-width: $value) {
+         @content;
+      }
+   }
+}
