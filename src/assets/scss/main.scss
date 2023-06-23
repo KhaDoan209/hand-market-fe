@@ -1,9 +1,8 @@
 @import './Base/common.scss';
 
-@import './Helpers/mixin.scss';
-@import './Helpers/variable.scss';
-@import './Helpers/text.scss';
-@import './Helpers/helper.scss';
+@import './Helper/mixin.scss';
+@import './Helper/variable.scss';
+@import './Helper/text.scss';
 
 @import './Components/button.scss';
 @import './Components/navbar.scss';
