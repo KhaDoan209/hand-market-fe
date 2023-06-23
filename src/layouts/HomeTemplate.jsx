@@ -1,13 +1,15 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
-import { useOutletContext } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 const HomeTemplate = () => {
+   const navigate = useNavigate();
+   const dispatch = useDispatch();
    return (
-      <div>
+      <>
          <NavBar />
-         <Outlet />
-      </div>
+         <Outlet context={({ navigate, dispatch })} />
+      </>
    );
 };
 

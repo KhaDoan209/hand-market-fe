@@ -3,7 +3,7 @@ import React from 'react';
 import Logo from '../assets/img/brand-logo.png';
 import { NavLink, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Bars3Icon } from '@heroicons/react/24/solid';
+import { Bars3Icon } from '@heroicons/react/24/outline';
 import { getUserFromLocal } from '../utils/utils-functions';
 import AvatarNav from './AvatarNav';
 

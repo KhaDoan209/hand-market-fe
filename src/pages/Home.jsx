@@ -6,8 +6,8 @@ import { Helmet } from 'react-helmet';
 import { useOutletContext } from 'react-router-dom';
 
 const Home = (props) => {
-   // const { navigate, dispatch } = useOutletContext();
-
+   const { navigate, dispatch } = useOutletContext();
+ 
    return (
       <>
          <Helmet>

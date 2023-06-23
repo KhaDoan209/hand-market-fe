@@ -7,6 +7,12 @@ export default defineConfig({
    base: '/hand-market',
    server: {
       port: 3000,
+      proxy: {
+         '/hand-market-api': {
+            target: 'http://localhost:8080',
+            changeOrigin: true,
+         },
+      },
       strictPort: true,
       open: true,
    },
