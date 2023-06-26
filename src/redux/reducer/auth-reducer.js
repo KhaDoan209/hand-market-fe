@@ -1,15 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-   userLogedIn: {},
+   emailValid: {},
 };
 
 const authReducer = createSlice({
    name: 'authReducer',
    initialState,
-   reducers: {},
+   reducers: {
+      checkExistedEmailReducer: (state, action) => {
+         state.emailValid = action.payload;
+      },
+   },
 });
 
-export const { loginReducer } = authReducer.actions;
+export const { checkExistedEmailReducer } = authReducer.actions;
 
 export default authReducer.reducer;

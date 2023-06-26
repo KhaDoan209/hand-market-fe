@@ -8,7 +8,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import HomeTemplate from './layouts/HomeTemplate';
 import FormTemplate from './layouts/FormTemplate';
 import Home from './pages/Home';
-import Login from './pages/Login';
+import Login from './pages/Auth/Login';
+import Register from './pages/Auth/Register';
 import { Provider } from 'react-redux';
 import { persistor, store } from './redux/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -44,7 +45,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                            <Route
                               path='/login'
                               element={<Login />}
-                              lazy={() => import('./pages/Login')}
+                              lazy={() => import('./pages/Auth/Login')}
+                           />
+                           <Route
+                              path='/register'
+                              element={<Register />}
+                              lazy={() => import('./pages/Auth/Register')}
                            />
                         </Route>
                      </Route>

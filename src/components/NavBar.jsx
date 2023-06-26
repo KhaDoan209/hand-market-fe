@@ -1,13 +1,12 @@
 'use client';
 import React from 'react';
 import Logo from '../assets/img/brand-logo.png';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { getUserFromLocal } from '../utils/utils-functions';
 import AvatarNav from './AvatarNav';
-
-const NavBar = () => {
+const NavBar = ({ dispatch, navigate }) => {
    const [showMenuMobi, setShowMenuMobi] = useState(true);
    const [windowSize, setWindowSize] = useState({
       width: window.innerWidth,
@@ -116,7 +115,10 @@ const NavBar = () => {
                               </li>
                            );
                         })}
-                        <AvatarNav />
+                        <AvatarNav
+                           navigate={navigate}
+                           dispatch={dispatch}
+                        />
                      </ul>
                   </div>
                ) : (

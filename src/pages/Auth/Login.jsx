@@ -2,10 +2,10 @@ import React from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { loginAction } from '../redux/action/auth-action';
+import { loginAction } from '../../redux/action/auth-action';
 import { Link, useOutletContext } from 'react-router-dom';
 import { useState } from 'react';
-
+import warning from '../../assets/svg/warning.svg';
 const Login = (props) => {
    const [showPassword, setShowPassword] = useState(false);
    const { dispatch, navigate } = useOutletContext();
@@ -15,8 +15,8 @@ const Login = (props) => {
          password: '',
       },
       validationSchema: Yup.object({
-         email: Yup.string().required('Email cannot be empty'),
-         password: Yup.string().required('Password cannot be empty'),
+         email: Yup.string().required('Email is empty'),
+         password: Yup.string().required('Password is empty'),
       }),
       onSubmit: (values) => {
          dispatch(loginAction(values, navigate));
@@ -32,7 +32,7 @@ const Login = (props) => {
             Welcome back, please enter your account's information
          </span>
          <form>
-            <div className='mb-3'>
+            <div className='mb-3 relative'>
                <label
                   htmlFor='email'
                   className='block mb-2 text-lg text-color-blue font-bold'
@@ -50,7 +50,13 @@ const Login = (props) => {
                   required
                />
                {formik.errors.email ? (
-                  <p className='text-red-600 ml-1'>{formik.errors.email}</p>
+                  <p className='text-red-600 ml-1 text-sm flex'>
+                     <img
+                        src={warning}
+                        className='h-5 w-5 mr-2'
+                     />
+                     {formik.errors.email}
+                  </p>
                ) : (
                   <></>
                )}
@@ -73,7 +79,13 @@ const Login = (props) => {
                   required
                />
                {formik.errors.password ? (
-                  <p className='text-red-600 ml-1'>{formik.errors.password}</p>
+                  <p className='text-red-600 ml-1 text-sm flex'>
+                     <img
+                        src={warning}
+                        className='h-5 w-5 mr-2'
+                     />
+                     {formik.errors.password}
+                  </p>
                ) : (
                   <></>
                )}

@@ -3,16 +3,14 @@ import { toast } from 'react-hot-toast';
 export const toastPromise = (
    method,
    loading,
-   success,
-   error = 'Unexpected error',
    duration = 1000
 ) => {
    return toast.promise(
       method,
       {
          loading,
-         success,
-         error,
+         success: (mess) => `${mess.message.toString()}`,
+         error: (err) => `${err.message.toString()}`,
       },
       {
          style: {

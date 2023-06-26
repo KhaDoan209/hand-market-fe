@@ -7,17 +7,9 @@ import { useOutletContext } from 'react-router-dom';
 
 const Home = (props) => {
    const { navigate, dispatch } = useOutletContext();
- 
+
    return (
       <>
-         <Helmet>
-            <meta charSet='utf-8' />
-            <title> Home Page</title>
-            <link
-               rel='canonical'
-               href='http://mysite.com/example'
-            />
-         </Helmet>
          <div className='w-100 banner bg-cover h-[300px] md:h-[500px] lg:h-[750px] mt-1'>
             <div className='w-1/4 md:w-2/4 flex flex-col justify-center height-inherit ml-10 md:ml-10'>
                <div className='w-4/4 md:w-2/4 mx-auto my-1 md:my-3 lg:my-5'>

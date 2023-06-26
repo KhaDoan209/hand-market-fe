@@ -20,7 +20,6 @@ http.interceptors.response.use(
    },
    function (error) {
       if (error.response.data) {
-         console.log(error.response.data);
          return Promise.reject(error.response.data);
       }
       return Promise.reject(error);
