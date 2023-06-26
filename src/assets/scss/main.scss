@@ -1,4 +1,11 @@
-@import './Base/common';
+@import './Base/common.scss';
 
-@import './Helpers/mixin';
-@import './Helpers/variable';
+@import './Helper/mixin.scss';
+@import './Helper/variable.scss';
+@import './Helper/text.scss';
+
+@import './Components/button.scss';
+@import './Components/navbar.scss';
+
+@import './Pages/home.scss';
+@import './Pages/login.scss';

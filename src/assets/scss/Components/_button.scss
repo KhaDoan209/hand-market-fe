@@ -1,0 +1,8 @@
+.button-yellow {
+   background: rgba(255, 222, 180, 1) !important;
+   color: $-blue-1 !important;
+   transition: all 0.3s !important;
+   &:hover {
+      background: rgba(255, 222, 180, 0.8) !important;
+   }
+}
