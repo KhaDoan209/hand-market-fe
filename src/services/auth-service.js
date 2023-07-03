@@ -16,3 +16,7 @@ export const logoutService = (id) => {
 export const registerService = (body) => {
    return toastPromise(http.post(`/auth/register`, body), 'Wait a minute');
 };
+
+export const resetTokenService = () => {
+   return http.post('/auth/reset');
+};

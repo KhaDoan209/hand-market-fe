@@ -25,12 +25,3 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-// import { configureStore } from '@reduxjs/toolkit';
-// import authReducer from './reducer/auth-reducer';
-// import userReducer from './reducer/user-reducer';
-// export const store = configureStore({
-//    reducer: {
-//       authReducer,
-//       userReducer,
-//    },
-// });
