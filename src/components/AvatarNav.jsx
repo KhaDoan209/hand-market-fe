@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import alterAvatar from '../assets/img/alter-ava.png';
 import { getUserFromLocal } from '../utils/utils-functions';
 import Modal from './Modal.jsx';
-import { useOutletContext } from 'react-router-dom';
 import { logoutAction } from '../redux/action/auth-action';
 const AvatarNav = ({ dispatch, navigate }) => {
    const [openMenu, setOpenMenu] = useState(false);
@@ -40,14 +39,14 @@ const AvatarNav = ({ dispatch, navigate }) => {
          {signedInUser ? (
             <button
                type='button'
-               className='flex mr-3 text-sm rounded-full md:mr-0 py-1 px-1 focus:bg-[#ffdeb4]'
+               className='flex mr-3 text-sm rounded-full md:mr-0 py-1 px-1 focus:bg-gray-200'
                id='user-menu-button'
             >
                <img
                   onClick={() => {
                      setOpenMenu(!openMenu);
                   }}
-                  className='w-10 h-10 rounded-full'
+                  className='w-11 h-11 rounded-full object-cover'
                   src={signedInUser?.avatar ? signedInUser.avatar : alterAvatar}
                   alt='user photo'
                />
@@ -57,12 +56,12 @@ const AvatarNav = ({ dispatch, navigate }) => {
          )}
 
          {openMenu ? (
-            <div className='absolute z-50 md:top-16 py-2 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-lg shadow-gray-800 dark:bg-gray-700 dark:divide-gray-600 w-fit md:min-w-[200px]'>
+            <div className='absolute z-50 md:top-16 py-2 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-lg shadow-gray-800  w-fit md:min-w-[200px]'>
                <div className='px-4 py-3'>
-                  <span className='inline text-md text-[#374b73] font-bold dark:text-white cursor-pointer hover:text-opacity-90'>
+                  <span className='inline text-md font-bold cursor-pointer hover:text-opacity-90 text-[#374b73]'>
                      {signedInUser?.first_name}&nbsp;{signedInUser?.last_name}
                   </span>
-                  <span className='block text-sm  text-gray-500 truncate dark:text-gray-400'>
+                  <span className='block text-sm  text-gray-500 truncate '>
                      {signedInUser?.email}
                   </span>
                </div>
@@ -73,7 +72,7 @@ const AvatarNav = ({ dispatch, navigate }) => {
                   <li>
                      <a
                         onClick={openModal}
-                        className='block px-4 py-2 text-sm text-red-600 font-bold hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer'
+                        className='block px-4 py-2 text-sm text-red-600 font-bold hover:bg-gray-100 cursor-pointer'
                      >
                         Sign out
                      </a>

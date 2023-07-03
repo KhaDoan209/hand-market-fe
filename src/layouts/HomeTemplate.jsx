@@ -30,6 +30,7 @@ const HomeTemplate = () => {
             />
          </Helmet>
          <NavBar
+            logo={true}
             navigate={navigate}
             dispatch={dispatch}
          />

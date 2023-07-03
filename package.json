@@ -10,15 +10,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.7.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "@reduxjs/toolkit": "^1.9.5",
     "@tanstack/react-query": "^4.29.14",
     "axios": "^1.4.0",
+    "chart.js": "^4.3.0",
+    "cookie": "^0.5.0",
     "flowbite": "^1.6.6",
     "flowbite-react": "^0.4.7",
-    "formik": "^2.4.2",
+    "formik": "^2.2.9",
+    "framer-motion": "^10.12.17",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-hot-toast": "^2.4.1",
@@ -28,6 +35,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "sass": "^1.63.4",
+    "socket.io-client": "^4.6.1",
     "yup": "^1.2.0"
   },
   "devDependencies": {

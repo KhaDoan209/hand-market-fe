@@ -1,16 +1,14 @@
 'use client';
 import React from 'react';
 import Logo from '../assets/img/brand-logo.png';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { getUserFromLocal } from '../utils/utils-functions';
 import AvatarNav from './AvatarNav';
-const NavBar = ({ dispatch, navigate }) => {
-   const [showMenuMobi, setShowMenuMobi] = useState(true);
-   const [windowSize, setWindowSize] = useState({
-      width: window.innerWidth,
-   });
+import { Admin } from '../utils/variables';
+import { DarkThemeToggle } from 'flowbite-react';
+const NavBar = ({ dispatch, navigate, logo }) => {
    const listItem = [
       {
          label: 'Home',
@@ -37,13 +35,30 @@ const NavBar = ({ dispatch, navigate }) => {
          link: '/login',
       },
    ];
-   let updatedListItems = listItem;
-   const signedInUser = getUserFromLocal();
-   if (signedInUser !== null) {
-      updatedListItems = listItem.filter(
-         (item) => item.label !== 'Register' && item.label !== 'Login'
-      );
-   }
+   const [showMenuMobi, setShowMenuMobi] = useState(true);
+   const [menuItem, setMenuItem] = useState(listItem);
+   const [windowSize, setWindowSize] = useState({
+      width: window.innerWidth,
+   });
+   useEffect(() => {
+      const signedInUser = getUserFromLocal();
+      if (signedInUser !== null) {
+         let updatedListItems = listItem.filter(
+            (item) => item.label !== 'Register' && item.label !== 'Login'
+         );
+         if (signedInUser?.role === Admin) {
+            const adminNav = [
+               { label: 'Account', link: '/admin/account-management' },
+               { label: 'Product', link: '/admin/product-management' },
+               { label: 'Blog', link: '/admin/blog-management' },
+               { label: 'Order', link: '/admin/order-management' },
+            ];
+            const navAdmin = updatedListItems.slice(0, 1).concat(adminNav);
+            setMenuItem(navAdmin);
+         }
+      }
+   }, []);
+
    useEffect(() => {
       const handleResize = () => {
          setWindowSize({
@@ -65,23 +80,27 @@ const NavBar = ({ dispatch, navigate }) => {
    const showActiveStyle = () => {
       return ({ isActive }) =>
          isActive
-            ? 'block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent md:dark:text-blue-500 font-normal font-semibold active-link'
-            : 'block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent md:dark:text-blue-500 font-normal font-semibold';
+            ? 'block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent font-normal font-semibold active-link'
+            : 'block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent  font-normal font-semibold';
    };
    return (
-      <nav className='bg-white border-gray-200 dark:bg-gray-900 shadow-sm shadow-gray-400'>
+      <nav className='bg-white border-gray-200  shadow-sm shadow-gray-400'>
          <div className='w-3/4 mx-auto py-3'>
             <div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto'>
-               <a
-                  // to='/'
-                  className='flex items-center'
-               >
-                  <img
-                     src={Logo}
-                     className='h-9 lg:h-20 mr-3'
-                     alt='Flowbite Logo'
-                  />
-               </a>
+               {logo ? (
+                  <Link
+                     to='/'
+                     className='flex items-center'
+                  >
+                     <img
+                        src={Logo}
+                        className='h-9 lg:h-20 mr-3'
+                        alt='Flowbite Logo'
+                     />
+                  </Link>
+               ) : (
+                  <></>
+               )}
                <div></div>
                <div className='flex md:justify-center items-center'>
                   <Bars3Icon
@@ -98,8 +117,8 @@ const NavBar = ({ dispatch, navigate }) => {
                      } overflow-hidden`}
                      id='nav-mobile'
                   >
-                     <ul className='flex items-center flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700'>
-                        {updatedListItems.map((item) => {
+                     <ul className='flex items-center flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white '>
+                        {menuItem.map((item) => {
                            return (
                               <li
                                  key={item.label}
@@ -115,6 +134,7 @@ const NavBar = ({ dispatch, navigate }) => {
                               </li>
                            );
                         })}
+
                         <AvatarNav
                            navigate={navigate}
                            dispatch={dispatch}
