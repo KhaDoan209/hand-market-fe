@@ -6,7 +6,6 @@ export const http = axios.create({ withCredentials: true, silent: true });
 http.interceptors.request.use(
    function (config) {
       config.baseURL = import.meta.env.VITE_BASE_URL;
-
       return { ...config };
    },
    function (error) {

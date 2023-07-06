@@ -20,6 +20,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { getUserFromLocal } from './utils/utils-functions';
 import Chart from 'chart.js/auto';
+import UserProfile from './pages/User/Account/UserProfile';
 const queryClient = new QueryClient();
 const checkAuthentication = () => {
    const userRole = getUserFromLocal();
@@ -49,7 +50,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                               path='/'
                               element={<Home />}
                            />
-
+                           <Route
+                              path='/user/user-profile/:id'
+                              element={<UserProfile />}
+                              lazy={() =>
+                                 import('./pages/User/Account/UserProfile')
+                              }
+                           />
                            <Route
                               path='/*'
                               element={<Navigate to={'/'} />}

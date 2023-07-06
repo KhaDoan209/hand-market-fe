@@ -10,7 +10,10 @@ import {
    restoreUserService,
    searchUserByEmailService,
    updateUserAddressService,
+   updateUserInformationService,
+   uploadUserAvatarService,
 } from '../../services/user-service';
+import { getSignedInUserReducer } from '../reducer/auth-reducer';
 import {
    getListDeletedUserReducer,
    getListUserReducer,
@@ -44,6 +47,7 @@ export const getUserDetailAction = (id) => {
       try {
          const data = await getUserDetailService(id);
          dispatch(getUserDetailReducer(data.data));
+         dispatch(getSignedInUserReducer(data.data));
       } catch (error) {
          console.log(error);
       }
@@ -79,6 +83,7 @@ export const updateUserAddressAction = (
          const user_detail = await getUserDetailService(id);
          dispatch(getListUserReducer(list_user.data));
          dispatch(getUserDetailReducer(user_detail.data));
+         dispatch(getSignedInUserReducer(user_detail.data));
          toast.success('Updated successfully', 1000);
       } catch (error) {
          console.log(error);
@@ -86,6 +91,35 @@ export const updateUserAddressAction = (
    };
 };
 
+export const updateUserInformationAction = (data, id) => {
+   return async (dispatch) => {
+      try {
+         toast.success('Updated successfully');
+         await updateUserInformationService(data, id);
+         const user_detail = await getUserDetailService(id);
+         localStorage.setItem(
+            import.meta.env.VITE_SIGNED_IN_USER,
+            JSON.stringify(user_detail.data)
+         );
+         dispatch(getSignedInUserReducer(user_detail.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const uploadUserAvatarAction = (data, id) => {
+   return async (dispatch) => {
+      try {
+         await uploadUserAvatarService(data, id);
+         const userDetail = await getUserDetailService(id);
+         dispatch(getUserDetailReducer(userDetail.data));
+         dispatch(getSignedInUserReducer(userDetail.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
 export const blockUserAction = (id, message) => {
    return async (dispatch) => {
       try {
