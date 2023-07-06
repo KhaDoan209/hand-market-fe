@@ -17,6 +17,7 @@ $breakpoints: (
    'large': 992px,
    'medium': 768px,
    'small': 576px,
+   'xtra-small': 480px,
 );
 
 @mixin responsive($screen) {

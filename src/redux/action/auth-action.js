@@ -4,9 +4,12 @@ import {
    logoutService,
    checkExistedEmailService,
    registerService,
+   resetTokenService,
 } from '../../services/auth-service';
-import { checkExistedEmailReducer } from '../reducer/auth-reducer';
-
+import {
+   checkExistedEmailReducer,
+   getSignedInUserReducer,
+} from '../reducer/auth-reducer';
 export const loginAction = (body, navigate) => {
    return async (dispatch) => {
       try {
@@ -15,6 +18,7 @@ export const loginAction = (body, navigate) => {
             import.meta.env.VITE_SIGNED_IN_USER,
             JSON.stringify(data.data)
          );
+         dispatch(getSignedInUserReducer(data.data));
          setTimeout(() => {
             navigate('/');
          }, 700);
@@ -71,6 +75,17 @@ export const checkExistedEmailAction = (email) => {
                })
             );
          }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const resetTokenAction = () => {
+   return async () => {
+      try {
+         let data = await resetTokenService();
+         console.log(data);
       } catch (error) {
          console.log(error);
       }

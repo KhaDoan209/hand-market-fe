@@ -45,7 +45,7 @@ const AccountManagement = () => {
       dispatch(getListUserAction(listUser?.currentPage, listUser?.pageSize));
    }, []);
    useEffect(() => {
-      dispatch(searchUserByEmailAction(emailSearch));
+      dispatch(searchUserByEmailAction(emailSearch.toLocaleLowerCase()));
    }, [debouncedEmailSearch]);
    const handleSearchByEmail = (event) => {
       setEmailSearch(event.target.value);

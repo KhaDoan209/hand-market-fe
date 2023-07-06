@@ -43,3 +43,15 @@ export const blockUserService = (id) => {
 export const restoreUserService = (id) => {
    return http.patch(`/user/restore-user-account/${id}`);
 };
+
+export const updateUserInformationService = (data, id) => {
+   return http.post(`/user/update-user-infor/${id}`, data);
+};
+
+export const uploadUserAvatarService = (data, id) => {
+   return toastPromise(
+      http.post(`/user/upload-user-avatar/${id}`, data),
+      'Uploading, wait a sec!',
+      5000
+   );
+};

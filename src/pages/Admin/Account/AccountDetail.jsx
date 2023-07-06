@@ -264,7 +264,7 @@ const AccountDetail = () => {
 
                   <div className='flex flex-col items-center pb-10'>
                      <img
-                        className='w-20 h-20 lg:w-40 lg:h-40 mb-3 rounded-full shadow-lg object-cover'
+                        className='w-28 h-28 lg:w-40 lg:h-40 mb-3 rounded-full shadow-lg object-cover'
                         src={
                            userDetail.avatar ? userDetail.avatar : alterAvatar
                         }

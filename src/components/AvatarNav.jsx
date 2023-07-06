@@ -4,12 +4,17 @@ import alterAvatar from '../assets/img/alter-ava.png';
 import { getUserFromLocal } from '../utils/utils-functions';
 import Modal from './Modal.jsx';
 import { logoutAction } from '../redux/action/auth-action';
+import { User } from '../utils/variables';
+import { NavLink } from 'react-router-dom';
+import { UserCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
+import { useSelector } from 'react-redux';
+import { ArrowLeftOnRectangleIcon } from '@heroicons/react/20/solid';
 const AvatarNav = ({ dispatch, navigate }) => {
    const [openMenu, setOpenMenu] = useState(false);
    const [windowSize, setWindowSize] = useState({
       width: window.innerWidth,
    });
-   const signedInUser = getUserFromLocal();
+   const userDetail = useSelector((state) => state.authReducer?.user_signed_in);
    let [isOpen, setIsOpen] = useState(false);
    useEffect(() => {
       const handleResize = () => {
@@ -32,14 +37,14 @@ const AvatarNav = ({ dispatch, navigate }) => {
       setIsOpen(true);
    };
    const handleLogout = () => {
-      dispatch(logoutAction(signedInUser?.id, navigate));
+      dispatch(logoutAction(userDetail?.id, navigate));
    };
    return (
       <div className='order-1 items-center md:order-2'>
-         {signedInUser ? (
+         {userDetail ? (
             <button
                type='button'
-               className='flex mr-3 text-sm rounded-full md:mr-0 py-1 px-1 focus:bg-gray-200'
+               className='flex mr-0 text-sm rounded-full md:mr-3 py-1 px-1 focus:bg-gray-200'
                id='user-menu-button'
             >
                <img
@@ -47,7 +52,7 @@ const AvatarNav = ({ dispatch, navigate }) => {
                      setOpenMenu(!openMenu);
                   }}
                   className='w-11 h-11 rounded-full object-cover'
-                  src={signedInUser?.avatar ? signedInUser.avatar : alterAvatar}
+                  src={userDetail?.avatar ? userDetail.avatar : alterAvatar}
                   alt='user photo'
                />
             </button>
@@ -57,13 +62,41 @@ const AvatarNav = ({ dispatch, navigate }) => {
 
          {openMenu ? (
             <div className='absolute z-50 md:top-16 py-2 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-lg shadow-gray-800  w-fit md:min-w-[200px]'>
-               <div className='px-4 py-3'>
-                  <span className='inline text-md font-bold cursor-pointer hover:text-opacity-90 text-[#374b73]'>
-                     {signedInUser?.first_name}&nbsp;{signedInUser?.last_name}
-                  </span>
-                  <span className='block text-sm  text-gray-500 truncate '>
-                     {signedInUser?.email}
-                  </span>
+               <div className='px-4 py-3 '>
+                  <div className='border-b-gray-300 border-b-[1px] pb-5 block'>
+                     <span className='inline text-lg font-bold cursor-pointer hover:text-opacity-90 text-[#374b73] '>
+                        {userDetail?.first_name}&nbsp;
+                        {userDetail?.last_name}
+                     </span>
+                     <span className='block text-sm text-gray-500 truncate'>
+                        {userDetail?.email}
+                     </span>
+                  </div>
+                  {userDetail?.role === User ? (
+                     <>
+                        <NavLink
+                           onClick={() => {
+                              dispatch(getUserDetailAction(userDetail?.id));
+                              setOpenMenu(false);
+                           }}
+                           to={`/user/user-profile/${userDetail?.id}`}
+                           className='flex w-full text-[#374b73] hover:bg-gray-100 rounded-lg py-2 px-2 mt-3'
+                        >
+                           <div className='text-md font-bold font-sans cursor-pointer hover:text-opacity-90 flex items-center '>
+                              <UserCircleIcon className='w-5 h-5 mr-1' />{' '}
+                              Profile
+                           </div>
+                        </NavLink>
+                        <NavLink className='flex w-full text-[#374b73] hover:bg-gray-100 rounded-lg py-2 px-2'>
+                           <div className='text-md font-bold font-sans cursor-pointer hover:text-opacity-90 flex items-center'>
+                              <ShoppingBagIcon className='w-5 h-5 mr-1' />{' '}
+                              Orders
+                           </div>
+                        </NavLink>
+                     </>
+                  ) : (
+                     <></>
+                  )}
                </div>
                <ul
                   className='py-2'
@@ -72,8 +105,9 @@ const AvatarNav = ({ dispatch, navigate }) => {
                   <li>
                      <a
                         onClick={openModal}
-                        className='block px-4 py-2 text-sm text-red-600 font-bold hover:bg-gray-100 cursor-pointer'
+                        className='flex w-full px-4 py-2 text-sm text-red-600 font-bold hover:bg-gray-100 cursor-pointer '
                      >
+                        <ArrowLeftOnRectangleIcon className='w-5 h-5 mr-1' />
                         Sign out
                      </a>
                   </li>

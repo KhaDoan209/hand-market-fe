@@ -6,12 +6,26 @@ import { useState, useEffect } from 'react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { getUserFromLocal } from '../utils/utils-functions';
 import AvatarNav from './AvatarNav';
-import { Admin } from '../utils/variables';
-import { DarkThemeToggle } from 'flowbite-react';
+import { Admin, User } from '../utils/variables';
+import {
+   ShoppingCartIcon,
+   BellAlertIcon,
+   HomeIcon,
+} from '@heroicons/react/24/solid';
+import { Tooltip } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
 const NavBar = ({ dispatch, navigate, logo }) => {
+   const signedInUser = useSelector(
+      (state) => state.authReducer?.user_signed_in
+   );
    const listItem = [
       {
-         label: 'Home',
+         label:
+            signedInUser?.role === User ? (
+               <HomeIcon className='w-7 h-7' />
+            ) : (
+               'Home'
+            ),
          link: '/',
       },
       {
@@ -41,7 +55,6 @@ const NavBar = ({ dispatch, navigate, logo }) => {
       width: window.innerWidth,
    });
    useEffect(() => {
-      const signedInUser = getUserFromLocal();
       if (signedInUser !== null) {
          let updatedListItems = listItem.filter(
             (item) => item.label !== 'Register' && item.label !== 'Login'
@@ -55,6 +68,28 @@ const NavBar = ({ dispatch, navigate, logo }) => {
             ];
             const navAdmin = updatedListItems.slice(0, 1).concat(adminNav);
             setMenuItem(navAdmin);
+         }
+         if (signedInUser?.role === User) {
+            const userNav = [
+               {
+                  label: (
+                     <Tooltip label='Notification'>
+                        <BellAlertIcon className='w-7 h-7' />
+                     </Tooltip>
+                  ),
+                  link: 'sdasda',
+               },
+               {
+                  label: (
+                     <Tooltip label='Shopping cart'>
+                        <ShoppingCartIcon className='w-7 h-7' />
+                     </Tooltip>
+                  ),
+                  link: '/admin/account-management',
+               },
+            ];
+            const navUser = updatedListItems.slice(0, 1).concat(userNav);
+            setMenuItem(navUser);
          }
       }
    }, []);
@@ -101,7 +136,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                ) : (
                   <></>
                )}
-               <div></div>
+
                <div className='flex md:justify-center items-center'>
                   <Bars3Icon
                      onClick={() => {
@@ -121,7 +156,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                         {menuItem.map((item) => {
                            return (
                               <li
-                                 key={item.label}
+                                 key={Math.random()}
                                  className='my-4 md:my-0 relative'
                               >
                                  <NavLink
