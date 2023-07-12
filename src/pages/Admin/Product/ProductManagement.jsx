@@ -10,15 +10,18 @@ import {
 import { useSelector } from 'react-redux';
 import useDebounce from '../../../hooks/useDebounce';
 import UserDropdown from '../../../components/UserDropdown';
-import alterAvatar from '../../../assets/img/alter-ava.png';
+import alterProduct from '../../../assets/img/alter-product.jpg';
 import Pagination from '../../../components/Pagination';
 import { useState } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
-const AccountManagement = () => {
+import { getListProductAction } from '../../../redux/action/product-action';
+const ProductManagement = () => {
    const { dispatch, navigate } = useOutletContext();
-   const [emailSearch, setEmailSearch] = useState('');
-   const debouncedEmailSearch = useDebounce(emailSearch, 300);
-   const listUser = useSelector((state) => state.userReducer.list_user);
+   // const [emailSearch, setEmailSearch] = useState('');
+   // const debouncedEmailSearch = useDebounce(emailSearch, 300);
+   const listProduct = useSelector(
+      (state) => state.productReducer.list_product
+   );
    const listFilter = [
       {
          label: 'Last day',
@@ -42,16 +45,17 @@ const AccountManagement = () => {
       },
    ];
    useEffect(() => {
-      dispatch(getListUserAction(listUser?.currentPage, listUser?.pageSize));
+      dispatch(getListProductAction());
    }, []);
-   useEffect(() => {
-      dispatch(searchUserByEmailAction(emailSearch.toLocaleLowerCase()));
-   }, [debouncedEmailSearch]);
+   // useEffect(() => {
+   // dispatch(searchUserByEmailAction(emailSearch.toLocaleLowerCase()));
+   // }, [debouncedEmailSearch]);
    const handleSearchByEmail = (event) => {
       setEmailSearch(event.target.value);
    };
+
    const renderTableUser = () => {
-      return listUser?.data?.map((item) => {
+      return listProduct?.data?.map((item) => {
          return (
             <Table.Row
                key={item.id}
@@ -60,30 +64,40 @@ const AccountManagement = () => {
                <Table.Cell className='whitespace-nowrap font-medium text-gray-900'>
                   <span
                      onClick={() => {
-                        navigate(
-                           `/admin/account-management/view-detail/${item?.id}`
-                        );
+                        navigate();
+                        // `/admin/account-management/view-detail/${item?.id}`
                      }}
                      className='text-[16px] text-[#374b73] hover:text-gray-400 cursor-pointer'
                   >
-                     {item.first_name}&nbsp;{item.last_name}
+                     {item.name}
                   </span>
                </Table.Cell>
-               <Table.Cell className='text-[16px]'>{item.email}</Table.Cell>
                <Table.Cell>
                   <img
-                     src={item.avatar !== null ? item.avatar : alterAvatar}
-                     className='w-7 h-7 lg:w-12 lg:h-12 object-cover rounded-full'
+                     src={item?.image !== null ? item?.image : alterProduct}
+                     className='w-16 h-16 lg:w-24 lg:h-24 object-fill rounded-sm'
                   />
                </Table.Cell>
                <Table.Cell>
-                  {item.is_banned ? (
-                     <span className='text-left text-red-500'>🔴 Blocked</span>
-                  ) : (
-                     <span className='text-left text-green-500'>
-                        🟢 Available
-                     </span>
-                  )}
+                  <span className='text-[16px]'>
+                     {Number(item?.price).toLocaleString('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                     })}
+                  </span>
+               </Table.Cell>
+               <Table.Cell>
+                  <span className='text-[16px] text-green-500'>
+                     {item?.in_stock ? 'In stock' : 'Out of stock'}
+                  </span>
+               </Table.Cell>
+               <Table.Cell>
+                  <span className='text-[16px]'>
+                     {Number(item?.quantity).toLocaleString()}
+                  </span>
+               </Table.Cell>
+               <Table.Cell>
+                  <span className='text-[16px]'>{item?.imported_date}</span>
                </Table.Cell>
                <Table.Cell>
                   <UserDropdown
@@ -98,7 +112,7 @@ const AccountManagement = () => {
    };
    return (
       <div className='w-full mx-auto mt-2 px-2'>
-         <div className='relative overflow-x-auto sm:rounded-lg p-5 h-fit'>
+         <div className='relative overflow-x-auto sm:rounded-lg p-5 h-fit  min-h-[100vh]'>
             <div className='flex items-center justify-between w-full mb-5'>
                <Filter
                   listFilter={listFilter}
@@ -130,13 +144,19 @@ const AccountManagement = () => {
                      Name
                   </Table.HeadCell>
                   <Table.HeadCell className='text-[#374b73]'>
-                     Email
+                     Image
                   </Table.HeadCell>
                   <Table.HeadCell className='text-[#374b73]'>
-                     Avatar
+                     Price
                   </Table.HeadCell>
                   <Table.HeadCell className='text-[#374b73]'>
                      Status
+                  </Table.HeadCell>
+                  <Table.HeadCell className='text-[#374b73]'>
+                     Quantity
+                  </Table.HeadCell>
+                  <Table.HeadCell className='text-[#374b73]'>
+                     Imported Date
                   </Table.HeadCell>
                   <Table.HeadCell className='text-[#374b73]'>
                      Action
@@ -145,9 +165,9 @@ const AccountManagement = () => {
                <Table.Body className='divide-y'>{renderTableUser()}</Table.Body>
             </Table>
             <div className='w-full flex justify-end mt-5'>
-               {listUser?.data?.length > 0 ? (
+               {listProduct?.data?.length > 0 ? (
                   <Pagination
-                     data={listUser}
+                     data={listProduct}
                      getPrevious={() => {
                         dispatch(
                            getListUserAction(
@@ -174,4 +194,4 @@ const AccountManagement = () => {
    );
 };
 
-export default AccountManagement;
+export default ProductManagement;

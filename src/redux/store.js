@@ -3,6 +3,9 @@ import thunk from 'redux-thunk';
 import { persistReducer, persistStore } from 'redux-persist';
 import authReducer from './reducer/auth-reducer';
 import userReducer from './reducer/user-reducer';
+import productReducer from './reducer/product-reducer';
+import categoryReducer from './reducer/category-reducer';
+import discountReducer from './reducer/discount-reducer';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 const persistConfig = {
@@ -12,8 +15,11 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-   authReducer: authReducer,
+   authReducer,
    userReducer,
+   productReducer,
+   categoryReducer,
+   discountReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -24,4 +30,3 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
-

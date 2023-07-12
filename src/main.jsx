@@ -13,12 +13,17 @@ import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import AccountManagement from './pages/Admin/Account/AccountManagement';
 import AccountDetail from './pages/Admin/Account/AccountDetail';
+import ProductManagement from './pages/Admin/Product/ProductManagement';
+import DeletedProduct from './pages/Admin/Product/DeletedProduct';
+import ProductDetail from './pages/Admin/Product/ProductDetail';
+import AddProduct from './pages/Admin/Product/AddProduct';
 import DeletedAccount from './pages/Admin/Account/DeletedAccount';
 import { Provider } from 'react-redux';
 import { persistor, store } from './redux/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { getUserFromLocal } from './utils/utils-functions';
+
 import Chart from 'chart.js/auto';
 import UserProfile from './pages/User/Account/UserProfile';
 const queryClient = new QueryClient();
@@ -96,6 +101,22 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                               element={<DeletedAccount />}
                               lazy={() =>
                                  import('./pages/Admin/Account/DeletedAccount')
+                              }
+                           />
+                           <Route
+                              path='/admin/product-management'
+                              element={<ProductManagement />}
+                              lazy={() =>
+                                 import(
+                                    './pages/Admin/Product/ProductManagement'
+                                 )
+                              }
+                           />
+                           <Route
+                              path='/admin/new-product'
+                              element={<AddProduct />}
+                              lazy={() =>
+                                 import('./pages/Admin/Product/AddProduct')
                               }
                            />
                         </Route>

@@ -15,10 +15,16 @@ const authReducer = createSlice({
       getSignedInUserReducer: (state, action) => {
          state.user_signed_in = action.payload;
       },
+      clearSignedInUserReducer: (state, action) => {
+         state.user_signed_in = null;
+      },
    },
 });
 
-export const { checkExistedEmailReducer, getSignedInUserReducer } =
-   authReducer.actions;
+export const {
+   checkExistedEmailReducer,
+   getSignedInUserReducer,
+   clearSignedInUserReducer,
+} = authReducer.actions;
 
 export default authReducer.reducer;

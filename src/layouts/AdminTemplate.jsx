@@ -14,7 +14,9 @@ const AdminTemplate = () => {
    const [windowSize, setWindowSize] = useState({
       width: window.innerWidth,
    });
-   const [showBanner, setShowBanner] = useState(true);
+   const [showBanner, setShowBanner] = useState(false);
+   const [isAdmin, setIsAdmin] = useState(false);
+   const [showOverLay, setShowOverLay] = useState(false);
    const location = useLocation();
    const navigate = useNavigate();
    const dispatch = useDispatch();
@@ -27,11 +29,15 @@ const AdminTemplate = () => {
          })
          .join(' ');
    };
-
+   const handleShowOverlay = (showOverLay) => {
+      setShowOverLay(showOverLay);
+   };
    useEffect(() => {
       const user = getUserFromLocal();
       if (user?.role !== Admin || user === null) {
          navigate('/');
+      } else {
+         setIsAdmin(true);
       }
    }, []);
 
@@ -46,64 +52,82 @@ const AdminTemplate = () => {
          window.removeEventListener('resize', handleResize);
       };
    }, []);
+
    useEffect(() => {
       if (windowSize.width < 768) {
          setShowBanner(true);
+         setShowOverLay(false);
       } else {
          setShowBanner(false);
       }
    }, [windowSize.width]);
-
    return (
       <>
-         <Helmet>
-            <meta charSet='utf-8' />
-            <title>{generateMetaData()} - Hand Market</title>
-            <link
-               rel='canonical'
-               href='http://mysite.com/example'
-            />
-         </Helmet>
-         {showBanner ? (
+         {isAdmin ? (
             <>
-               <div className='h-screen'>
-                  <div className='h-4/5 flex flex-col justify-center my-auto'>
-                     <img
-                        className='object-cover'
-                        src={notFound}
-                     />
-                     <h1 className='mx-2 text-center text-[#374b73] font-semibold'>
-                        Sorry, this function is unavailable on mobile screen
-                     </h1>
-                     <Link
-                        className='mx-2 text-center text-lg underline font-semibold mt-2'
-                        as={ReactLink}
-                        to='/'
-                     >
-                        <span className='text-[#374b73] underline'>
-                           Back to home
-                        </span>
-                     </Link>
-                  </div>
-               </div>
+               <Helmet>
+                  <meta charSet='utf-8' />
+                  <title>{generateMetaData()} - Hand Market</title>
+                  <link
+                     rel='canonical'
+                     href='http://mysite.com/example'
+                  />
+               </Helmet>
+               {showBanner ? (
+                  <>
+                     <div className='h-screen'>
+                        <div className='h-4/5 flex flex-col justify-center my-auto'>
+                           <img
+                              className='object-cover'
+                              src={notFound}
+                           />
+                           <h1 className='mx-2 text-center text-[#374b73] font-semibold'>
+                              Sorry, this function is unavailable on mobile
+                              screen
+                           </h1>
+                           <Link
+                              className='mx-2 text-center text-lg underline font-semibold mt-2'
+                              as={ReactLink}
+                              to='/'
+                           >
+                              <span className='text-[#374b73] underline'>
+                                 Back to home
+                              </span>
+                           </Link>
+                        </div>
+                     </div>
+                  </>
+               ) : (
+                  <>
+                     <div className='relative'>
+                        <NavBar
+                           logo={false}
+                           navigate={navigate}
+                           dispatch={dispatch}
+                        />
+                        {showOverLay ? <div className='overlay'></div> : ''}
+                        <div
+                           className={`fixed left-0 top-0  z-[1000] ${
+                              showOverLay ? 'slide-in' : 'slide-out'
+                           }`}
+                        >
+                           <SideBar
+                              handleShowOverlay={handleShowOverlay}
+                              showOverLay={showOverLay}
+                              navigate={navigate}
+                              dispatch={dispatch}
+                           />
+                        </div>
+                     </div>
+
+                     <div className='w-11/12 mx-auto'>
+                        <Outlet context={{ navigate, dispatch }} />
+                     </div>
+                  </>
+               )}
             </>
          ) : (
-            <div className='grid grid-cols-12 min-h-screen'>
-               <div className='col-span-2'>
-                  <SideBar
-                     navigate={navigate}
-                     dispatch={dispatch}
-                  />
-               </div>
-               <div className='col-span-10'>
-                  <NavBar
-                     logo={false}
-                     navigate={navigate}
-                     dispatch={dispatch}
-                  />
-                  <Outlet context={{ navigate, dispatch }} />
-               </div>
-            </div>
+            <></>
          )}
       </>
    );

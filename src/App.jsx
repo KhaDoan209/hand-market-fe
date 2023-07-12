@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import cookie from 'cookie';
 import { getUserFromLocal } from './utils/utils-functions';
 import { useDispatch } from 'react-redux';
@@ -14,10 +14,12 @@ function App() {
    const navigate = useNavigate();
    const cookies = cookie.parse(document.cookie);
    const signedInUser = getUserFromLocal();
+
    useEffect(() => {
       if (cookies.access_token == 'undefined' && signedInUser) {
          dispatch(resetTokenAction());
-      } else if (cookies.refresh_token == 'undefined') {
+      } else if (cookies.refresh_token == undefined) {
+         toast.error('Your session has expired, please login again');
          navigate('/login');
       }
    }, []);

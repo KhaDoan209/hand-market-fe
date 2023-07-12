@@ -11,7 +11,6 @@ import {
    updateUserAddressAction,
    changeUserRoleAction,
 } from '../../../redux/action/user-action';
-
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
@@ -210,7 +209,7 @@ const AccountDetail = () => {
                            setEnableInput(false);
                            setOpenProfileSetting(false);
                            onCloseUpdateInfor();
-                           formik.handleSubmit();
+                           formikAddress.handleSubmit();
                         }}
                         colorScheme='whatsapp'
                      >

@@ -9,7 +9,9 @@ import {
 import {
    checkExistedEmailReducer,
    getSignedInUserReducer,
+   clearSignedInUserReducer,
 } from '../reducer/auth-reducer';
+import { persistor } from '../store';
 export const loginAction = (body, navigate) => {
    return async (dispatch) => {
       try {
@@ -46,9 +48,9 @@ export const logoutAction = (id, navigate) => {
       try {
          await logoutService(id);
          localStorage.removeItem(import.meta.env.VITE_SIGNED_IN_USER);
-         setTimeout(() => {
-            navigate('/login');
-         }, 500);
+         persistor.purge();
+         navigate('/login');
+         dispatch(clearSignedInUserReducer());
       } catch (error) {
          console.log(error);
       }

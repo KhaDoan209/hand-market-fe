@@ -24,7 +24,7 @@ import {
    getUserDetailAction,
 } from '../redux/action/user-action';
 
-export default function UserDropdown({ item, navigate, dispatch }) {
+export default function ProductDropdown({ item, navigate, dispatch }) {
    const [open, setOpen] = useState(false);
    const {
       isOpen: isOpenDelete,

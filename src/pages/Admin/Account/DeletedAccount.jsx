@@ -65,12 +65,12 @@ const DeletedAccount = () => {
                            { duration: 1000 }
                         );
                      }}
-                     className='text-md text-[#374b73] hover:text-gray-400 cursor-pointer'
+                     className='text-[16px] text-[#374b73] hover:text-gray-400 cursor-pointer'
                   >
                      {item.first_name}&nbsp;{item.last_name}
                   </span>
                </Table.Cell>
-               <Table.Cell>{item.email}</Table.Cell>
+               <Table.Cell className='text-[16px]'>{item.email}</Table.Cell>
                <Table.Cell>
                   <img
                      src={item.avatar !== null ? item.avatar : alterAvatar}
@@ -87,7 +87,7 @@ const DeletedAccount = () => {
                         setModalType('restore');
                         setUser(item);
                      }}
-                     className='p-2 bg-[#1aff8d] rounded-lg hover:bg-green-300'
+                     className='p-3 bg-[#36cf18] rounded-lg hover:bg-green-300'
                   >
                      <Tooltip
                         placement='right-end'
@@ -106,7 +106,7 @@ const DeletedAccount = () => {
                         setModalType('delete');
                         setUser(item);
                      }}
-                     className='p-2 bg-red-500 rounded-lg hover:bg-red-400 ml-2'
+                     className='p-3 bg-red-500 rounded-lg hover:bg-red-400 ml-2'
                   >
                      <Tooltip
                         placement='right-end'
@@ -212,7 +212,7 @@ const DeletedAccount = () => {
                <Table.Body className='divide-y'>{renderTableUser()}</Table.Body>
             </Table>
             <div className='w-full flex justify-end mt-5'>
-               {listDeletedUser.data.length > 0 ? (
+               {listDeletedUser?.data?.length > 0 ? (
                   <Pagination
                      data={listDeletedUser}
                      getPrevious={() => {

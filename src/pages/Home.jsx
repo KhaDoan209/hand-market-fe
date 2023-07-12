@@ -1,12 +1,16 @@
-import React, { Suspense } from 'react';
+import React, { useEffect } from 'react';
 import { Button } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import Category from '../components/Category';
 import { useOutletContext } from 'react-router-dom';
 import UserDropdown from '../components/UserDropdown';
+import { useDispatch } from 'react-redux';
+import { getListUserAction } from '../redux/action/user-action';
 
 const Home = (props) => {
    const { navigate, dispatch } = useOutletContext();
+
+   useEffect(() => {}, []);
    return (
       <>
          <div className='w-100 banner bg-cover h-[300px] md:h-[500px] lg:h-[750px] mt-1'>
