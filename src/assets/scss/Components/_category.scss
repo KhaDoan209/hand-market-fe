@@ -1,0 +1,19 @@
+.category {
+   .slick-slider {
+      .slick-dots {
+         bottom: -25px;
+         .slick-avitve {
+            color: $-yellow-1 !important;
+         }
+         li {
+            margin: 0;
+            button {
+               &::before {
+                  font-size: 12px;
+                  color: $-blue-1;
+               }
+            }
+         }
+      }
+   }
+}

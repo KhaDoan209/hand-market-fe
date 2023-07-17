@@ -47,7 +47,6 @@ export const getUserDetailAction = (id) => {
       try {
          const data = await getUserDetailService(id);
          dispatch(getUserDetailReducer(data.data));
-         dispatch(getSignedInUserReducer(data.data));
       } catch (error) {
          console.log(error);
       }
@@ -83,7 +82,6 @@ export const updateUserAddressAction = (
          const user_detail = await getUserDetailService(id);
          dispatch(getListUserReducer(list_user.data));
          dispatch(getUserDetailReducer(user_detail.data));
-         dispatch(getSignedInUserReducer(user_detail.data));
          toast.success('Updated successfully', 1000);
       } catch (error) {
          console.log(error);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import alterAvatar from '../assets/img/alter-ava.png';
-import { getUserFromLocal } from '../utils/utils-functions';
 import Modal from './Modal.jsx';
 import { logoutAction } from '../redux/action/auth-action';
 import { User } from '../utils/variables';
@@ -9,12 +8,14 @@ import { NavLink } from 'react-router-dom';
 import { UserCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { useSelector } from 'react-redux';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/20/solid';
+import { getUserFromLocal } from '../utils/utils-functions';
 const AvatarNav = ({ dispatch, navigate }) => {
    const [openMenu, setOpenMenu] = useState(false);
    const [windowSize, setWindowSize] = useState({
       width: window.innerWidth,
    });
-   const userDetail = useSelector((state) => state.authReducer?.user_signed_in);
+   const isUserExisted = getUserFromLocal();
+   const userDetail = useSelector((state) => state.authReducer.user_signed_in);
    let [isOpen, setIsOpen] = useState(false);
    useEffect(() => {
       const handleResize = () => {
@@ -41,7 +42,7 @@ const AvatarNav = ({ dispatch, navigate }) => {
    };
    return (
       <div className='order-1 items-center md:order-2'>
-         {userDetail ? (
+         {isUserExisted ? (
             <button
                type='button'
                className='flex mr-0 text-sm rounded-full md:mr-3 py-1 px-1 focus:bg-gray-200'

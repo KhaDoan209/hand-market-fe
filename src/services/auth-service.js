@@ -18,6 +18,5 @@ export const registerService = (body) => {
 };
 
 export const resetTokenService = () => {
-   console.log('run here');
    return http.post('/auth/reset');
 };

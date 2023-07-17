@@ -1,57 +1,45 @@
 'use client';
-import React, { useEffect } from 'react';
-import { Checkbox, Table } from 'flowbite-react';
+import React, { useEffect, useState } from 'react';
+import { Table } from 'flowbite-react';
 import Filter from '../../../components/Filter';
 import { useOutletContext } from 'react-router-dom';
-import {
-   getListUserAction,
-   searchUserByEmailAction,
-} from '../../../redux/action/user-action';
+import ProductDropdown from '../../../components/ProductDropdown';
 import { useSelector } from 'react-redux';
 import useDebounce from '../../../hooks/useDebounce';
-import UserDropdown from '../../../components/UserDropdown';
-import alterAvatar from '../../../assets/img/alter-ava.png';
+import alterProduct from '../../../assets/img/alter-product.jpg';
 import Pagination from '../../../components/Pagination';
-import { useState } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
-const AccountManagement = () => {
+import {
+   getListProductAction,
+   getProductDetailAction,
+} from '../../../redux/action/product-action';
+import moment from 'moment/moment';
+const ProductManagement = () => {
    const { dispatch, navigate } = useOutletContext();
-   const [emailSearch, setEmailSearch] = useState('');
-   const debouncedEmailSearch = useDebounce(emailSearch, 300);
-   const listUser = useSelector((state) => state.userReducer.list_user);
-   const listFilter = [
-      {
-         label: 'Last day',
-         value: 'Last day',
-      },
-      {
-         label: 'Last 7 days',
-         value: 'Last 7 days',
-      },
-      {
-         label: 'Last 30 days',
-         value: 'Last 30 days',
-      },
-      {
-         label: 'Last month',
-         value: 'Last month',
-      },
-      {
-         label: 'Last year',
-         value: 'Last year',
-      },
-   ];
+   // const [emailSearch, setEmailSearch] = useState('');
+   // const debouncedEmailSearch = useDebounce(emailSearch, 300);
+   const listProduct = useSelector(
+      (state) => state.productReducer.list_product
+   );
+   const category = useSelector((state) => state.categoryReducer.list_category);
+   const listFilter = category.map((item) => {
+      return {
+         label: item.name,
+         value: item.id,
+      };
+   });
    useEffect(() => {
-      dispatch(getListUserAction(listUser?.currentPage, listUser?.pageSize));
+      dispatch(getListProductAction());
    }, []);
-   useEffect(() => {
-      dispatch(searchUserByEmailAction(emailSearch.toLocaleLowerCase()));
-   }, [debouncedEmailSearch]);
+   // useEffect(() => {
+   // dispatch(searchUserByEmailAction(emailSearch.toLocaleLowerCase()));
+   // }, [debouncedEmailSearch]);
    const handleSearchByEmail = (event) => {
       setEmailSearch(event.target.value);
    };
-   const renderTableUser = () => {
-      return listUser?.data?.map((item) => {
+
+   const renderTableProduct = () => {
+      return listProduct?.data?.map((item) => {
          return (
             <Table.Row
                key={item.id}
@@ -60,33 +48,51 @@ const AccountManagement = () => {
                <Table.Cell className='whitespace-nowrap font-medium text-gray-900'>
                   <span
                      onClick={() => {
+                        dispatch(getProductDetailAction(item?.id));
                         navigate(
-                           `/admin/account-management/view-detail/${item?.id}`
+                           `/admin/product-management/product-detail/${item?.id}`
                         );
                      }}
                      className='text-[16px] text-[#374b73] hover:text-gray-400 cursor-pointer'
                   >
-                     {item.first_name}&nbsp;{item.last_name}
+                     {item.name}
                   </span>
                </Table.Cell>
-               <Table.Cell className='text-[16px]'>{item.email}</Table.Cell>
                <Table.Cell>
                   <img
-                     src={item.avatar !== null ? item.avatar : alterAvatar}
-                     className='w-7 h-7 lg:w-12 lg:h-12 object-cover rounded-full'
+                     src={item?.image !== null ? item?.image : alterProduct}
+                     className='w-16 h-16 lg:w-24 lg:h-24 object-contain rounded-sm'
                   />
                </Table.Cell>
                <Table.Cell>
-                  {item.is_banned ? (
-                     <span className='text-left text-red-500'>🔴 Blocked</span>
-                  ) : (
-                     <span className='text-left text-green-500'>
-                        🟢 Available
-                     </span>
-                  )}
+                  <span className='text-[16px]'>
+                     {Number(item?.price).toLocaleString('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                     })}
+                  </span>
                </Table.Cell>
                <Table.Cell>
-                  <UserDropdown
+                  <span
+                     className={`text-[16px] ${
+                        item?.in_stock ? 'text-green-500' : 'text-red-500'
+                     } `}
+                  >
+                     {item?.in_stock ? 'In stock' : 'Out of stock'}
+                  </span>
+               </Table.Cell>
+               <Table.Cell>
+                  <span className='text-[16px]'>
+                     {Number(item?.quantity).toLocaleString()}
+                  </span>
+               </Table.Cell>
+               <Table.Cell>
+                  <span className='text-[16px]'>
+                     {moment(item?.created_at).format('LLL')}
+                  </span>
+               </Table.Cell>
+               <Table.Cell>
+                  <ProductDropdown
                      dispatch={dispatch}
                      navigate={navigate}
                      item={item}
@@ -98,7 +104,7 @@ const AccountManagement = () => {
    };
    return (
       <div className='w-full mx-auto mt-2 px-2'>
-         <div className='relative overflow-x-auto sm:rounded-lg p-5 h-fit'>
+         <div className='relative overflow-x-auto sm:rounded-lg p-5 h-fit  min-h-[100vh]'>
             <div className='flex items-center justify-between w-full mb-5'>
                <Filter
                   listFilter={listFilter}
@@ -130,37 +136,45 @@ const AccountManagement = () => {
                      Name
                   </Table.HeadCell>
                   <Table.HeadCell className='text-[#374b73]'>
-                     Email
+                     Image
                   </Table.HeadCell>
                   <Table.HeadCell className='text-[#374b73]'>
-                     Avatar
+                     Price
                   </Table.HeadCell>
                   <Table.HeadCell className='text-[#374b73]'>
                      Status
                   </Table.HeadCell>
                   <Table.HeadCell className='text-[#374b73]'>
+                     Quantity
+                  </Table.HeadCell>
+                  <Table.HeadCell className='text-[#374b73]'>
+                     Imported Date
+                  </Table.HeadCell>
+                  <Table.HeadCell className='text-[#374b73]'>
                      Action
                   </Table.HeadCell>
                </Table.Head>
-               <Table.Body className='divide-y'>{renderTableUser()}</Table.Body>
+               <Table.Body className='divide-y'>
+                  {renderTableProduct()}
+               </Table.Body>
             </Table>
             <div className='w-full flex justify-end mt-5'>
-               {listUser?.data?.length > 0 ? (
+               {listProduct?.data?.length > 0 ? (
                   <Pagination
-                     data={listUser}
+                     data={listProduct}
                      getPrevious={() => {
                         dispatch(
-                           getListUserAction(
-                              listUser?.previousPage,
-                              listUser?.pageSize
+                           getListProductAction(
+                              listProduct?.previousPage,
+                              listProduct?.pageSize
                            )
                         );
                      }}
                      getNext={() => {
                         dispatch(
-                           getListUserAction(
-                              listUser?.nextPage,
-                              listUser?.pageSize
+                           getListProductAction(
+                              listProduct?.nextPage,
+                              listProduct?.pageSize
                            )
                         );
                      }}
@@ -174,4 +188,4 @@ const AccountManagement = () => {
    );
 };
 
-export default AccountManagement;
+export default ProductManagement;

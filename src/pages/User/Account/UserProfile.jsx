@@ -135,10 +135,10 @@ const UserProfile = () => {
    const formikAddress = useFormik({
       enableReinitialize: true,
       initialValues: {
-         street: userDetail.Address?.street,
-         province: userDetail.Address?.province,
-         district: userDetail.Address?.district,
-         ward: userDetail.Address?.ward,
+         street: userDetail?.Address?.street,
+         province: userDetail?.Address?.province,
+         district: userDetail?.Address?.district,
+         ward: userDetail?.Address?.ward,
       },
       validationSchema: Yup.object({
          street: Yup.string().max(100, 'Street is too long'),
@@ -271,7 +271,7 @@ const UserProfile = () => {
                            setEnableInput(false);
                            setOpenProfileSetting(false);
                            onCloseUpdateInfor();
-                           formik.handleSubmit();
+                           formikAddress.handleSubmit();
                         }}
                         colorScheme='whatsapp'
                      >
@@ -627,8 +627,8 @@ const UserProfile = () => {
                            <img
                               className='w-28 h-28 lg:w-40 lg:h-40 mb-3 rounded-full shadow-lg object-cover'
                               src={
-                                 userDetail.avatar
-                                    ? userDetail.avatar
+                                 userDetail?.avatar
+                                    ? userDetail?.avatar
                                     : alterAvatar
                               }
                               alt='Bonnie image'
