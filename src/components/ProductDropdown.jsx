@@ -1,11 +1,5 @@
 import { Fragment } from 'react';
-import {
-   Cog8ToothIcon,
-   LockClosedIcon,
-   LockOpenIcon,
-   TrashIcon,
-   EyeIcon,
-} from '@heroicons/react/20/solid';
+import { Cog8ToothIcon, TrashIcon, EyeIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import {
    Modal,
@@ -19,10 +13,9 @@ import {
 } from '@chakra-ui/react';
 import { useDisclosure } from '@chakra-ui/react';
 import {
-   blockUserAction,
-   deleteUserAction,
-   getUserDetailAction,
-} from '../redux/action/user-action';
+   deleteProductAction,
+   getProductDetailAction,
+} from '../redux/action/product-action';
 
 export default function ProductDropdown({ item, navigate, dispatch }) {
    const [open, setOpen] = useState(false);
@@ -30,11 +23,6 @@ export default function ProductDropdown({ item, navigate, dispatch }) {
       isOpen: isOpenDelete,
       onOpen: onOpenDelete,
       onClose: onCloseDelete,
-   } = useDisclosure();
-   const {
-      isOpen: isOpenBlock,
-      onOpen: onOpenBlock,
-      onClose: onCloseBlock,
    } = useDisclosure();
 
    const renderModalDelete = () => {
@@ -50,11 +38,10 @@ export default function ProductDropdown({ item, navigate, dispatch }) {
                <ModalContent>
                   <ModalHeader>
                      <span className='text-xl'>
-                        {`Do you want to delete ${item?.email} ?`}
+                        {`Do you want to delete ${item?.name} ?`}
                      </span>
                      <p className='text-sm mt-5 font-normal text-gray-500 italic'>
-                        The deleted account will be moved to the deleted list,
-                        and can be restored
+                        The deleted product will not be restored
                      </p>
                   </ModalHeader>
                   <ModalCloseButton />
@@ -70,7 +57,7 @@ export default function ProductDropdown({ item, navigate, dispatch }) {
                      </Button>
                      <Button
                         onClick={() => {
-                           dispatch(deleteUserAction(item?.id));
+                           dispatch(deleteProductAction(item?.id));
                         }}
                         colorScheme='red'
                      >
@@ -82,71 +69,7 @@ export default function ProductDropdown({ item, navigate, dispatch }) {
          </>
       );
    };
-   const renderModalBlock = () => {
-      return (
-         <>
-            <Modal
-               size='lg'
-               isCentered
-               isOpen={isOpenBlock}
-               onClose={onCloseBlock}
-            >
-               <ModalOverlay />
-               <ModalContent>
-                  <ModalHeader>
-                     <span className='text-xl'>
-                        {`Do you want to ${
-                           item.is_banned ? 'unblock' : 'block'
-                        } ${item?.email} ?`}
-                     </span>
-                  </ModalHeader>
-                  <ModalCloseButton />
-                  <ModalFooter>
-                     <Button
-                        ariant='ghost'
-                        colorScheme='gray'
-                        mr={3}
-                        onClick={onCloseBlock}
-                     >
-                        <span className='text-[#374b73]'>Close</span>
-                     </Button>
-                     {item?.is_banned ? (
-                        <Button
-                           onClick={() => {
-                              dispatch(
-                                 blockUserAction(
-                                    item?.id,
-                                    'Unblocked user successfully'
-                                 )
-                              );
-                              onCloseBlock();
-                           }}
-                           colorScheme='whatsapp'
-                        >
-                           Unblock
-                        </Button>
-                     ) : (
-                        <Button
-                           onClick={() => {
-                              dispatch(
-                                 blockUserAction(
-                                    item?.id,
-                                    'Blocked user successfully'
-                                 )
-                              );
-                              onCloseBlock();
-                           }}
-                           colorScheme='red'
-                        >
-                           Block User
-                        </Button>
-                     )}
-                  </ModalFooter>
-               </ModalContent>
-            </Modal>
-         </>
-      );
-   };
+
    return (
       <>
          <div>
@@ -167,9 +90,9 @@ export default function ProductDropdown({ item, navigate, dispatch }) {
                      >
                         <div
                            onClick={() => {
-                              dispatch(getUserDetailAction(item.id));
+                              dispatch(getProductDetailAction(item?.id));
                               navigate(
-                                 `/admin/account-management/view-detail/${item?.id}`
+                                 `/admin/product-management/product-detail/${item?.id}`
                               );
                            }}
                            className='flex items-center hover:font-bold hover:bg-gray-100 px-4 py-3 mx-auto'
@@ -179,21 +102,6 @@ export default function ProductDropdown({ item, navigate, dispatch }) {
                            </div>
                            <span className='font-semibold text-[#374b73]'>
                               View detail
-                           </span>
-                        </div>
-                        <div
-                           onClick={onOpenBlock}
-                           className='flex items-center hover:font-bold hover:bg-gray-100 px-4 py-3 mx-auto'
-                        >
-                           <div className='flex mr-2 text-[#374b73]'>
-                              {item.is_banned ? (
-                                 <LockOpenIcon className='h-5 w-5' />
-                              ) : (
-                                 <LockClosedIcon className='h-5 w-5' />
-                              )}
-                           </div>
-                           <span className='font-semibold text-[#374b73]'>
-                              {item.is_banned ? 'Unblock' : 'Block'}
                            </span>
                         </div>
                         <div
@@ -213,7 +121,6 @@ export default function ProductDropdown({ item, navigate, dispatch }) {
                   <></>
                )}
             </button>
-            {renderModalBlock()}
             {renderModalDelete()}
          </div>
       </>

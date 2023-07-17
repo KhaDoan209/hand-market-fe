@@ -1,20 +1,19 @@
 'use client';
-import React, { useEffect } from 'react';
-import { Checkbox, Table } from 'flowbite-react';
+import React, { useEffect, useState } from 'react';
+import { Table } from 'flowbite-react';
 import Filter from '../../../components/Filter';
 import { useOutletContext } from 'react-router-dom';
-import {
-   getListUserAction,
-   searchUserByEmailAction,
-} from '../../../redux/action/user-action';
+import ProductDropdown from '../../../components/ProductDropdown';
 import { useSelector } from 'react-redux';
 import useDebounce from '../../../hooks/useDebounce';
-import UserDropdown from '../../../components/UserDropdown';
 import alterProduct from '../../../assets/img/alter-product.jpg';
 import Pagination from '../../../components/Pagination';
-import { useState } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
-import { getListProductAction } from '../../../redux/action/product-action';
+import {
+   getListProductAction,
+   getProductDetailAction,
+} from '../../../redux/action/product-action';
+import moment from 'moment/moment';
 const ProductManagement = () => {
    const { dispatch, navigate } = useOutletContext();
    // const [emailSearch, setEmailSearch] = useState('');
@@ -22,28 +21,13 @@ const ProductManagement = () => {
    const listProduct = useSelector(
       (state) => state.productReducer.list_product
    );
-   const listFilter = [
-      {
-         label: 'Last day',
-         value: 'Last day',
-      },
-      {
-         label: 'Last 7 days',
-         value: 'Last 7 days',
-      },
-      {
-         label: 'Last 30 days',
-         value: 'Last 30 days',
-      },
-      {
-         label: 'Last month',
-         value: 'Last month',
-      },
-      {
-         label: 'Last year',
-         value: 'Last year',
-      },
-   ];
+   const category = useSelector((state) => state.categoryReducer.list_category);
+   const listFilter = category.map((item) => {
+      return {
+         label: item.name,
+         value: item.id,
+      };
+   });
    useEffect(() => {
       dispatch(getListProductAction());
    }, []);
@@ -54,7 +38,7 @@ const ProductManagement = () => {
       setEmailSearch(event.target.value);
    };
 
-   const renderTableUser = () => {
+   const renderTableProduct = () => {
       return listProduct?.data?.map((item) => {
          return (
             <Table.Row
@@ -64,8 +48,10 @@ const ProductManagement = () => {
                <Table.Cell className='whitespace-nowrap font-medium text-gray-900'>
                   <span
                      onClick={() => {
-                        navigate();
-                        // `/admin/account-management/view-detail/${item?.id}`
+                        dispatch(getProductDetailAction(item?.id));
+                        navigate(
+                           `/admin/product-management/product-detail/${item?.id}`
+                        );
                      }}
                      className='text-[16px] text-[#374b73] hover:text-gray-400 cursor-pointer'
                   >
@@ -75,7 +61,7 @@ const ProductManagement = () => {
                <Table.Cell>
                   <img
                      src={item?.image !== null ? item?.image : alterProduct}
-                     className='w-16 h-16 lg:w-24 lg:h-24 object-fill rounded-sm'
+                     className='w-16 h-16 lg:w-24 lg:h-24 object-contain rounded-sm'
                   />
                </Table.Cell>
                <Table.Cell>
@@ -87,7 +73,11 @@ const ProductManagement = () => {
                   </span>
                </Table.Cell>
                <Table.Cell>
-                  <span className='text-[16px] text-green-500'>
+                  <span
+                     className={`text-[16px] ${
+                        item?.in_stock ? 'text-green-500' : 'text-red-500'
+                     } `}
+                  >
                      {item?.in_stock ? 'In stock' : 'Out of stock'}
                   </span>
                </Table.Cell>
@@ -97,10 +87,12 @@ const ProductManagement = () => {
                   </span>
                </Table.Cell>
                <Table.Cell>
-                  <span className='text-[16px]'>{item?.imported_date}</span>
+                  <span className='text-[16px]'>
+                     {moment(item?.created_at).format('LLL')}
+                  </span>
                </Table.Cell>
                <Table.Cell>
-                  <UserDropdown
+                  <ProductDropdown
                      dispatch={dispatch}
                      navigate={navigate}
                      item={item}
@@ -162,7 +154,9 @@ const ProductManagement = () => {
                      Action
                   </Table.HeadCell>
                </Table.Head>
-               <Table.Body className='divide-y'>{renderTableUser()}</Table.Body>
+               <Table.Body className='divide-y'>
+                  {renderTableProduct()}
+               </Table.Body>
             </Table>
             <div className='w-full flex justify-end mt-5'>
                {listProduct?.data?.length > 0 ? (
@@ -170,17 +164,17 @@ const ProductManagement = () => {
                      data={listProduct}
                      getPrevious={() => {
                         dispatch(
-                           getListUserAction(
-                              listUser?.previousPage,
-                              listUser?.pageSize
+                           getListProductAction(
+                              listProduct?.previousPage,
+                              listProduct?.pageSize
                            )
                         );
                      }}
                      getNext={() => {
                         dispatch(
-                           getListUserAction(
-                              listUser?.nextPage,
-                              listUser?.pageSize
+                           getListProductAction(
+                              listProduct?.nextPage,
+                              listProduct?.pageSize
                            )
                         );
                      }}

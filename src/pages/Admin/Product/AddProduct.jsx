@@ -65,10 +65,11 @@ const AddProduct = () => {
          brand: Yup.string().max(100, 'Brand is too long !'),
          price: Yup.number()
             .required('Price is empty !')
-            .min(1000, 'Price must be greater than 1000'),
+            .min(1000, 'Price must be greater than 1000')
+            .max(9999999.99, 'Price is too high'),
          description: Yup.string().max(
-            500,
-            'Description should less than 500 letters !'
+            1000,
+            'Description should less than 1000 letters !'
          ),
          quantity: Yup.number()
             .required('Quantity is empty')
@@ -77,14 +78,7 @@ const AddProduct = () => {
          type: Yup.string().required('Product type is required !'),
       }),
       onSubmit: (values) => {
-         const newValues = {
-            ...values,
-            price: parseFloat(values.price),
-            quantity: parseInt(values.quantity),
-            category_id: parseInt(values.category_id),
-            discount_id: parseInt(values.discount_id),
-         };
-         const newProduct = convertObjectToFormData(newValues);
+         const newProduct = convertObjectToFormData(values);
          dispatch(createNewProductAction(newProduct));
          resetTextFormInput(nameRef, descriptionRef, priceRef, quantityRef);
          setDisplayUploadedImage(null);
@@ -97,7 +91,7 @@ const AddProduct = () => {
    }, []);
 
    return (
-      <div className='w-9/12 mx-auto add-product h-min-[500px] h-screen justify-center flex flex-col mt-4'>
+      <div className='w-9/12 mx-auto product-page h-min-[500px] h-screen justify-center flex flex-col mt-4'>
          <div className='bg-image'></div>
          <div className='overlay'></div>
          <div className='bg-white rounded-lg shadow-lg shadow-[#5a6e8c] px-10 py-10 '>

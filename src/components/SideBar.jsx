@@ -54,7 +54,7 @@ const SideBar = ({ dispatch, navigate, handleShowOverlay, showOverLay }) => {
          subItem: [
             {
                label: 'Add Product',
-               link: '/admin/new-product',
+               link: '/admin/product-management/new-product',
                icon: addProduct,
             },
          ],

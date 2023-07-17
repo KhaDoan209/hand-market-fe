@@ -34,3 +34,18 @@ export const convertObjectToFormData = (values) => {
    }
    return object;
 };
+
+export const calculatePriceAfterDiscount = (price, discount) => {
+   if (Number(discount) > 0) {
+      const discountPrice = Number(price) * Number(discount / 100);
+      return (Number(price) - discountPrice).toLocaleString('vi-VN', {
+         style: 'currency',
+         currency: 'VND',
+      });
+   } else {
+      return Number(price).toLocaleString('vi-VN', {
+         style: 'currency',
+         currency: 'VND',
+      });
+   }
+};

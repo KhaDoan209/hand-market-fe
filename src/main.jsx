@@ -1,7 +1,6 @@
 import React from 'react';
 import './assets/scss/main.scss';
 import './index.css';
-import './assets/scss/main.scss';
 import App from './App.jsx';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -113,10 +112,17 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                               }
                            />
                            <Route
-                              path='/admin/new-product'
+                              path='/admin/product-management/new-product'
                               element={<AddProduct />}
                               lazy={() =>
                                  import('./pages/Admin/Product/AddProduct')
+                              }
+                           />
+                           <Route
+                              path='/admin/product-management/product-detail/:id'
+                              element={<ProductDetail />}
+                              lazy={() =>
+                                 import('./pages/Admin/Product/ProductDetail')
                               }
                            />
                         </Route>

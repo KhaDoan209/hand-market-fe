@@ -118,7 +118,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
             : 'block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent  font-normal font-semibold';
    };
    return (
-      <nav className='bg-white border-gray-200  shadow-sm shadow-gray-400'>
+      <nav className='bg-white border-gray-200 shadow-sm shadow-gray-400'>
          <div className='w-3/4 mx-auto py-3'>
             <div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto'>
                {logo ? (
