@@ -13,26 +13,19 @@ import Register from './pages/Auth/Register';
 import AccountManagement from './pages/Admin/Account/AccountManagement';
 import AccountDetail from './pages/Admin/Account/AccountDetail';
 import ProductManagement from './pages/Admin/Product/ProductManagement';
-import DeletedProduct from './pages/Admin/Product/DeletedProduct';
 import ProductDetail from './pages/Admin/Product/ProductDetail';
 import AddProduct from './pages/Admin/Product/AddProduct';
 import DeletedAccount from './pages/Admin/Account/DeletedAccount';
+import ShoppingCart from './pages/User/Cart/ShoppingCart';
+import Product from './pages/User/Product/Product';
+import OrderDetail from './pages/User/Order/OrderDetail';
 import { Provider } from 'react-redux';
 import { persistor, store } from './redux/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import { getUserFromLocal } from './utils/utils-functions';
-
 import Chart from 'chart.js/auto';
 import UserProfile from './pages/User/Account/UserProfile';
 const queryClient = new QueryClient();
-const checkAuthentication = () => {
-   const userRole = getUserFromLocal();
-   if (userRole) {
-      return true;
-   }
-   return false;
-};
 
 ReactDOM.createRoot(document.getElementById('root')).render(
    <>
@@ -59,6 +52,27 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                               element={<UserProfile />}
                               lazy={() =>
                                  import('./pages/User/Account/UserProfile')
+                              }
+                           />
+                           <Route
+                              path='/user/shopping-cart/:id'
+                              element={<ShoppingCart />}
+                              lazy={() =>
+                                 import('./pages/User/Cart/ShoppingCart')
+                              }
+                           />
+                           <Route
+                              path='/user/view-product'
+                              element={<Product />}
+                              lazy={() =>
+                                 import('./pages/User/Product/Product')
+                              }
+                           />
+                           <Route
+                              path='/user/view-order-detail/:id'
+                              element={<OrderDetail />}
+                              lazy={() =>
+                                 import('./pages/User/Order/OrderDetail')
                               }
                            />
                            <Route

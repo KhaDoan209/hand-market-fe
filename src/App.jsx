@@ -14,11 +14,10 @@ function App() {
    const navigate = useNavigate();
    const cookies = cookie.parse(document.cookie);
    const signedInUser = getUserFromLocal();
-
    useEffect(() => {
       if (cookies.access_token == 'undefined' && signedInUser) {
          dispatch(resetTokenAction());
-      } else if (cookies.refresh_token == undefined) {
+      } else if (cookies.refresh_token == undefined && signedInUser !== null) {
          toast.error('Your session has expired, please login again');
          navigate('/login');
       }

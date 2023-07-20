@@ -7,11 +7,16 @@ import {
    changeProductImageService,
    deleteProductService,
    getListProductByPurchaseService,
+   getListProductByDiscountService,
 } from '../../services/product-service';
+import { clearSignedInUserReducer } from '../reducer/auth-reducer';
 import {
    getListProductByPurchaseReducer,
    getListProductReducer,
    getProductDetailReducer,
+   getListProductByDiscountReducer,
+   getListProductForUserReducer,
+   clearListProductForUserReducer,
 } from '../reducer/product-reducer';
 
 export const getListProductAction = (pageNumber = 1, pageSize = 8) => {
@@ -19,6 +24,17 @@ export const getListProductAction = (pageNumber = 1, pageSize = 8) => {
       try {
          const list_product = await getListProductService(pageNumber, pageSize);
          dispatch(getListProductReducer(list_product.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const getListProductForUserAction = (pageNumber = 1, pageSize = 8) => {
+   return async (dispatch) => {
+      try {
+         const list_product = await getListProductService(pageNumber, pageSize);
+         dispatch(getListProductForUserReducer(list_product.data));
       } catch (error) {
          console.log(error);
       }
@@ -36,7 +52,10 @@ export const getProductDetailAction = (id) => {
    };
 };
 
-export const getListProductByViewAction = (pageNumber = 1, pageSize = 8) => {
+export const getListProductByPurchaseAction = (
+   pageNumber = 1,
+   pageSize = 8
+) => {
    return async (dispatch) => {
       try {
          const list_product_by_purchase = await getListProductByPurchaseService(
@@ -45,6 +64,25 @@ export const getListProductByViewAction = (pageNumber = 1, pageSize = 8) => {
          );
          dispatch(
             getListProductByPurchaseReducer(list_product_by_purchase.data)
+         );
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const getListProductByDiscountAction = (
+   pageNumber = 1,
+   pageSize = 8
+) => {
+   return async (dispatch) => {
+      try {
+         const list_product_by_discount = await getListProductByDiscountService(
+            pageNumber,
+            pageSize
+         );
+         dispatch(
+            getListProductByDiscountReducer(list_product_by_discount.data)
          );
       } catch (error) {
          console.log(error);
@@ -104,5 +142,11 @@ export const deleteProductAction = (id, pageNumber = 1, pageSize = 8) => {
       } catch (error) {
          console.log(error);
       }
+   };
+};
+
+export const clearListProductForUserAction = () => {
+   return (dispatch) => {
+      dispatch(clearListProductForUserReducer());
    };
 };

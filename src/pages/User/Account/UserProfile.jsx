@@ -122,7 +122,7 @@ const UserProfile = () => {
       onClose: onCloseChangeAvatar,
    } = useDisclosure();
    useEffect(() => {
-      dispatch(getUserDetailAction(id));
+      dispatch(getUserDetailAction(userDetail?.id));
    }, []);
    useEffect(() => {
       const currentYear = new Date().getFullYear();
@@ -587,7 +587,7 @@ const UserProfile = () => {
          <div className='grid grid-cols-12 relative z-0'>
             <div className='col-span-12 xl:col-span-5 relative z-[5] h-fit xl:h-screen'>
                <div className='w-11/12 lg:w-9/12 mx-auto flex flex-col my-5'>
-                  <div className='w-full bg-white border border-gray-200 rounded-lg shadow-xl shadow-gray-200 backdrop-filter h-fit'>
+                  <div className='w-full bg-white border border-gray-200 rounded-lg shadow-xl shadow-gray-300 backdrop-filter h-fit'>
                      <div className='flex justify-end px-4 pt-4 relative'>
                         <button
                            onClick={() => {
@@ -864,7 +864,7 @@ const UserProfile = () => {
                </div>
             </div>
             <div className='col-span-12 xl:col-span-7'>
-               <div className='w-11/12 mx-auto my-5 h-fit rounded-md bg-gray-white shadow-lg shadow-gray-200 py-5 px-5'>
+               <div className='w-11/12 mx-auto my-5 h-fit rounded-md bg-gray-white shadow-lg shadow-gray-300 py-5 px-5 bg-white'>
                   <div className='text-[#5a6e8c] font-bold text-lg lg:text-2xl flex items-center justify-between'>
                      <div className='flex items-center'>
                         <CreditCardIcon className='h-4 w-4 lg:h-6 lg:w-6 mr-0 lg:mr-2' />

@@ -124,7 +124,7 @@ const SideBar = ({ dispatch, navigate, handleShowOverlay, showOverLay }) => {
                }`}
             >
                {listItem.map((item) => {
-                  if (item.subItem.length == 0) {
+                  if (item?.subItem?.length == 0) {
                      return (
                         <Fragment key={item.id}>
                            <li>
