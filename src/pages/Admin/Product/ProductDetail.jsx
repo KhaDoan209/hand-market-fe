@@ -103,7 +103,7 @@ const ProductDetail = () => {
       }
    };
    return (
-      <div className='w-10/12 mx-auto product-detail-page bg-white px-10 py-10'>
+      <div className='w-10/12 mx-auto product-detail-page bg-white mt-10 mb-20 px-10 py-14 rounded-md shadow-lg shadow-gray-300'>
          <div className='grid grid-cols-12'>
             <div className='col-span-5'>
                <div className='w-full h-full border-r border-gray-200 flex flex-col justify-start relative'>
@@ -170,7 +170,7 @@ const ProductDetail = () => {
                >
                   <PencilSquareIcon className='h-4 w-4 lg:h-5 lg:w-5' />
                </div>
-               <div className='bg-white px-5 py-3 rounded-md shadow-md shadow-gray-400'>
+               <div className='bg-white px-5 py-3 rounded-md '>
                   <div className='my-2 flex justify-between items-stretch'>
                      <div className='w-3/5 mx-2'>
                         <h1 className='font-mono font-bold text-gray-500 text-lg'>
@@ -246,7 +246,7 @@ const ProductDetail = () => {
                               Category:
                            </h1>
                            <h2 className='text-xl font-semibold text-[#5a6e8c]'>
-                              {product_detail?.Category.name}
+                              {product_detail?.Category?.name}
                            </h2>
                         </div>
                         <div className='my-2 w-2/4 mx-2'>
@@ -262,7 +262,7 @@ const ProductDetail = () => {
                </div>
             </div>
             <div className='col-span-12 my-10 h-[1px] bg-gray-100'></div>
-            <div className='col-span-12 bg-white px-5 rounded-md shadow-md shadow-gray-400'>
+            <div className='col-span-12 bg-white px-5 rounded-md '>
                <div className='flex my-2'>
                   <div className='my-2 w-1/4 mx-2'>
                      <h1 className='font-mono font-bold text-gray-500 text-lg'>
@@ -301,7 +301,7 @@ const ProductDetail = () => {
                      <h2 className='text-xl font-semibold text-green-400'>
                         {calculatePriceAfterDiscount(
                            product_detail?.price,
-                           product_detail?.Discount.percentage
+                           product_detail?.Discount?.percentage
                         )}
                      </h2>
                   </div>

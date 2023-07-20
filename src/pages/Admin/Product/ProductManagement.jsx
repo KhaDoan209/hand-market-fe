@@ -13,6 +13,7 @@ import {
    getListProductAction,
    getProductDetailAction,
 } from '../../../redux/action/product-action';
+import { getListDiscountAction } from '../../../redux/action/discount-action';
 import moment from 'moment/moment';
 const ProductManagement = () => {
    const { dispatch, navigate } = useOutletContext();
@@ -49,6 +50,7 @@ const ProductManagement = () => {
                   <span
                      onClick={() => {
                         dispatch(getProductDetailAction(item?.id));
+                        dispatch(getListDiscountAction());
                         navigate(
                            `/admin/product-management/product-detail/${item?.id}`
                         );

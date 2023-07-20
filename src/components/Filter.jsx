@@ -64,7 +64,6 @@ const Filter = ({ listFilter, initialValue }) => {
                                     name='filter-radio'
                                     onChange={(e) => {
                                        const { value } = e.target;
-                                       console.log(value);
                                        setFilterValue(item.label);
                                        setOpenFilter(!openFilter);
                                     }}

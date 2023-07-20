@@ -6,13 +6,16 @@ import { useState, useEffect } from 'react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import AvatarNav from './AvatarNav';
 import { Admin, User } from '../utils/variables';
+import NumberCircle from './NumberCircle';
 import {
    ShoppingCartIcon,
    BellAlertIcon,
    HomeIcon,
+   TagIcon,
 } from '@heroicons/react/24/solid';
 import { Tooltip } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
+import { getItemCartByUserAction } from '../redux/action/cart-action';
 const NavBar = ({ dispatch, navigate, logo }) => {
    const signedInUser = useSelector(
       (state) => state.authReducer?.user_signed_in
@@ -29,7 +32,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
       },
       {
          label: 'Products',
-         link: '/product',
+         link: '/user/view-product',
       },
       {
          label: 'About Us',
@@ -48,6 +51,9 @@ const NavBar = ({ dispatch, navigate, logo }) => {
          link: '/login',
       },
    ];
+   const itemInCart = useSelector(
+      (state) => state.cartReducer.list_item_in_cart
+   );
    const [showMenuMobi, setShowMenuMobi] = useState(true);
    const [menuItem, setMenuItem] = useState(listItem);
    const [windowSize, setWindowSize] = useState({
@@ -72,7 +78,21 @@ const NavBar = ({ dispatch, navigate, logo }) => {
             const userNav = [
                {
                   label: (
-                     <Tooltip label='Notification'>
+                     <Tooltip
+                        hasArrow
+                        label='Product'
+                     >
+                        <TagIcon className='w-7 h-7' />
+                     </Tooltip>
+                  ),
+                  link: '/user/view-product',
+               },
+               {
+                  label: (
+                     <Tooltip
+                        hasArrow
+                        label='Notification'
+                     >
                         <BellAlertIcon className='w-7 h-7' />
                      </Tooltip>
                   ),
@@ -80,18 +100,26 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                },
                {
                   label: (
-                     <Tooltip label='Shopping cart'>
-                        <ShoppingCartIcon className='w-7 h-7' />
+                     <Tooltip
+                        hasArrow
+                        label='Shopping cart'
+                     >
+                        <div className='z-1'>
+                           <ShoppingCartIcon className='w-7 h-7' />
+                           <div className='absolute top-[-7px] right-[-10px] z-40'>
+                              <NumberCircle number={itemInCart?.data?.length} />
+                           </div>
+                        </div>
                      </Tooltip>
                   ),
-                  link: '/admin/account-management',
+                  link: `/user/shopping-cart/${signedInUser?.id}`,
                },
             ];
             const navUser = updatedListItems.slice(0, 1).concat(userNav);
             setMenuItem(navUser);
          }
       }
-   }, []);
+   }, [itemInCart?.data?.length]);
 
    useEffect(() => {
       const handleResize = () => {
@@ -104,6 +132,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
          window.removeEventListener('resize', handleResize);
       };
    }, []);
+
    useEffect(() => {
       if (windowSize.width > 768) {
          setShowMenuMobi(true);
@@ -111,12 +140,18 @@ const NavBar = ({ dispatch, navigate, logo }) => {
          setShowMenuMobi(false);
       }
    }, [windowSize.width]);
+
+   // useEffect(() => {
+   //    dispatch(getItemCartByUserAction(signedInUser?.id));
+   // }, []);
+
    const showActiveStyle = () => {
       return ({ isActive }) =>
          isActive
             ? 'block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent font-normal font-semibold active-link'
             : 'block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent  font-normal font-semibold';
    };
+
    return (
       <nav className='bg-white border-gray-200 shadow-sm shadow-gray-400'>
          <div className='w-3/4 mx-auto py-3'>

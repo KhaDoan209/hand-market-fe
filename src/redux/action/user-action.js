@@ -47,6 +47,7 @@ export const getUserDetailAction = (id) => {
       try {
          const data = await getUserDetailService(id);
          dispatch(getUserDetailReducer(data.data));
+         dispatch(getSignedInUserReducer(data.data));
       } catch (error) {
          console.log(error);
       }

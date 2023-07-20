@@ -12,6 +12,12 @@ export const getListProductByPurchaseService = (pageNumber, pageSize) => {
    );
 };
 
+export const getListProductByDiscountService = (pageNumber, pageSize) => {
+   return http.get(
+      `/product/get-list-product-by-discount?pageNumber=${pageNumber}&pageSize=${pageSize}`
+   );
+};
+
 export const getProductDetailService = (id) => {
    return http.get(`/product/get-product-detail/${id}`);
 };

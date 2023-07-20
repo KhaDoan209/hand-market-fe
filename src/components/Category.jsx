@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import quotation from '../assets/svg/quotation.svg';
 const Category = ({ item }) => {
    return (
       <div className='mt-10 py-2'>
          <div
-            className={`w-10/12 text-center mx-auto px-10 pb-5 rounded-2xl bg-white relative hover:shadow-md hover:shadow-gray-300 transition-all duration-200 cursor-grab`}
+            className={`w-10/12 text-center mx-auto py-10 px-10 pb-5 rounded-2xl bg-white relative hover:shadow-md hover:shadow-gray-300 transition-all duration-200 cursor-grab`}
          >
             <img
                className='w-24 h-2w-24 absolute top-0 left-20'

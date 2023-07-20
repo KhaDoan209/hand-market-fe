@@ -6,23 +6,36 @@ import userReducer from './reducer/user-reducer';
 import productReducer from './reducer/product-reducer';
 import categoryReducer from './reducer/category-reducer';
 import discountReducer from './reducer/discount-reducer';
+import cartReducer from './reducer/cart-reducer';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 const persistConfig = {
    key: 'root',
    storage,
    stateReconciler: autoMergeLevel2,
+   blacklist: ['productReducer'],
 };
-
+const productPersistConfig = {
+   key: 'productReducer',
+   storage,
+   blacklist: ['list_product_for_user'],
+};
 const rootReducer = combineReducers({
    authReducer,
    userReducer,
-   productReducer,
+   productReducer: persistReducer(productPersistConfig, productReducer),
    categoryReducer,
    discountReducer,
+   cartReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+
+// const rootReducer = combineReducers({
+//    auth: persistReducer(authPersistConfig, authReducer),
+//    other: otherReducer,
+//  })
 
 export const store = configureStore({
    reducer: persistedReducer,

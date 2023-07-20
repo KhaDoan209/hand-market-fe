@@ -49,3 +49,28 @@ export const calculatePriceAfterDiscount = (price, discount) => {
       });
    }
 };
+
+export const calculateDiscountPriceInCart = (
+   price,
+   discount,
+   item_quantity
+) => {
+   if (Number(discount) > 0) {
+      const discountPrice = Number(price) * Number(discount / 100);
+      return (Number(price) - discountPrice) * item_quantity;
+   } else {
+      return Number(price * item_quantity);
+   }
+};
+
+export function saveScrollPosition() {
+   const scrollY = window.scrollY;
+   sessionStorage.setItem('scrollPosition', scrollY);
+}
+
+export function restoreScrollPosition() {
+   const scrollY = sessionStorage.getItem('scrollPosition');
+   if (scrollY) {
+      window.scrollTo(0, parseInt(scrollY, 10));
+   }
+}
