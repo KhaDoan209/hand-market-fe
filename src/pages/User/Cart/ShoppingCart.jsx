@@ -10,6 +10,7 @@ import { useOutletContext } from 'react-router-dom';
 import { calculateDiscountPriceInCart } from '../../../utils/utils-functions';
 import { PlusIcon, MinusIcon } from '@heroicons/react/20/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import { convertToCurrency } from '../../../utils/utils-functions';
 import {
    Tooltip,
    Modal,
@@ -23,6 +24,8 @@ import {
    ModalFooter,
 } from '@chakra-ui/react';
 import emptyCart from '../../../assets/img/empty-cart.png';
+import { createPaymentIntentAction } from '../../../redux/action/payment-action';
+import { renderSubTotalPrice } from '../../../utils/utils-functions';
 const ShoppingCart = () => {
    const { dispatch, navigate } = useOutletContext();
    const [selectedItems, setSelectedItems] = useState([]);
@@ -148,20 +151,9 @@ const ShoppingCart = () => {
       selectedItems?.map((item) => {
          count += item?.item_quantity;
       });
-
       return count;
    };
-   const renderSubTotalPrice = () => {
-      let price = 0;
-      selectedItems?.map((item) => {
-         price +=
-            (Number(item?.Product?.price) -
-               Number(item?.Product?.price) *
-                  Number(item?.Product?.Discount?.percentage / 100)) *
-            item?.item_quantity;
-      });
-      return price;
-   };
+
    return (
       <div className='w-3/4 mx-auto grid grid-cols-12 gap-5 mb-10'>
          <div className='col-span-9 mt-5 bg-white py-5 px-10 rounded-md shadow-md shadow-gray-300'>
@@ -219,26 +211,25 @@ const ShoppingCart = () => {
 
                                  <div className='flex items-baseline'>
                                     <span className='text-lg font-semibold text-[#374b73]'>
-                                       {calculateDiscountPriceInCart(
-                                          item?.Product?.price,
-                                          item?.Product?.Discount?.percentage,
-                                          item?.item_quantity
-                                       ).toLocaleString('vi-VN', {
-                                          style: 'currency',
-                                          currency: 'VND',
-                                       })}
+                                       {convertToCurrency(
+                                          calculateDiscountPriceInCart(
+                                             item?.Product?.price,
+                                             item?.Product?.Discount
+                                                ?.percentage,
+                                             item?.item_quantity
+                                          )
+                                       )}
                                     </span>
                                     {Number(
                                        item?.Product?.Discount?.percentage
                                     ) !== 0 ? (
                                        <div className='text-md line-through font-semibold text-gray-400 mx-3'>
-                                          {Number(
-                                             item?.Product?.price *
-                                                item?.item_quantity
-                                          ).toLocaleString('vi-VN', {
-                                             style: 'currency',
-                                             currency: 'VND',
-                                          })}
+                                          {convertToCurrency(
+                                             Number(
+                                                item?.Product?.price *
+                                                   item?.item_quantity
+                                             )
+                                          )}
                                        </div>
                                     ) : (
                                        <></>
@@ -362,16 +353,21 @@ const ShoppingCart = () => {
             <h2 className='text-[#374b73] font-semibold text-md'>
                <span className='text-gray-500'>Total price:</span>&nbsp;
                <div className='inline text-lg font-bold'>
-                  {renderSubTotalPrice().toLocaleString('vi-VN', {
-                     style: 'currency',
-                     currency: 'VND',
-                  })}
+                  {convertToCurrency(renderSubTotalPrice(selectedItems))}
                </div>
                {renderSubTotalItemCount() > 0 ? (
                   <div className='w-full flex justify-center'>
                      <button
                         onClick={() => {
-                           navigate('/user/view-order-detail/:id');
+                           navigate(
+                              `/user/view-order-detail/${signedInUser?.id}`
+                           );
+                           // dispatch(
+                           //    createPaymentIntentAction(
+                           //       { amount: renderSubTotalPrice() },
+                           //       'cus_OJACupYIuqEFgK'
+                           //    )
+                           // );
                         }}
                         className='py-2 px-3 mt-5 rounded-md bg-gray-100 text-[#374b73] transition-all duration-200 text-sm shadow-sm shadow-gray-300  hover:bg-[#374b73] hover:border-white hover:text-white'
                      >

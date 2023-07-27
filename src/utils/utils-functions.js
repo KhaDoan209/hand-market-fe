@@ -63,14 +63,25 @@ export const calculateDiscountPriceInCart = (
    }
 };
 
-export function saveScrollPosition() {
-   const scrollY = window.scrollY;
-   sessionStorage.setItem('scrollPosition', scrollY);
-}
+export const renderSubTotalPrice = (itemArray) => {
+   let price = 0;
+   itemArray?.map((item) => {
+      price +=
+         (Number(item?.Product?.price) -
+            Number(item?.Product?.price) *
+               Number(item?.Product?.Discount?.percentage / 100)) *
+         item?.item_quantity;
+   });
+   return price;
+};
 
-export function restoreScrollPosition() {
-   const scrollY = sessionStorage.getItem('scrollPosition');
-   if (scrollY) {
-      window.scrollTo(0, parseInt(scrollY, 10));
-   }
-}
+export const convertToCurrency = (number) => {
+   return number.toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+   });
+};
+
+export const countVAT = (price) => {
+   return (price * 8) / 100;
+};

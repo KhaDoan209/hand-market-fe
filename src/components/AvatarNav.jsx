@@ -9,6 +9,7 @@ import { UserCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { useSelector } from 'react-redux';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/20/solid';
 import { getUserFromLocal } from '../utils/utils-functions';
+import { getUserDetailAction } from '../redux/action/user-action';
 const AvatarNav = ({ dispatch, navigate }) => {
    const [openMenu, setOpenMenu] = useState(false);
    const [windowSize, setWindowSize] = useState({
@@ -88,6 +89,7 @@ const AvatarNav = ({ dispatch, navigate }) => {
                               Profile
                            </div>
                         </NavLink>
+
                         <NavLink className='flex w-full text-[#374b73] hover:bg-gray-100 rounded-lg py-2 px-2'>
                            <div className='text-md font-bold font-sans cursor-pointer hover:text-opacity-90 flex items-center'>
                               <ShoppingBagIcon className='w-5 h-5 mr-1' />{' '}

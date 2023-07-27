@@ -18,6 +18,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { getItemCartByUserAction } from '../redux/action/cart-action';
 import { getListProductAction } from '../redux/action/product-action';
+
 const Home = (props) => {
    const { navigate, dispatch } = useOutletContext();
    const userSignedIn = getUserFromLocal();

@@ -30,34 +30,47 @@ import {
    useDisclosure,
    Button,
 } from '@chakra-ui/react';
+import NextArrow from '../../../components/NextArrow';
+import PrevArrow from '../../../components/PrevArrow';
 import alterAvatar from '../../../assets/img/alter-ava.png';
 import { MapPinIcon } from '@heroicons/react/24/solid';
 import PaymentCard from '../../../components/PaymentCard';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import {
+   createNewCardAction,
+   getListSavedCardAction,
+} from '../../../redux/action/card-action';
+import Slider from 'react-slick';
 const UserProfile = () => {
    const { dispatch, navigate } = useOutletContext();
    const { id } = useParams();
    const [openProfileSetting, setOpenProfileSetting] = useState(false);
    const [enableInput, setEnableInput] = useState(false);
    const [enablePhone, setEnablePhone] = useState(false);
-   const [years, setYears] = useState([]);
    const [uploadImg, setUploadImg] = useState(null);
    const [selectedImage, setSelectedImg] = useState(null);
+   const stripe = useStripe();
+   const elements = useElements();
    const userDetail = useSelector((state) => state.authReducer?.user_signed_in);
-   const monthList = [
-      { label: 'January', value: 'Jan' },
-      { label: 'February', value: 'Feb' },
-      { label: 'March', value: 'Mar' },
-      { label: 'April', value: 'Apr' },
-      { label: 'May', value: 'May' },
-      { label: 'June', value: 'Jun' },
-      { label: 'July', value: 'Jul' },
-      { label: 'August', value: 'Aug' },
-      { label: 'September', value: 'Sep' },
-      { label: 'October', value: 'Oct' },
-      { label: 'November', value: 'Nov' },
-      { label: 'December', value: 'Dec' },
-   ];
+   const listSavedCards = useSelector((state) => state.cardReducer?.list_card);
+   const CARD_ELEMENT_OPTIONS = {
+      style: {
+         base: {
+            color: '#374b73',
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+               color: '#aab7c4',
+            },
+         },
+         invalid: {
+            color: '#EF4444',
+            iconColor: '#EF4444',
+         },
+      },
+   };
    const actionList = [
       {
          label: 'Edit Address',
@@ -122,15 +135,8 @@ const UserProfile = () => {
       onClose: onCloseChangeAvatar,
    } = useDisclosure();
    useEffect(() => {
+      dispatch(getListSavedCardAction(userDetail?.stripe_customer_id));
       dispatch(getUserDetailAction(userDetail?.id));
-   }, []);
-   useEffect(() => {
-      const currentYear = new Date().getFullYear();
-      const yearOptions = [];
-      for (let year = currentYear; year <= currentYear + 10; year++) {
-         yearOptions.push(year);
-      }
-      setYears(yearOptions);
    }, []);
    const formikAddress = useFormik({
       enableReinitialize: true,
@@ -376,116 +382,13 @@ const UserProfile = () => {
                <ModalOverlay />
                <ModalContent>
                   <ModalHeader className='w-10/12 mx-auto text-center'>
-                     <span className='text-xl lg:text-3xl'>
-                        Update your card information
-                     </span>
+                     <span className='text-xl lg:text-3xl'>Add a new card</span>
                   </ModalHeader>
-                  <ModalBody className='w-full mx-auto grid grid-cols-12'>
-                     <div className='my-2 col-span-8 mx-2'>
-                        <label
-                           className='text-sm lg:text-lg font-semibold lg:pr-3 text-gray-600'
-                           htmlFor='first_name'
-                        >
-                           Card Owner
-                        </label>
-                        <Input
-                           id='first_name'
-                           name='first_name'
-                           _focus={{
-                              borderColor: '#374b73',
-                           }}
-                           variant='flushed'
-                           placeholder={userDetail?.first_name}
-                        />
-                     </div>
-                     <div className='my-2 col-span-4 mx-2'>
-                        <label
-                           className='text-sm lg:text-lg font-semibold lg:pr-3 text-gray-600'
-                           htmlFor='first_name'
-                        >
-                           Expiration Date
-                        </label>
-                        <div className='flex w-full justify-between'>
-                           <div className='mx-1'>
-                              <Select
-                                 className='border-none'
-                                 variant='flushed'
-                                 _focus={{
-                                    borderColor: '#374b73',
-                                 }}
-                                 placeholder='Month'
-                              >
-                                 {monthList?.map((item) => {
-                                    return (
-                                       <option
-                                          className='text-black'
-                                          key={Math.random()}
-                                          value={item.value}
-                                       >
-                                          {item.label}
-                                       </option>
-                                    );
-                                 })}
-                              </Select>
-                           </div>
-                           <div className='mx-1'>
-                              <Select
-                                 className='border-none'
-                                 variant='flushed'
-                                 _focus={{
-                                    borderColor: '#374b73',
-                                 }}
-                                 placeholder='Year'
-                              >
-                                 {years?.map((item) => {
-                                    return (
-                                       <option
-                                          className='text-black'
-                                          key={Math.random()}
-                                          value={item}
-                                       >
-                                          {item}
-                                       </option>
-                                    );
-                                 })}
-                              </Select>
-                           </div>
-                        </div>
-                     </div>
-                     <div className='my-2 col-span-9 mx-2'>
-                        <label
-                           className='text-sm lg:text-lg font-semibold lg:pr-3 text-gray-600'
-                           htmlFor='first_name'
-                        >
-                           Card Number
-                        </label>
-                        <Input
-                           id='card_number'
-                           name='card_number'
-                           _focus={{
-                              borderColor: '#374b73',
-                           }}
-                           variant='flushed'
-                           placeholder={userDetail?.first_name}
-                        />
-                     </div>
-                     <div className='my-2 col-span-3 mx-2'>
-                        <label
-                           className='text-sm lg:text-lg font-semibold lg:pr-3 text-gray-600'
-                           htmlFor='first_name'
-                        >
-                           CVV
-                        </label>
-                        <Input
-                           id='cvv'
-                           name='last_name'
-                           _focus={{
-                              borderColor: '#374b73',
-                           }}
-                           variant='flushed'
-                           placeholder={userDetail?.first_name}
-                        />
-                     </div>
+                  <ModalBody className='w-full'>
+                     <CardElement
+                        options={CARD_ELEMENT_OPTIONS}
+                        className='py-4 px-2 border-2 rounded-md font-bold '
+                     />
                   </ModalBody>
                   <ModalCloseButton />
                   <ModalFooter>
@@ -499,7 +402,12 @@ const UserProfile = () => {
                      >
                         <span className='text-[#374b73]'>Close</span>
                      </Button>
-                     <Button colorScheme='facebook'>Update</Button>
+                     <Button
+                        onClick={handleSubmitCreditCard}
+                        colorScheme='facebook'
+                     >
+                        Add
+                     </Button>
                   </ModalFooter>
                </ModalContent>
             </Modal>
@@ -582,6 +490,25 @@ const UserProfile = () => {
          onCloseChangeAvatar();
       }, 4000);
    };
+   const handleSubmitCreditCard = async () => {
+      if (!stripe || !elements) {
+         return;
+      }
+      toast.loading('Wait a sec !', { duration: 1000 });
+      const cardElement = elements.getElement(CardElement);
+      const { token, error } = await stripe.createToken(cardElement);
+      onCloseUpdateCard();
+      if (error) {
+         toast.dismiss();
+         toast.error(error.message.toString());
+      } else {
+         const data = {
+            card_token: token?.id,
+            customer_stripe_id: userDetail?.stripe_customer_id,
+         };
+         await dispatch(createNewCardAction(data, userDetail?.id));
+      }
+   };
    return (
       <div className='w-10/12 mx-auto'>
          <div className='grid grid-cols-12 relative z-0'>
@@ -647,10 +574,11 @@ const UserProfile = () => {
                            />
                         </div>
                         <h5 className='mb-1 text-2xl font-bold text-[#374b73] '>
-                           {userDetail.first_name}&nbsp;{userDetail.last_name}
+                           {userDetail?.first_name}&nbsp;
+                           {userDetail?.last_name}
                         </h5>
                         <span className='text-sm text-gray-500  mb-5'>
-                           {userDetail.email}
+                           {userDetail?.email}
                         </span>
                         <div className='w-10/12 mx-auto'>
                            <div className='text-left my-1'>
@@ -677,7 +605,7 @@ const UserProfile = () => {
                                     }}
                                     onChange={formikAddress.handleChange}
                                     variant='flushed'
-                                    placeholder={userDetail.Address?.street}
+                                    placeholder={userDetail?.Address?.street}
                                  />
                                  {formikAddress.errors.street ? (
                                     <p className='text-red-600 ml-1 text-sm flex'>
@@ -706,7 +634,7 @@ const UserProfile = () => {
                                     }}
                                     onChange={formikAddress.handleChange}
                                     variant='flushed'
-                                    placeholder={userDetail.Address?.ward}
+                                    placeholder={userDetail?.Address?.ward}
                                  />
                                  {formikAddress.errors.ward ? (
                                     <p className='text-red-600 ml-1 text-sm flex'>
@@ -735,7 +663,7 @@ const UserProfile = () => {
                                     }}
                                     onChange={formikAddress.handleChange}
                                     variant='flushed'
-                                    placeholder={userDetail.Address?.district}
+                                    placeholder={userDetail?.Address?.district}
                                  />
                                  {formikAddress.errors.district ? (
                                     <p className='text-red-600 ml-1 text-sm flex'>
@@ -881,7 +809,38 @@ const UserProfile = () => {
                   </div>
 
                   <div className='py-5 overflow-scroll sm:overflow-visible'>
-                     <PaymentCard />
+                     <div className='mx-auto payment-card'>
+                        {listSavedCards?.length > 0 ? (
+                           <Slider
+                              infinite={false}
+                              speed={1000}
+                              slidesToShow={1}
+                              slidesToScroll={1}
+                              autoplay={false}
+                              pauseOnHover={true}
+                              swiper={true}
+                              dots={true}
+                           >
+                              {listSavedCards.map((item) => {
+                                 return (
+                                    <div
+                                       className='px-3 my-5'
+                                       key={Math.random()}
+                                    >
+                                       <PaymentCard
+                                          card={item}
+                                          user={userDetail}
+                                       />
+                                    </div>
+                                 );
+                              })}
+                           </Slider>
+                        ) : (
+                           <h1 className='text-center text-2xl text-[#374b73] font-semibold'>
+                              No card added yet
+                           </h1>
+                        )}
+                     </div>
                   </div>
                </div>
             </div>

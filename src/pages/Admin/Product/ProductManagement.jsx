@@ -15,6 +15,7 @@ import {
 } from '../../../redux/action/product-action';
 import { getListDiscountAction } from '../../../redux/action/discount-action';
 import moment from 'moment/moment';
+import { convertToCurrency } from '../../../utils/utils-functions';
 const ProductManagement = () => {
    const { dispatch, navigate } = useOutletContext();
    // const [emailSearch, setEmailSearch] = useState('');
@@ -68,10 +69,7 @@ const ProductManagement = () => {
                </Table.Cell>
                <Table.Cell>
                   <span className='text-[16px]'>
-                     {Number(item?.price).toLocaleString('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND',
-                     })}
+                     {convertToCurrency(Number(item?.price))}
                   </span>
                </Table.Cell>
                <Table.Cell>

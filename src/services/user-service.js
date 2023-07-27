@@ -1,5 +1,6 @@
 import { http } from './axios-interceptor';
 import { toastPromise } from '../utils/toast';
+import toast from 'react-hot-toast';
 export const getListUserService = (pageNumber, pageSize) => {
    return http.get(
       `/user/get-list-user?pageNumber=${pageNumber}&pageSize=${pageSize}`
@@ -49,9 +50,9 @@ export const updateUserInformationService = (data, id) => {
 };
 
 export const uploadUserAvatarService = (data, id) => {
-   return toastPromise(
-      http.post(`/user/upload-user-avatar/${id}`, data),
-      'Uploading, wait a sec!',
-      5000
-   );
+   return toast.promise(http.post(`/user/upload-user-avatar/${id}`, data), {
+      loading: 'Image uploading, Wait a sec !',
+      success: (mess) => `${mess.message.toString()}`,
+      error: (err) => `${err.message.toString()}`,
+   });
 };

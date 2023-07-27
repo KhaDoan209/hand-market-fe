@@ -86,3 +86,23 @@
 .card:hover .card-inner {
    transform: rotateY(-180deg);
 }
+
+.payment-card {
+   .slick-slider {
+      .slick-dots {
+         bottom: -20px;
+         .slick-avitve {
+            color: $-yellow-1 !important;
+         }
+         li {
+            margin: 0;
+            button {
+               &::before {
+                  font-size: 10px;
+                  color: $-blue-1;
+               }
+            }
+         }
+      }
+   }
+}

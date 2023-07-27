@@ -7,6 +7,8 @@ import productReducer from './reducer/product-reducer';
 import categoryReducer from './reducer/category-reducer';
 import discountReducer from './reducer/discount-reducer';
 import cartReducer from './reducer/cart-reducer';
+import paymentReducer from './reducer/payment-reducer';
+import cardReducer from './reducer/card-reducer';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 const persistConfig = {
@@ -27,10 +29,11 @@ const rootReducer = combineReducers({
    categoryReducer,
    discountReducer,
    cartReducer,
+   paymentReducer,
+   cardReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
-
 
 // const rootReducer = combineReducers({
 //    auth: persistReducer(authPersistConfig, authReducer),
