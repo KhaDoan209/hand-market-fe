@@ -8,7 +8,10 @@ import {
    updateProductInformationAction,
 } from '../../../redux/action/product-action';
 import { useSelector } from 'react-redux';
-import { calculatePriceAfterDiscount } from '../../../utils/utils-functions';
+import {
+   calculatePriceAfterDiscount,
+   convertToCurrency,
+} from '../../../utils/utils-functions';
 import star from '../../../assets/svg/rate-star.svg';
 import emptyStar from '../../../assets/svg/rate-empty-star.svg';
 import moment from 'moment/moment';
@@ -284,13 +287,7 @@ const ProductDetail = () => {
                         />
                      ) : (
                         <h2 className='text-xl font-semibold text-red-500'>
-                           {Number(product_detail?.price).toLocaleString(
-                              'vi-VN',
-                              {
-                                 style: 'currency',
-                                 currency: 'VND',
-                              }
-                           )}
+                           {convertToCurrency(Number(product_detail?.price))}
                         </h2>
                      )}
                   </div>
@@ -317,7 +314,7 @@ const ProductDetail = () => {
                            value={formik.values.discount_id}
                         >
                            <option value={product_detail.discount_id}>
-                              {product_detail?.Discount.percentage}%
+                              {product_detail?.Discount?.percentage}%
                            </option>
                            {discount.map((item) => {
                               if (item.id !== product_detail?.discount_id) {
@@ -334,7 +331,7 @@ const ProductDetail = () => {
                         </select>
                      ) : (
                         <h2 className='text-xl font-semibold text-orange-300'>
-                           {product_detail?.Discount.percentage} %
+                           {product_detail?.Discount?.percentage} %
                         </h2>
                      )}
                   </div>

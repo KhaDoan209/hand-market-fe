@@ -1,11 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import background from '../assets/img/card-bg.jpg';
 import chip from '../assets/img/chip.png';
 import visa from '../assets/img/visa.png';
+import master from '../assets/img/master.png';
 import pattern from '../assets/img/pattern.png';
 import chevronRight from '../assets/svg/chevron-right.svg';
-const PaymentCard = () => {
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteSavedCardAction } from '../redux/action/card-action';
+import { useDisclosure } from '@chakra-ui/react';
+import {
+   Modal,
+   ModalOverlay,
+   ModalContent,
+   ModalHeader,
+   ModalFooter,
+   ModalBody,
+   ModalCloseButton,
+   Button,
+} from '@chakra-ui/react';
+const PaymentCard = ({ card, user }) => {
+   const dispatch = useDispatch();
+   const { isOpen, onOpen, onClose } = useDisclosure();
+   const renderCardBrand = () => {
+      switch (card?.brand) {
+         case 'visa':
+            return (
+               <img
+                  src={visa}
+                  className='w-6 md:w-12'
+               />
+            );
+
+         case 'mastercard':
+            return (
+               <img
+                  src={master}
+                  className='w-6 md:w-12'
+               />
+            );
+      }
+   };
    return (
       <div className='card w-[350px] h-[200px] md:w-[450px] md:h-[250px] mx-auto'>
          <div className='card-inner'>
@@ -19,19 +54,20 @@ const PaymentCard = () => {
                      src={chip}
                      className='w-6 md:w-12'
                   />
-                  <img
-                     src={visa}
-                     className='w-6 md:w-12'
-                  />
+                  {renderCardBrand()}
                </div>
                <div className='row mt-2 md:mt-5'>
-                  <p className='text-md md:text-xl tracking-widest'>5244</p>
-                  <p className='text-md md:text-xl tracking-widest'>2150</p>
-                  <p className='text-md md:text-xl tracking-widest'>8252</p>
-                  <p className='text-md md:text-xl tracking-widest'>6420</p>
+                  <p className='text-md md:text-xl tracking-widest'>****</p>
+                  <p className='text-md md:text-xl tracking-widest'>****</p>
+                  <p className='text-md md:text-xl tracking-widest'>****</p>
+                  <p className='text-md md:text-xl tracking-widest'>
+                     {card?.last4}
+                  </p>
                </div>
                <div className='flex align-top justify-between card-holder mt-5 md:mt-10'>
-                  <p className='uppercase md:text-md text-sm'>CARD HOLDER</p>
+                  <p className='uppercase md:text-md text-lg'>
+                     {user?.first_name + ' ' + user?.last_name}
+                  </p>
                   <div>
                      <p className='md:text-md tracking-widest text-sm'>
                         MONTH/YEAR
@@ -48,7 +84,7 @@ const PaymentCard = () => {
                            />
                         </div>
                         <p className='text-sm md:text-md mx-2 tracking-widest'>
-                           02/2020
+                           {card?.exp_month}/{card?.exp_year}
                         </p>
                      </div>
                   </div>
@@ -64,15 +100,57 @@ const PaymentCard = () => {
                   <div>
                      <img src={pattern} />
                   </div>
-                  <p className='text-sm md:text-lg py-2'>824</p>
+                  <p className='text-sm md:text-lg py-1'>***</p>
                </div>
-               <div className='row card-text'>
-                  <p>
-                     Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                     Illum necessitatibus officia quo nesciunt atque?
-                  </p>
+               <div className='w-full flex justify-end mt-5'>
+                  <button
+                     onClick={onOpen}
+                     className='py-2 px-3 bg-white text-[#5a6e8c] rounded-md  hover:bg-gray-200 cursor-pointer transition-all duration-300'
+                  >
+                     Delete
+                  </button>
                </div>
             </div>
+            <Modal
+               size={'lg'}
+               isCentered
+               isOpen={isOpen}
+               onClose={onClose}
+            >
+               <ModalOverlay />
+               <ModalContent>
+                  <ModalHeader>
+                     <p className='text-xl'>
+                        Do you want to remove card end with {card?.last4} ?
+                     </p>
+                  </ModalHeader>
+                  <ModalCloseButton />
+                  <ModalFooter>
+                     <Button
+                        colorScheme='gray'
+                        mr={3}
+                        onClick={onClose}
+                     >
+                        Close
+                     </Button>
+                     <Button
+                        onClick={() => {
+                           dispatch(
+                              deleteSavedCardAction(
+                                 user?.stripe_customer_id,
+                                 card?.card_id
+                              )
+                           );
+                           onClose();
+                        }}
+                        colorScheme='red'
+                        variant='solid'
+                     >
+                        Remove
+                     </Button>
+                  </ModalFooter>
+               </ModalContent>
+            </Modal>
          </div>
       </div>
    );

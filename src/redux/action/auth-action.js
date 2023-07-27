@@ -48,6 +48,7 @@ export const logoutAction = (id, navigate) => {
       try {
          await logoutService(id);
          localStorage.removeItem(import.meta.env.VITE_SIGNED_IN_USER);
+         localStorage.removeItem('listCart');
          persistor.purge();
          navigate('/login');
          dispatch(clearSignedInUserReducer());

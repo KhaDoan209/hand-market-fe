@@ -9,7 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItemToCartAction } from '../redux/action/cart-action';
 import toast from 'react-hot-toast';
-
+import { calculateDiscountPriceInCart } from '../utils/utils-functions';
+import { convertToCurrency } from '../utils/utils-functions';
 const ProductCard = ({ item, type, letter_length }) => {
    const navigate = useNavigate();
    const dispatch = useDispatch();
@@ -33,10 +34,7 @@ const ProductCard = ({ item, type, letter_length }) => {
                      </span>
                   </div>
                   <span className='text-md font-semibold text-gray-500 line-through tracking-wide block my-2'>
-                     {Number(item?.price).toLocaleString('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND',
-                     })}
+                     {convertToCurrency(Number(item?.price))}
                   </span>
                </>
             );
@@ -45,17 +43,11 @@ const ProductCard = ({ item, type, letter_length }) => {
                <>
                   <div className='my-2'>
                      <span className='text-2xl font-bold text-[#5a6e8c]'>
-                        {Number(item?.price).toLocaleString('vi-VN', {
-                           style: 'currency',
-                           currency: 'VND',
-                        })}
+                        {convertToCurrency(Number(item?.price))}
                      </span>
                   </div>
                   <span className='text-md font-semibold text-gray-500 line-through tracking-wide block my-2 opacity-0'>
-                     {Number(item?.price).toLocaleString('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND',
-                     })}
+                     {convertToCurrency(Number(item?.price))}
                   </span>
                </>
             );
@@ -80,6 +72,38 @@ const ProductCard = ({ item, type, letter_length }) => {
                )}
             </span>
          </>;
+      } else if (type === ProductType.checkout) {
+         return (
+            <div className='flex items-baseline mt-4'>
+               <span className='text-lg font-semibold text-[#374b73]'>
+                  {convertToCurrency(
+                     calculateDiscountPriceInCart(
+                        item?.Product?.price,
+                        item?.Product?.Discount?.percentage,
+                        item?.item_quantity
+                     )
+                  )}
+               </span>
+               {Number(item?.Product?.Discount?.percentage) !== 0 ? (
+                  <div className='text-md line-through font-semibold text-gray-400 mx-3'>
+                     {convertToCurrency(
+                        Number(item?.Product?.price * item?.item_quantity)
+                     )}
+                  </div>
+               ) : (
+                  <></>
+               )}
+               {item?.Product?.Discount.percentage > 0 ? (
+                  <div className='mb-1'>
+                     <span className='text-[10px] font-bold text-white bg-red-600 px-2 rounded-md py-1'>
+                        -{item?.Product?.Discount.percentage}% off
+                     </span>
+                  </div>
+               ) : (
+                  <></>
+               )}
+            </div>
+         );
       }
    };
    const renderProductRate = () => {
@@ -192,6 +216,34 @@ const ProductCard = ({ item, type, letter_length }) => {
                      </div>
                   </div>
                </>
+            );
+         case ProductType.checkout:
+            return (
+               <div
+                  key={Math.random()}
+                  className='border-b border-gray-200 mt-4'
+               >
+                  <div className='flex py-2'>
+                     <img
+                        className='w-1/6 object-cover'
+                        src={item?.Product?.image}
+                     />
+                     <div className='w-5/6 px-5'>
+                        <div className='flex items-center'>
+                           <h2 className='text-xl font-bold text-[#374b73] my-2 w-11/12'>
+                              {item?.Product?.name}
+                           </h2>
+                        </div>
+                        <div className='text-[#374b73] flex items-center'>
+                           <span className='mr-2 font-bold'>Quantity:</span>
+                           <span className='text-center font-bold text-md'>
+                              {item?.item_quantity}
+                           </span>
+                        </div>
+                        {renderProductPrice()}
+                     </div>
+                  </div>
+               </div>
             );
          default:
             return null;

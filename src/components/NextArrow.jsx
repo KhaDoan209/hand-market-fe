@@ -5,7 +5,7 @@ const NextArrow = (props) => {
 
    return (
       <div
-         className='rounded-full text-[#374b73] hover:bg-[#374b73] hover:text-white absolute top-[50%] right-[-5%] hover:cursor-pointer transition-all duration-200 p-1 border-2 border-gray-500'
+         className={`rounded-full text-[#374b73] hover:bg-[#374b73] hover:text-white absolute top-[50%] right-[-5%] hover:cursor-pointer transition-all duration-200 p-1 border-2 border-gray-500`}
          onClick={onClick}
       >
          <ChevronRightIcon className='w-5 h-5' />
