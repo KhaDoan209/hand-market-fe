@@ -12,14 +12,14 @@ import {
 } from '../../../utils/utils-functions';
 import visa from '../../../assets/img/visa-card.png';
 import mastercard from '../../../assets/img/mastercard.jpg';
-import { getListSavedCardReducer } from '../../../redux/reducer/card-reducer';
 import { getListSavedCardAction } from '../../../redux/action/card-action';
+import { calculateDiscountPriceInCart } from '../../../utils/utils-functions';
+import { createNewOrderAction } from '../../../redux/action/order-action';
 const OrderReview = () => {
    const { dispatch, navigate } = useOutletContext();
    const userSignedIn = useSelector(
       (state) => state.authReducer.user_signed_in
    );
-
    const listSavedCards = useSelector((state) => state.cardReducer?.list_card);
    const shippingOptions = [
       {
@@ -44,8 +44,10 @@ const OrderReview = () => {
    const [selectCard, setSelectCard] = useState(
       listSavedCards?.length > 0 ? listSavedCards[0].last4 : null
    );
+   const [cardId, setCardId] = useState(
+      listSavedCards?.length > 0 ? listSavedCards[0].card_id : null
+   );
    const [itemToCheckOut, setItemToCheckOut] = useState([]);
-
    useEffect(() => {
       if (userSignedIn?.Address === null) {
          toast.error(
@@ -79,6 +81,17 @@ const OrderReview = () => {
       dispatch(getListSavedCardAction(userSignedIn?.stripe_customer_id));
       setItemToCheckOut(JSON.parse(localStorage.getItem('listCart')));
    }, []);
+   const calculateTotalOrder = () => {
+      return (
+         (renderSubTotalPrice(itemToCheckOut) * Number(shippingPercent)) / 100 +
+         renderSubTotalPrice(itemToCheckOut) +
+         countVAT(
+            renderSubTotalPrice(itemToCheckOut) +
+               (renderSubTotalPrice(itemToCheckOut) * Number(shippingPercent)) /
+                  100
+         )
+      );
+   };
    const renderCardImage = (item) => {
       if (item?.brand === 'visa') {
          return (
@@ -96,8 +109,27 @@ const OrderReview = () => {
          );
       }
    };
-   const renderCardDateValidation = () => {
-      let dateNow = new Date().getTime() / 1000; // get current
+   const handleOnPlaceOrder = () => {
+      const productToCheckout = [];
+      itemToCheckOut?.map((item) => {
+         const itemInCart = {
+            id: item?.product_id,
+            quantity: item?.item_quantity,
+            price: calculateDiscountPriceInCart(
+               item?.Product?.price,
+               item?.Product?.Discount?.percentage,
+               item?.item_quantity
+            ),
+         };
+         productToCheckout.push(itemInCart);
+      });
+      const newOrder = {
+         order_total: Math.ceil(Number(calculateTotalOrder())),
+         card_id: cardId,
+         product: productToCheckout,
+         user_id: userSignedIn?.id,
+      };
+      dispatch(createNewOrderAction(navigate, newOrder));
    };
    return (
       <div className='w-3/4 mx-auto grid grid-cols-12 gap-5 mb-10'>
@@ -202,6 +234,7 @@ const OrderReview = () => {
                                  }
                                  onChange={(event) => {
                                     setSelectCard(event.target.name);
+                                    setCardId(event.target.value);
                                  }}
                                  className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 cursor-pointer'
                               />
@@ -327,23 +360,13 @@ const OrderReview = () => {
             </div>
             <div className='flex justify-between text-green-600 font-semibold my-1 text-lg'>
                <p>Total Order:</p>
-               <span>
-                  {convertToCurrency(
-                     (renderSubTotalPrice(itemToCheckOut) *
-                        Number(shippingPercent)) /
-                        100 +
-                        renderSubTotalPrice(itemToCheckOut) +
-                        countVAT(
-                           renderSubTotalPrice(itemToCheckOut) +
-                              (renderSubTotalPrice(itemToCheckOut) *
-                                 Number(shippingPercent)) /
-                                 100
-                        )
-                  )}
-               </span>
+               <span>{convertToCurrency(calculateTotalOrder())}</span>
             </div>
             <div className='w-full flex justify-center mt-2'>
-               <button className='py-2 px-3 mt-5 rounded-md bg-gray-100 text-[#5a6e8c] transition-all duration-200 text-sm shadow-sm shadow-gray-300  hover:bg-[#ffdeb4] hover:border-white  font-semibold'>
+               <button
+                  onClick={handleOnPlaceOrder}
+                  className='py-2 px-3 mt-5 rounded-md bg-gray-100 text-[#5a6e8c] transition-all duration-200 text-sm shadow-sm shadow-gray-300  hover:bg-[#ffdeb4] hover:border-white  font-semibold'
+               >
                   Place order
                </button>
             </div>

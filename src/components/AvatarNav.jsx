@@ -85,12 +85,19 @@ const AvatarNav = ({ dispatch, navigate }) => {
                            className='flex w-full text-[#374b73] hover:bg-gray-100 rounded-lg py-2 px-2 mt-3'
                         >
                            <div className='text-md font-bold font-sans cursor-pointer hover:text-opacity-90 flex items-center '>
-                              <UserCircleIcon className='w-5 h-5 mr-1' />{' '}
+                              <UserCircleIcon className='w-5 h-5 mr-1' />
                               Profile
                            </div>
                         </NavLink>
 
-                        <NavLink className='flex w-full text-[#374b73] hover:bg-gray-100 rounded-lg py-2 px-2'>
+                        <NavLink
+                           to={`/user/order-management/${userDetail?.id}`}
+                           onClick={() => {
+                              // dispatch()
+                              setOpenMenu(false);
+                           }}
+                           className='flex w-full text-[#374b73] hover:bg-gray-100 rounded-lg py-2 px-2'
+                        >
                            <div className='text-md font-bold font-sans cursor-pointer hover:text-opacity-90 flex items-center'>
                               <ShoppingBagIcon className='w-5 h-5 mr-1' />{' '}
                               Orders

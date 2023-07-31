@@ -11,6 +11,7 @@ import {
    getSignedInUserReducer,
    clearSignedInUserReducer,
 } from '../reducer/auth-reducer';
+import { clearCardReducer } from '../reducer/card-reducer';
 import { persistor } from '../store';
 export const loginAction = (body, navigate) => {
    return async (dispatch) => {
@@ -52,6 +53,7 @@ export const logoutAction = (id, navigate) => {
          persistor.purge();
          navigate('/login');
          dispatch(clearSignedInUserReducer());
+         dispatch(clearCardReducer());
       } catch (error) {
          console.log(error);
       }
@@ -87,8 +89,7 @@ export const checkExistedEmailAction = (email) => {
 export const resetTokenAction = () => {
    return async () => {
       try {
-         let data = await resetTokenService();
-         console.log(data);
+         await resetTokenService();
       } catch (error) {
          console.log(error);
       }

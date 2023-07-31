@@ -11,9 +11,13 @@ const cardReducer = createSlice({
       getListSavedCardReducer: (state, action) => {
          state.list_card = action.payload;
       },
+      clearCardReducer: (state, action) => {
+         state.list_card = [];
+      },
    },
 });
 
-export const { getListSavedCardReducer } = cardReducer.actions;
+export const { getListSavedCardReducer, clearCardReducer } =
+   cardReducer.actions;
 
 export default cardReducer.reducer;

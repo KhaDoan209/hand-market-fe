@@ -141,9 +141,11 @@ const NavBar = ({ dispatch, navigate, logo }) => {
       }
    }, [windowSize.width]);
 
-   // useEffect(() => {
-   //    dispatch(getItemCartByUserAction(signedInUser?.id));
-   // }, []);
+   useEffect(() => {
+      if (signedInUser) {
+         dispatch(getItemCartByUserAction(signedInUser?.id));
+      }
+   }, []);
 
    const showActiveStyle = () => {
       return ({ isActive }) =>

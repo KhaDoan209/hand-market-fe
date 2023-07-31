@@ -9,6 +9,7 @@ import discountReducer from './reducer/discount-reducer';
 import cartReducer from './reducer/cart-reducer';
 import paymentReducer from './reducer/payment-reducer';
 import cardReducer from './reducer/card-reducer';
+import orderReducer from './reducer/order-reducer';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 const persistConfig = {
@@ -31,14 +32,10 @@ const rootReducer = combineReducers({
    cartReducer,
    paymentReducer,
    cardReducer,
+   orderReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-// const rootReducer = combineReducers({
-//    auth: persistReducer(authPersistConfig, authReducer),
-//    other: otherReducer,
-//  })
 
 export const store = configureStore({
    reducer: persistedReducer,
