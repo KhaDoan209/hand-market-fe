@@ -19,12 +19,14 @@ import DeletedAccount from './pages/Admin/Account/DeletedAccount';
 import ShoppingCart from './pages/User/Cart/ShoppingCart';
 import Product from './pages/User/Product/Product';
 import OrderReview from './pages/User/Order/OrderReview';
+import OrderManagement from './pages/User/Order/OrderManagement';
 import { Provider } from 'react-redux';
 import { persistor, store } from './redux/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import Chart from 'chart.js/auto';
 import UserProfile from './pages/User/Account/UserProfile';
+import OrderComplete from './pages/User/Order/OrderComplete';
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -69,10 +71,17 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                               }
                            />
                            <Route
-                              path='/user/view-order-detail/:id'
+                              path='/user/review-order/:id'
                               element={<OrderReview />}
                               lazy={() =>
                                  import('./pages/User/Order/OrderReview')
+                              }
+                           />
+                           <Route
+                              path='/user/order-management/:id'
+                              element={<OrderManagement />}
+                              lazy={() =>
+                                 import('./pages/User/Order/OrderManagement')
                               }
                            />
                            <Route
@@ -140,6 +149,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                               }
                            />
                         </Route>
+                        <Route
+                           path='/user/order-complete'
+                           element={<OrderComplete />}
+                           lazy={() =>
+                              import('./pages/User/Order/OrderComplete')
+                           }
+                        />
                      </Route>
                   </Routes>
                </Provider>

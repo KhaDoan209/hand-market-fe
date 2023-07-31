@@ -692,7 +692,7 @@ const UserProfile = () => {
                                     }}
                                     onChange={formikAddress.handleChange}
                                     variant='flushed'
-                                    placeholder={userDetail.Address?.province}
+                                    placeholder={userDetail?.Address?.province}
                                  />
                                  {formikAddress.errors.province ? (
                                     <p className='text-red-600 ml-1 text-sm flex'>

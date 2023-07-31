@@ -24,7 +24,7 @@ import {
    ModalFooter,
 } from '@chakra-ui/react';
 import emptyCart from '../../../assets/img/empty-cart.png';
-import { createPaymentIntentAction } from '../../../redux/action/payment-action';
+
 import { renderSubTotalPrice } from '../../../utils/utils-functions';
 const ShoppingCart = () => {
    const { dispatch, navigate } = useOutletContext();
@@ -359,15 +359,7 @@ const ShoppingCart = () => {
                   <div className='w-full flex justify-center'>
                      <button
                         onClick={() => {
-                           navigate(
-                              `/user/view-order-detail/${signedInUser?.id}`
-                           );
-                           // dispatch(
-                           //    createPaymentIntentAction(
-                           //       { amount: renderSubTotalPrice() },
-                           //       'cus_OJACupYIuqEFgK'
-                           //    )
-                           // );
+                           navigate(`/user/review-order/${signedInUser?.id}`);
                         }}
                         className='py-2 px-3 mt-5 rounded-md bg-gray-100 text-[#374b73] transition-all duration-200 text-sm shadow-sm shadow-gray-300  hover:bg-[#374b73] hover:border-white hover:text-white'
                      >
