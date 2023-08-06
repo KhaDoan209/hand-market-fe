@@ -1,8 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Button } from 'flowbite-react';
 import Category from '../components/Category';
-import { NavLink, useOutletContext } from 'react-router-dom';
-import { getUserFromLocal } from '../utils/utils-functions';
+import { useOutletContext } from 'react-router-dom';
+import {
+   getUserFromLocal,
+   playNotificationSound,
+} from '../utils/utils-functions';
 import Slider from 'react-slick';
 import { useSelector } from 'react-redux';
 import { getListCategoryAction } from '../redux/action/category-action';
@@ -16,9 +19,8 @@ import NextArrow from '../components/NextArrow';
 import PrevArrow from '../components/PrevArrow';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { getItemCartByUserAction } from '../redux/action/cart-action';
-import { getListProductAction } from '../redux/action/product-action';
-
+import { socket } from '../socket';
+import { getListNotificationAction } from '../redux/action/noti-action';
 const Home = (props) => {
    const { navigate, dispatch } = useOutletContext();
    const userSignedIn = getUserFromLocal();
@@ -52,12 +54,28 @@ const Home = (props) => {
       //       clearInterval(apiCalling);
       //    };
    }, []);
+   useEffect(() => {
+      if (userSignedIn?.id) {
+         socket.emit('join_room', {
+            userId: userSignedIn?.id,
+            role: userSignedIn?.role,
+         });
+         socket.on('new_notification', (data) => {
+            playNotificationSound();
+            dispatch(getListNotificationAction(userSignedIn?.id));
+         });
+         socket.on('read_noti', () => {
+            console.log('read_noti');
+            dispatch(getListNotificationAction(userSignedIn?.id));
+         });
+      }
+   }, []);
    return (
       <>
-         <div className='w-100 banner bg-cover h-[300px] md:h-[500px] lg:h-[750px] mt-1'>
+         <div className='w-full banner bg-cover h-[300px] md:h-[500px] lg:h-[750px] mt-1'>
             <div className='w-1/4 md:w-2/4 flex flex-col justify-center height-inherit ml-10 md:ml-10'>
                <div className='w-4/4 md:w-2/4 lg:w-3/4 mx-auto my-1 md:my-3 lg:my-5'>
-                  <h1 className='text-2xl md:text-5xl lg:text-8xl font-semibold text-left text-color-blue my-5'>
+                  <h1 className='sm:text-2xl md:text-5xl lg:text-8xl font-semibold text-left text-color-blue my-5'>
                      Welcome to the Hand Market
                   </h1>
                </div>
@@ -79,12 +97,12 @@ const Home = (props) => {
                   </Button>
                </div>
             </div>
-            <div className='w-3/4 mx-auto category mb-20 mt-10'>
+            <div className='w-11/12 m-0 md:w-3/4 mx-auto category mb-20 mt-10'>
                <div className='flex mt-10 items-center'>
                   <span className='text-xl origin-center inline-block text-[#FFB4B4] font-bold transform vertical-text rotate-180 mx-2'>
                      Our products
                   </span>
-                  <h2 className='text-5xl mx-2 text-[#374b73] font-bold'>
+                  <h2 className='text-3xl md:text-4xl lg:text-5xl mx-2 text-[#374b73] font-bold'>
                      Fresh ingredients everyday
                   </h2>
                </div>
@@ -98,13 +116,13 @@ const Home = (props) => {
                   })}
                </Slider>
             </div>
-            <div className='container w-3/4 mx-auto'>
+            <div className='container w-11/12 md:w-3/4 mx-auto'>
                <div className='my-10'>
                   <div className='flex my-10 items-center'>
-                     <span className='text-xl origin-center inline-block text-[#FFB4B4] font-bold transform vertical-text rotate-180 mx-2'>
+                     <span className='text-md lg:text-xl origin-center inline-block text-[#FFB4B4] font-bold transform vertical-text rotate-180 mx-2'>
                         Recommendations
                      </span>
-                     <h2 className='text-5xl mx-2 text-[#374b73] font-bold'>
+                     <h2 className='text-3xl lg:text-5xl mx-2 text-[#374b73] font-bold'>
                         Daily Suggestions
                      </h2>
                   </div>
@@ -164,10 +182,10 @@ const Home = (props) => {
                </div>
                <div className='my-10'>
                   <div className='flex my-10 items-center'>
-                     <span className='text-xl origin-center inline-block text-[#FFB4B4] font-bold transform vertical-text rotate-180 mx-2'>
+                     <span className='text-md lg:text-xl origin-center inline-block text-[#FFB4B4] font-bold transform vertical-text rotate-180 mx-2'>
                         Promotions
                      </span>
-                     <h2 className='text-5xl mx-2 text-[#374b73] font-bold'>
+                     <h2 className='text-3xl lg:text-5xl mx-2 text-[#374b73] font-bold'>
                         Hot deals
                      </h2>
                   </div>

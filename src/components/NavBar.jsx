@@ -1,11 +1,11 @@
 'use client';
-import React from 'react';
+import React, { Fragment } from 'react';
 import Logo from '../assets/img/brand-logo.png';
 import { Link, NavLink } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import AvatarNav from './AvatarNav';
-import { Admin, User } from '../utils/variables';
+import { Admin, Shipper, User } from '../utils/variables';
 import NumberCircle from './NumberCircle';
 import {
    ShoppingCartIcon,
@@ -13,9 +13,13 @@ import {
    HomeIcon,
    TagIcon,
 } from '@heroicons/react/24/solid';
-import { Tooltip } from '@chakra-ui/react';
+import { Button, Tooltip } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { getItemCartByUserAction } from '../redux/action/cart-action';
+import Notification from './Notification';
+import { socket } from '../socket';
+import { getListNotificationAction } from '../redux/action/noti-action';
+import InfiniteScroll from 'react-infinite-scroll-component';
 const NavBar = ({ dispatch, navigate, logo }) => {
    const signedInUser = useSelector(
       (state) => state.authReducer?.user_signed_in
@@ -54,11 +58,14 @@ const NavBar = ({ dispatch, navigate, logo }) => {
    const itemInCart = useSelector(
       (state) => state.cartReducer.list_item_in_cart
    );
+   const listNoti = useSelector((state) => state.notiReducer.list_notification);
    const [showMenuMobi, setShowMenuMobi] = useState(true);
    const [menuItem, setMenuItem] = useState(listItem);
    const [windowSize, setWindowSize] = useState({
       width: window.innerWidth,
    });
+   const [showNoti, setShowNoti] = useState(false);
+   const notiRef = useRef();
    useEffect(() => {
       if (signedInUser !== null) {
          let updatedListItems = listItem.filter(
@@ -91,13 +98,24 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                   label: (
                      <Tooltip
                         hasArrow
-                        label='Notification'
+                        label='Shopping cart'
                      >
-                        <BellAlertIcon className='w-7 h-7' />
+                        <div className='z-1'>
+                           <ShoppingCartIcon className='w-7 h-7' />
+                           <div className='absolute top-[-7px] right-[-10px] z-40'>
+                              <NumberCircle number={itemInCart?.data?.length} />
+                           </div>
+                        </div>
                      </Tooltip>
                   ),
-                  link: 'sdasda',
+                  link: `/user/shopping-cart/${signedInUser?.id}`,
                },
+            ];
+            const navUser = updatedListItems.slice(0, 1).concat(userNav);
+            setMenuItem(navUser);
+         }
+         if (signedInUser?.role === Shipper) {
+            const shipperNav = [
                {
                   label: (
                      <Tooltip
@@ -115,12 +133,14 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                   link: `/user/shopping-cart/${signedInUser?.id}`,
                },
             ];
-            const navUser = updatedListItems.slice(0, 1).concat(userNav);
-            setMenuItem(navUser);
+            const navShipper = updatedListItems.slice(0, 1).concat(shipperNav);
+            setMenuItem(navShipper);
          }
       }
-   }, [itemInCart?.data?.length]);
-
+   }, [
+      itemInCart?.data?.length,
+      listNoti?.filter((notification) => !notification.is_read).length,
+   ]);
    useEffect(() => {
       const handleResize = () => {
          setWindowSize({
@@ -132,7 +152,6 @@ const NavBar = ({ dispatch, navigate, logo }) => {
          window.removeEventListener('resize', handleResize);
       };
    }, []);
-
    useEffect(() => {
       if (windowSize.width > 768) {
          setShowMenuMobi(true);
@@ -140,22 +159,33 @@ const NavBar = ({ dispatch, navigate, logo }) => {
          setShowMenuMobi(false);
       }
    }, [windowSize.width]);
-
    useEffect(() => {
-      if (signedInUser) {
+      if (signedInUser?.id) {
          dispatch(getItemCartByUserAction(signedInUser?.id));
+         dispatch(getListNotificationAction(signedInUser?.id));
       }
    }, []);
+   useEffect(() => {
+      document.addEventListener('click', handleClickOutside);
+      return () => {
+         document.removeEventListener('click', handleClickOutside);
+      };
+   }, []);
 
+   const handleClickOutside = (event) => {
+      if (notiRef.current && !notiRef.current.contains(event.target)) {
+         setShowNoti(false);
+      }
+   };
    const showActiveStyle = () => {
       return ({ isActive }) =>
          isActive
             ? 'block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent font-normal font-semibold active-link'
-            : 'block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent  font-normal font-semibold';
+            : 'block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent font-normal font-semibold';
    };
 
    return (
-      <nav className='bg-white border-gray-200 shadow-sm shadow-gray-400'>
+      <nav className='bg-white border-gray-200 shadow-sm shadow-gray-400 w-full'>
          <div className='w-3/4 mx-auto py-3'>
             <div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto'>
                {logo ? (
@@ -184,8 +214,8 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                {showMenuMobi ? (
                   <div
                      className={` md:w-auto md:order-1 transition-all duration-300 ${
-                        showMenuMobi ? 'h-auto w-full' : 'h-0'
-                     } overflow-hidden`}
+                        showMenuMobi ? 'h-auto w-full' : 'h-0 overflow-visible'
+                     } `}
                      id='nav-mobile'
                   >
                      <ul className='flex items-center flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white '>
@@ -195,17 +225,79 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                                  key={Math.random()}
                                  className='my-4 md:my-0 relative'
                               >
-                                 <NavLink
-                                    to={item.link}
-                                    className={showActiveStyle()}
-                                    aria-current='page'
-                                 >
-                                    {item.label}
-                                 </NavLink>
+                                 {item.link !== '' ? (
+                                    <NavLink
+                                       to={item.link}
+                                       className={showActiveStyle()}
+                                       aria-current='page'
+                                    >
+                                       {item.label}
+                                    </NavLink>
+                                 ) : (
+                                    <></>
+                                 )}
                               </li>
                            );
                         })}
-
+                        {signedInUser?.id ? (
+                           <div
+                              ref={notiRef}
+                              className='relative'
+                           >
+                              <NavLink className='block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent font-normal'>
+                                 <Tooltip
+                                    hasArrow
+                                    label='Notification'
+                                 >
+                                    <div
+                                       onClick={() => {
+                                          setShowNoti(!showNoti);
+                                       }}
+                                    >
+                                       <BellAlertIcon className='w-7 h-7' />
+                                    </div>
+                                 </Tooltip>
+                              </NavLink>
+                              <div className='absolute top-[-8px] right-[-10px] z-40'>
+                                 <NumberCircle
+                                    number={
+                                       listNoti?.filter(
+                                          (notification) =>
+                                             !notification.is_read
+                                       ).length
+                                    }
+                                 />
+                              </div>
+                              <div className='absolute z-50 top-[40px] right-[-38px]'>
+                                 <div
+                                    className={`flex justify-end duration-150 transition-all ${
+                                       showNoti ? 'w-11/12' : 'opacity-0'
+                                    } `}
+                                 >
+                                    <div className='arrow-up'></div>
+                                 </div>
+                                 <div
+                                    id='notiDropdown'
+                                    className={`bg-white duration-200 transition-all shadow-sm shadow-gray-400 rounded-md overflow-y-scroll ${
+                                       showNoti
+                                          ? 'h-[500px] w-[25rem]'
+                                          : 'h-0 w-[25rem]'
+                                    }`}
+                                 >
+                                    {showNoti &&
+                                       listNoti?.map((item) => {
+                                          return (
+                                             <Fragment key={Math.random()}>
+                                                <Notification item={item} />
+                                             </Fragment>
+                                          );
+                                       })}
+                                 </div>
+                              </div>
+                           </div>
+                        ) : (
+                           <></>
+                        )}
                         <AvatarNav
                            navigate={navigate}
                            dispatch={dispatch}

@@ -42,10 +42,10 @@ const OrderReview = () => {
    const [shipping, setShipping] = useState('Standard');
    const [shippingPercent, setShippingPercent] = useState('2');
    const [selectCard, setSelectCard] = useState(
-      listSavedCards?.length > 0 ? listSavedCards[0].last4 : null
+      listSavedCards?.length > 0 ? listSavedCards[0]?.last4 : null
    );
    const [cardId, setCardId] = useState(
-      listSavedCards?.length > 0 ? listSavedCards[0].card_id : null
+      listSavedCards?.length > 0 ? listSavedCards[0]?.card_id : null
    );
    const [itemToCheckOut, setItemToCheckOut] = useState([]);
    useEffect(() => {
@@ -128,6 +128,7 @@ const OrderReview = () => {
          card_id: cardId,
          product: productToCheckout,
          user_id: userSignedIn?.id,
+         shipping_method: shipping,
       };
       dispatch(createNewOrderAction(navigate, newOrder));
    };

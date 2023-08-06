@@ -387,7 +387,7 @@ const UserProfile = () => {
                   <ModalBody className='w-full'>
                      <CardElement
                         options={CARD_ELEMENT_OPTIONS}
-                        className='py-4 px-2 border-2 rounded-md font-bold '
+                        className='py-4 px-2 border-2 rounded-md font-bold'
                      />
                   </ModalBody>
                   <ModalCloseButton />

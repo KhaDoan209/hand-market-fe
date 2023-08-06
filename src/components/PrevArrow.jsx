@@ -5,7 +5,7 @@ const PrevArrow = (props) => {
 
    return (
       <div
-         className='rounded-full text-[#374b73] hover:bg-[#374b73] hover:text-white absolute top-[50%] left-[-5%] hover:cursor-pointer transition-all duration-200 p-1 border-2 border-gray-500'
+         className='rounded-full text-[#374b73] hover:bg-[#374b73] hover:text-white absolute top-[50%] left-0 md:left-[-5%] hover:cursor-pointer transition-all duration-200 p-1 border-2 border-gray-500 z-40'
          onClick={onClick}
       >
          <ChevronLeftIcon className='w-5 h-5' />

@@ -59,8 +59,9 @@ const OrderCard = ({ item }) => {
             <div className='w-2/5 mx-4 text-[#374b73]'>
                <h2 className='tracking-wider text-black'>PAYMENT STATUS</h2>
                <h2 className='font-bold text-green-500'>
-                  {item?.payment_status}
+                  {item?.payment_status.toUpperCase()}
                </h2>
+               <h1>{moment(item?.expected_delivery_date).format('LLLL')}</h1>
             </div>
          </div>
       </div>

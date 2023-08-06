@@ -29,12 +29,14 @@ const HomeTemplate = () => {
                href='http://mysite.com/example'
             />
          </Helmet>
-         <NavBar
-            logo={true}
-            navigate={navigate}
-            dispatch={dispatch}
-         />
-         <Outlet context={{ navigate, dispatch }} />
+         <div className='container max-w-full'>
+            <NavBar
+               logo={true}
+               navigate={navigate}
+               dispatch={dispatch}
+            />
+            <Outlet context={{ navigate, dispatch }} />
+         </div>
       </>
    );
 };

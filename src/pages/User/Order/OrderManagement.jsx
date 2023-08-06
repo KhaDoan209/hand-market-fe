@@ -21,7 +21,6 @@ const OrderManagement = () => {
          <h1 className='text-[#374b73] text-4xl font-bold mb-5'>Your Orders</h1>
          {listOrder?.data?.length > 0 ? (
             <>
-               {' '}
                {listOrder?.data.map((item) => {
                   return (
                      <div

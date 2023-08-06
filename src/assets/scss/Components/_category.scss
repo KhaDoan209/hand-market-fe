@@ -17,3 +17,20 @@
       }
    }
 }
+@include responsive('xtra-small') {
+   .category {
+      .slick-slider {
+         .slick-dots {
+            bottom: -15px;
+            li {
+               margin: 0;
+               button {
+                  &::before {
+                     font-size: 10px;
+                  }
+               }
+            }
+         }
+      }
+   }
+}

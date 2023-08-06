@@ -134,9 +134,9 @@ const ProductCard = ({ item, type, letter_length }) => {
          case ProductType.discount:
             return (
                <>
-                  <div className='max-w-sm w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer'>
+                  <div className='max-w-sm w-9/12 mx-auto md:w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer min-h-[420px] h-fit'>
                      <img
-                        className='rounded-t-lg w-full object-contain'
+                        className='rounded-t-lg w-full object-cover'
                         src={item.image}
                      />
                      <div className='p-5 relative'>
@@ -160,9 +160,9 @@ const ProductCard = ({ item, type, letter_length }) => {
          case ProductType.purchase:
             return (
                <>
-                  <div className='max-w-sm w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer '>
+                  <div className='max-w-sm w-9/12 mx-auto md:w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer min-h-[420px] h-fit'>
                      <img
-                        className='rounded-t-lg w-full object-contain'
+                        className='rounded-t-lg w-full object-cover'
                         src={item.image}
                      />
 
@@ -175,7 +175,7 @@ const ProductCard = ({ item, type, letter_length }) => {
                         <div className='mb-3'>{renderProductPrice()}</div>
                         <div className='flex items-baseline'>
                            <ShoppingBagIcon className='w-5 h-5 text-[#374b73]' />
-                           <span className='text-xl font-bold text-red-500 font-semiboldss mx-1'>
+                           <span className='text-xl font-bold text-red-500 mx-1'>
                               {item?.purchase}
                            </span>
                            <span className='text-gray-500'>purchases</span>
@@ -194,9 +194,9 @@ const ProductCard = ({ item, type, letter_length }) => {
          case ProductType.normal:
             return (
                <>
-                  <div className='max-w-sm w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer'>
+                  <div className='max-w-sm w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer min-h-[420px] h-fit'>
                      <img
-                        className='rounded-t-lg w-full object-contain'
+                        className='rounded-t-lg w-full object-cover'
                         src={item.image}
                      />
                      <div className='p-5 relative'>
@@ -262,7 +262,7 @@ const ProductCard = ({ item, type, letter_length }) => {
          navigate('/login');
       }
    };
-   return <div>{renderComponent()}</div>;
+   return <>{renderComponent()}</>;
 };
 
 export default ProductCard;

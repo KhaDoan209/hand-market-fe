@@ -20,6 +20,7 @@ import ShoppingCart from './pages/User/Cart/ShoppingCart';
 import Product from './pages/User/Product/Product';
 import OrderReview from './pages/User/Order/OrderReview';
 import OrderManagement from './pages/User/Order/OrderManagement';
+import UserProductDetail from './pages/User/Product/UserProductDetail';
 import { Provider } from 'react-redux';
 import { persistor, store } from './redux/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -68,6 +69,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                               element={<Product />}
                               lazy={() =>
                                  import('./pages/User/Product/Product')
+                              }
+                           />
+                           <Route
+                              path='/user/view-product-detail/:id'
+                              element={<UserProductDetail />}
+                              lazy={() =>
+                                 import(
+                                    './pages/User/Product/UserProductDetail'
+                                 )
                               }
                            />
                            <Route
