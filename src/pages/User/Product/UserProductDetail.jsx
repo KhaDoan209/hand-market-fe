@@ -1,0 +1,217 @@
+import React, { Fragment, useEffect, useState } from 'react';
+import { Button, Input, Textarea } from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
+import {
+   changeProductImageAction,
+   getProductDetailAction,
+   updateProductInformationAction,
+} from '../../../redux/action/product-action';
+import { useSelector } from 'react-redux';
+import {
+   calculatePriceAfterDiscount,
+   convertToCurrency,
+} from '../../../utils/utils-functions';
+import star from '../../../assets/svg/rate-star.svg';
+import emptyStar from '../../../assets/svg/rate-empty-star.svg';
+import moment from 'moment/moment';
+import { getListDiscountAction } from '../../../redux/action/discount-action';
+
+const UserProductDetail = () => {
+   const { id } = useParams();
+   const { dispatch, navigate } = useOutletContext();
+   const product_detail = useSelector(
+      (state) => state.productReducer.product_detail
+   );
+   const discount = useSelector((state) => state.discountReducer.list_discount);
+   useEffect(() => {
+      dispatch(getProductDetailAction(id));
+      dispatch(getListDiscountAction());
+   }, []);
+   const renderRate = () => {
+      if (product_detail?.stars > 0) {
+         const stars = [];
+         for (let i = 0; i < product_detail?.stars; i++) {
+            stars.push(
+               <Fragment key={Math.random()}>
+                  <img
+                     src={star}
+                     className='w-7 h-7 mx-1'
+                  />
+               </Fragment>
+            );
+         }
+         return stars;
+      } else {
+         const stars = [];
+         for (let i = 0; i < 5; i++) {
+            stars.push(
+               <Fragment key={Math.random()}>
+                  <img
+                     src={emptyStar}
+                     className='w-7 h-7 mx-1'
+                  />
+               </Fragment>
+            );
+         }
+         return stars;
+      }
+   };
+   return (
+      <div className='w-10/12 mx-auto product-detail-page bg-white mt-10 mb-20 px-10 py-14 rounded-md shadow-lg shadow-gray-300'>
+         <div className='grid grid-cols-12'>
+            <div className='col-span-5'>
+               <div className='w-full h-full border-r border-gray-200 flex flex-col justify-start relative'>
+                  <img
+                     className='pr-2 h-[400px] w-full object-cover xl:object-contain'
+                     src={
+                        product_detail?.image ? product_detail?.image : 'image'
+                     }
+                  />
+               </div>
+            </div>
+            <div className='col-span-7 ml-5 relative'>
+               <div className='bg-white px-5 py-3 rounded-md '>
+                  <div className='my-2 flex justify-between items-stretch'>
+                     <div className='w-3/5 mx-2'>
+                        <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                           Name:
+                        </h1>
+                        <h1 className='text-3xl font-bold text-[#374b73]'>
+                           {product_detail?.name}
+                        </h1>
+                     </div>
+
+                     <div className='my-2 w-2/5 mx-2'>
+                        <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                           Rate:
+                        </h1>
+                        <div className='flex'>{renderRate()}</div>
+                     </div>
+                  </div>
+                  <div className='my-4 mx-2'>
+                     <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                        Description:
+                     </h1>
+
+                     <p className='text-md text-[#374b73] text-justify'>
+                        {product_detail?.description}
+                     </p>
+                  </div>
+                  <div className='mx-2'>
+                     <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                        Brand:
+                     </h1>
+                     <h1 className='text-2xl font-semibold text-[#374b73] text-justify'>
+                        {product_detail?.brand}
+                     </h1>
+                  </div>
+                  <div className='my-10 items-center grid grid-cols-12'>
+                     <div className='col-span-12 flex my-2'>
+                        <div className='my-2 w-2/4 mx-2'>
+                           <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                              Category:
+                           </h1>
+                           <h2 className='text-xl font-semibold text-[#5a6e8c]'>
+                              {product_detail?.Category?.name}
+                           </h2>
+                        </div>
+                        <div className='my-2 w-2/4 mx-2'>
+                           <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                              Type:
+                           </h1>
+                           <h2 className='text-xl font-semibold text-[#5a6e8c]'>
+                              {product_detail?.type}
+                           </h2>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div className='col-span-12 my-10 h-[1px] bg-gray-100'></div>
+            <div className='col-span-12 bg-white px-5 rounded-md '>
+               <div className='flex my-2'>
+                  <div className='my-2 w-1/4 mx-2'>
+                     <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                        Price:
+                     </h1>
+
+                     <h2 className='text-xl font-semibold text-red-500'>
+                        {convertToCurrency(Number(product_detail?.price))}
+                     </h2>
+                  </div>
+                  <div className='my-2 w-1/4 mx-2'>
+                     <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                        Discounted Price:
+                     </h1>
+                     <h2 className='text-xl font-semibold text-green-400'>
+                        {calculatePriceAfterDiscount(
+                           product_detail?.price,
+                           product_detail?.Discount?.percentage
+                        )}
+                     </h2>
+                  </div>
+                  <div className='my-2 w-1/4 mx-2'>
+                     <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                        Discount:
+                     </h1>
+                     <h2 className='text-xl font-semibold text-orange-300'>
+                        {product_detail?.Discount?.percentage} %
+                     </h2>
+                  </div>
+                  <div className='my-2 w-1/4 mx-2'>
+                     <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                        Imported At:
+                     </h1>
+                     <h2 className='text-lg font-semibold text-black'>
+                        {moment(product_detail?.created_at).format('LLL')}
+                     </h2>
+                  </div>
+               </div>
+               <div className='flex my-2'>
+                  <div className='my-2 w-1/4 mx-2'>
+                     <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                        Quantity:
+                     </h1>
+                     <h2 className='text-xl font-semibold text-black'>
+                        {product_detail?.quantity} pcs
+                     </h2>
+                  </div>
+                  <div className='my-2 w-1/4 mx-2'>
+                     <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                        Status:
+                     </h1>
+                     <h2
+                        className={`text-xl font-semibold ${
+                           product_detail?.in_stock
+                              ? 'text-green-400'
+                              : 'text-red-500'
+                        }`}
+                     >
+                        {product_detail?.in_stock ? 'In stock' : 'Out of stock'}
+                     </h2>
+                  </div>
+                  <div className='my-2 w-1/4 mx-2'>
+                     <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                        Views:
+                     </h1>
+                     <h2 className='text-xl font-semibold text-black'>
+                        {product_detail?.views}
+                     </h2>
+                  </div>
+                  <div className='my-2 w-1/4 mx-2'>
+                     <h1 className='font-mono font-bold text-gray-500 text-lg'>
+                        Purchases:
+                     </h1>
+                     <h2 className='bg-transparent text-xl font-semibold text-black'>
+                        {product_detail?.purchase}
+                     </h2>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   );
+};
+
+export default UserProductDetail;

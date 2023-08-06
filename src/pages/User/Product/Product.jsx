@@ -22,7 +22,7 @@ const Product = () => {
       };
    }, []);
    return (
-      <div className='flex justify-between w-10/12 mx-auto'>
+      <div className='lg:flex justify-between w-full md:w-11/12 lg:w-10/12 mx-auto'>
          <div className='w-1/4'>dasdas</div>
          <InfiniteScroll
             scrollThreshold='200px'
@@ -55,7 +55,7 @@ const Product = () => {
                      return (
                         <div
                            key={Math.random()}
-                           className='col-span-3'
+                           className='col-span-12 md:col-span-6 lg:col-span-3'
                         >
                            <ProductCard
                               item={item}

@@ -85,3 +85,10 @@ export const convertToCurrency = (number) => {
 export const countVAT = (price) => {
    return (price * 8) / 100;
 };
+
+export const playNotificationSound = () => {
+   const notificationSound = document.getElementById('notificationSound');
+   if (notificationSound) {
+      return notificationSound.play();
+   }
+};

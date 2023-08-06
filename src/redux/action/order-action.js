@@ -39,7 +39,7 @@ export const createNewOrderAction = (
          localStorage.removeItem('listCart');
          setTimeout(() => {
             navigate('/user/order-complete');
-         }, 500);
+         }, 300);
          const cart = await getItemCartByUserService(
             user_id,
             pageNumber,
