@@ -42,6 +42,8 @@ import {
    getListSavedCardAction,
 } from '../../../redux/action/card-action';
 import Slider from 'react-slick';
+import { Shipper, User } from '../../../utils/variables';
+import { isMobile } from 'react-device-detect';
 const UserProfile = () => {
    const { dispatch, navigate } = useOutletContext();
    const { id } = useParams();
@@ -432,7 +434,7 @@ const UserProfile = () => {
                   </ModalHeader>
                   <ModalBody className='w-full'>
                      <img
-                        className='w-96 mx-auto h-96 object-cover rounded-full'
+                        className='w-64 lg:w-96 mx-auto h-64 lg:h-96 object-cover rounded-full'
                         src={uploadImg !== null ? uploadImg : ''}
                      />
                   </ModalBody>
@@ -511,7 +513,7 @@ const UserProfile = () => {
    };
    return (
       <div className='w-10/12 mx-auto'>
-         <div className='grid grid-cols-12 relative z-0'>
+         <div className='mt-10 sm:mt-0 grid grid-cols-12 relative z-0'>
             <div className='col-span-12 xl:col-span-5 relative z-[5] h-fit xl:h-screen'>
                <div className='w-11/12 lg:w-9/12 mx-auto flex flex-col my-5'>
                   <div className='w-full bg-white border border-gray-200 rounded-lg shadow-xl shadow-gray-300 backdrop-filter h-fit'>
@@ -562,7 +564,7 @@ const UserProfile = () => {
                            />
                            <label
                               htmlFor='uploadAvatar'
-                              className='bg-white rounded-md shadow-md text-[#374b73] shadow-gray-300 hover:bg-[#374b73] hover:text-white p-2 top-0 right-5 xl:right-[-20%] absolute cursor-pointer transition-all duration-300'
+                              className='bg-white rounded-md shadow-md text-[#374b73] shadow-gray-300 hover:bg-[#374b73] hover:text-white p-2 top-[-20px] right-0 md:top-0 md:right-5 xl:right-[-20%] absolute cursor-pointer transition-all duration-300'
                            >
                               <CameraIcon className='w-4 h-4' />
                            </label>
@@ -791,59 +793,68 @@ const UserProfile = () => {
                   </div>
                </div>
             </div>
-            <div className='col-span-12 xl:col-span-7'>
-               <div className='w-11/12 mx-auto my-5 h-fit rounded-md bg-gray-white shadow-lg shadow-gray-300 py-5 px-5 bg-white'>
-                  <div className='text-[#5a6e8c] font-bold text-lg lg:text-2xl flex items-center justify-between'>
-                     <div className='flex items-center'>
-                        <CreditCardIcon className='h-4 w-4 lg:h-6 lg:w-6 mr-0 lg:mr-2' />
-                        <h2>Card Information</h2>
+            {isMobile && userDetail?.role === Shipper ? (
+               <div className='h-[5rem]'></div>
+            ) : (
+               <></>
+            )}
+            {userDetail?.role === User ? (
+               <div className='col-span-12 xl:col-span-7'>
+                  <div className='w-11/12 mx-auto my-5 h-fit rounded-md bg-gray-white shadow-lg shadow-gray-300 py-5 px-5 bg-white'>
+                     <div className='text-[#5a6e8c] font-bold text-lg lg:text-2xl flex items-center justify-between'>
+                        <div className='flex items-center'>
+                           <CreditCardIcon className='h-4 w-4 lg:h-6 lg:w-6 mr-0 lg:mr-2' />
+                           <h2>Card Information</h2>
+                        </div>
+                        <div
+                           onClick={() => {
+                              onOpenUpdateCard();
+                           }}
+                           className='p-2 cursor-pointer hover:bg-[#374b73] rounded-md hover:text-white transition-all duration-300'
+                        >
+                           <PencilSquareIcon className='h-4 w-4 lg:h-6 lg:w-6' />
+                        </div>
                      </div>
-                     <div
-                        onClick={() => {
-                           onOpenUpdateCard();
-                        }}
-                        className='p-2 cursor-pointer hover:bg-[#374b73] rounded-md hover:text-white transition-all duration-300'
-                     >
-                        <PencilSquareIcon className='h-4 w-4 lg:h-6 lg:w-6' />
-                     </div>
-                  </div>
 
-                  <div className='py-5 overflow-scroll sm:overflow-visible'>
-                     <div className='mx-auto payment-card'>
-                        {listSavedCards?.length > 0 ? (
-                           <Slider
-                              infinite={false}
-                              speed={1000}
-                              slidesToShow={1}
-                              slidesToScroll={1}
-                              autoplay={false}
-                              pauseOnHover={true}
-                              swiper={true}
-                              dots={true}
-                           >
-                              {listSavedCards.map((item) => {
-                                 return (
-                                    <div
-                                       className='px-3 my-5'
-                                       key={Math.random()}
-                                    >
-                                       <PaymentCard
-                                          card={item}
-                                          user={userDetail}
-                                       />
-                                    </div>
-                                 );
-                              })}
-                           </Slider>
-                        ) : (
-                           <h1 className='text-center text-2xl text-[#374b73] font-semibold'>
-                              No card added yet
-                           </h1>
-                        )}
+                     <div className='py-5 overflow-scroll sm:overflow-visible'>
+                        <div className='mx-auto payment-card'>
+                           {listSavedCards?.length > 0 ? (
+                              <Slider
+                                 infinite={false}
+                                 speed={1000}
+                                 slidesToShow={1}
+                                 slidesToScroll={1}
+                                 autoplay={false}
+                                 pauseOnHover={true}
+                                 swiper={true}
+                                 dots={true}
+                              >
+                                 {listSavedCards.map((item) => {
+                                    return (
+                                       <div
+                                          className='px-3 my-5'
+                                          key={Math.random()}
+                                       >
+                                          <PaymentCard
+                                             card={item}
+                                             user={userDetail}
+                                          />
+                                       </div>
+                                    );
+                                 })}
+                              </Slider>
+                           ) : (
+                              <h1 className='text-center text-2xl text-[#374b73] font-semibold'>
+                                 No card added yet
+                              </h1>
+                           )}
+                        </div>
                      </div>
                   </div>
                </div>
-            </div>
+            ) : (
+               <></>
+            )}
          </div>
       </div>
    );

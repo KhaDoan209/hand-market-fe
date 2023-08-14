@@ -14,3 +14,43 @@ export const createNewOrderService = (data) => {
       error: ({ message }) => `${message.toString()}`,
    });
 };
+
+export const getListPendingDeliveryOrderService = () => {
+   return http.get(`/order/get-list-pending-delivery-order`);
+};
+
+export const getListWaitingDoneOrderService = (shipperId) => {
+   return http.get(`/order/get-list-waiting-done-order/${shipperId}`);
+};
+
+export const getOrderInProgressService = (shipperId) => {
+   return http.get(`/order/get-order-in-progress/${shipperId}`);
+};
+
+export const getOrderDetailService = (orderId) => {
+   return http.get(`/order/get-order-detail/${orderId}`);
+};
+
+export const takeOrderService = (shipperId, orderId) => {
+   return toast.promise(
+      http.post(
+         `/order/take-an-order/?shipperId=${shipperId}&orderId=${orderId}`
+      ),
+      {
+         loading: 'Wait a sec!',
+         success: (message) => `${message}`,
+         error: (error) => `${error}`,
+      },
+      {
+         duration: 1000,
+      }
+   );
+};
+
+export const changeOrderStatusService = (data) => {
+   return toast.promise(http.post(`/order/change-order-status`, data), {
+      loading: 'Wait a sec!',
+      success: (result) => `${result.message}`,
+      error: (error) => `${error.message}`,
+   });
+};

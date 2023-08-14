@@ -7,6 +7,10 @@ import { NotificationType } from '../enums/NotificationType';
 import { changeReadingStatusAction } from '../redux/action/noti-action';
 import { getProductDetailAction } from '../redux/action/product-action';
 import orderNotiImg from '../assets/img/order-noti.png';
+import deliveryTruck from '../assets/img/delivery_truck.png';
+import shipperImg from '../assets/img/shipper.png';
+import holdingBox from '../assets/img/holding_box.png';
+import { getOrderDetailAction } from '../redux/action/order-action';
 const Notification = ({ item }) => {
    const navigate = useNavigate();
    const dispatch = useDispatch();
@@ -46,7 +50,7 @@ const Notification = ({ item }) => {
                >
                   <div className='py-3 flex items-center'>
                      <img
-                        className='w-16 h-16 rounded-sm object-cover'
+                        className='w-20 h-20 rounded-sm object-contain'
                         src={item?.Product?.image}
                      />
                      <div className='mx-2'>
@@ -72,16 +76,14 @@ const Notification = ({ item }) => {
                      dispatch(
                         changeReadingStatusAction(signedInUser.id, item.id)
                      );
-                     // if (item?.link !== null) {
-                     //    dispatch(getProductDetailAction(Number(item?.link)));
-                     //    navigate(`user/view-product-detail/${item?.link}`);
-                     // }
+                     dispatch(getOrderDetailAction(item?.order_id));
+                     navigate(`user/order-detail/${item?.link}`);
                   }}
                   className='bg-white px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 border-b border-gray-300'
                >
                   <div className='py-3 flex items-center'>
                      <img
-                        className='w-16 h-16 rounded-sm object-cover'
+                        className='w-20 h-20 rounded-sm object-contain'
                         src={orderNotiImg}
                      />
                      <div className='mx-2'>
@@ -93,6 +95,105 @@ const Notification = ({ item }) => {
                      <div>
                         {item?.is_read ? (
                            ''
+                        ) : (
+                           <div className='h-3 w-3 rounded-full bg-[#ffb4b4]'></div>
+                        )}
+                     </div>
+                  </div>
+               </div>
+            );
+         case NotificationType.SHIPMENT_OUT_FOR_DELIVERY:
+            return (
+               <div
+                  onClick={() => {
+                     dispatch(
+                        changeReadingStatusAction(signedInUser.id, item.id)
+                     );
+                     dispatch(getOrderDetailAction(item?.order_id));
+                     navigate(`user/order-detail/${item?.link}`);
+                  }}
+                  className='bg-white px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 border-b border-gray-300'
+               >
+                  <div className='py-3 flex items-center'>
+                     <img
+                        className='w-20 h-20 rounded-sm object-contain'
+                        src={shipperImg}
+                     />
+                     <div className='mx-2'>
+                        <div className='text-[#374b73]'>
+                           {renderNotiContent()}
+                        </div>
+                        <div className='flex'>{renderTime()}</div>
+                     </div>
+                     <div>
+                        {item?.is_read ? (
+                           ''
+                        ) : (
+                           <div className='h-3 w-3 rounded-full bg-[#ffb4b4]'></div>
+                        )}
+                     </div>
+                  </div>
+               </div>
+            );
+         case NotificationType.ORDER_RECEIVED:
+            return (
+               <div
+                  onClick={() => {
+                     dispatch(
+                        changeReadingStatusAction(signedInUser.id, item.id)
+                     );
+                     dispatch(getOrderDetailAction(item?.order_id));
+                     navigate(`user/order-detail/${item?.link}`);
+                  }}
+                  className='bg-white px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 border-b border-gray-300'
+               >
+                  <div className='py-3 flex items-center'>
+                     <img
+                        className='w-20 h-20 rounded-sm object-contain'
+                        src={deliveryTruck}
+                     />
+                     <div className='mx-2'>
+                        <div className='text-[#374b73]'>
+                           {renderNotiContent()}
+                        </div>
+                        <div className='flex'>{renderTime()}</div>
+                     </div>
+                     <div>
+                        {item?.is_read ? (
+                           ''
+                        ) : (
+                           <div className='h-3 w-3 rounded-full bg-[#ffb4b4]'></div>
+                        )}
+                     </div>
+                  </div>
+               </div>
+            );
+         case NotificationType.ORDER_DELIVERED:
+            return (
+               <div
+                  onClick={() => {
+                     dispatch(
+                        changeReadingStatusAction(signedInUser.id, item.id)
+                     );
+                     dispatch(getOrderDetailAction(item?.order_id));
+                     navigate(`user/order-detail/${item?.link}`);
+                  }}
+                  className='bg-white px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 border-b border-gray-300'
+               >
+                  <div className='py-3 flex items-center'>
+                     <img
+                        className='w-20 h-20 rounded-sm object-contain'
+                        src={holdingBox}
+                     />
+                     <div className='mx-2'>
+                        <div className='text-[#374b73]'>
+                           {renderNotiContent()}
+                        </div>
+                        <div className='flex'>{renderTime()}</div>
+                     </div>
+                     <div>
+                        {item?.is_read ? (
+                           <></>
                         ) : (
                            <div className='h-3 w-3 rounded-full bg-[#ffb4b4]'></div>
                         )}

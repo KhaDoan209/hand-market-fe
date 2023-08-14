@@ -4,7 +4,6 @@ import moment from 'moment/moment';
 import { convertToCurrency } from '../utils/utils-functions';
 
 const OrderCard = ({ item }) => {
-   console.log(item);
    return (
       <div className='border border-gray-300 rounded-lg'>
          <div className='flex w-full justify-between px-2 py-3 border-b border-gray-300 bg-gray-100 rounded-t-lg'>
@@ -12,7 +11,10 @@ const OrderCard = ({ item }) => {
                <h1 className='tracking-wide '>
                   ORDER #<b>{item?.order_code}</b>
                </h1>
-               <Link className='text-md cursor-pointer hover:underline'>
+               <Link
+                  to={`/user/order-detail/${item?.id}`}
+                  className='text-md cursor-pointer hover:underline'
+               >
                   View order detail
                </Link>
             </div>
