@@ -17,7 +17,7 @@ const AvatarNav = ({ dispatch, navigate }) => {
    });
    const isUserExisted = getUserFromLocal();
    const userDetail = useSelector((state) => state.authReducer.user_signed_in);
-   let [isOpen, setIsOpen] = useState(false);
+   const [isOpen, setIsOpen] = useState(false);
    useEffect(() => {
       const handleResize = () => {
          setWindowSize({
@@ -53,7 +53,7 @@ const AvatarNav = ({ dispatch, navigate }) => {
                   onClick={() => {
                      setOpenMenu(!openMenu);
                   }}
-                  className='w-11 h-11 rounded-full object-cover'
+                  className='w-12 h-12 rounded-full object-cover'
                   src={userDetail?.avatar ? userDetail.avatar : alterAvatar}
                   alt='user photo'
                />
@@ -66,7 +66,7 @@ const AvatarNav = ({ dispatch, navigate }) => {
             <div className='absolute z-50 md:top-16 py-2 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-lg shadow-gray-800  w-fit md:min-w-[200px]'>
                <div className='px-4 py-3 '>
                   <div className='border-b-gray-300 border-b-[1px] pb-5 block'>
-                     <span className='inline text-lg font-bold cursor-pointer hover:text-opacity-90 text-[#374b73] '>
+                     <span className='inline text-lg font-bold cursor-pointer hover:text-opacity-90 text-[#374b73]'>
                         {userDetail?.first_name}&nbsp;
                         {userDetail?.last_name}
                      </span>
@@ -93,7 +93,6 @@ const AvatarNav = ({ dispatch, navigate }) => {
                         <NavLink
                            to={`/user/order-management/${userDetail?.id}`}
                            onClick={() => {
-                              // dispatch()
                               setOpenMenu(false);
                            }}
                            className='flex w-full text-[#374b73] hover:bg-gray-100 rounded-lg py-2 px-2'

@@ -118,7 +118,7 @@ const Login = (props) => {
             </form>
 
             <div className='w-full flex flex-wrap mt-4 mb-4 justify-center text-sm md:text-md'>
-               <h4 className='text-white font-bold md:text-[#374b73] md:font-normal'>
+               <h4 className='text-gray-400 font-bold md:text-[#374b73] md:font-normal'>
                   Not have an account ?
                </h4>
                <Link

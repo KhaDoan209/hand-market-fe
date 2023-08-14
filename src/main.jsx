@@ -1,6 +1,7 @@
 import React from 'react';
 import './assets/scss/main.scss';
 import './index.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import App from './App.jsx';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -21,13 +22,17 @@ import Product from './pages/User/Product/Product';
 import OrderReview from './pages/User/Order/OrderReview';
 import OrderManagement from './pages/User/Order/OrderManagement';
 import UserProductDetail from './pages/User/Product/UserProductDetail';
+import Notification from './pages/Shipper/Notification/Notification';
+import OrderList from './pages/Shipper/Order/OrderList';
+import UserProfile from './pages/User/Account/UserProfile';
+import OrderComplete from './pages/User/Order/OrderComplete';
+import OrderDetailUser from './pages/User/Order/OrderDetailUser';
 import { Provider } from 'react-redux';
 import { persistor, store } from './redux/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import Chart from 'chart.js/auto';
-import UserProfile from './pages/User/Account/UserProfile';
-import OrderComplete from './pages/User/Order/OrderComplete';
+
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -53,46 +58,38 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                            <Route
                               path='/user/user-profile/:id'
                               element={<UserProfile />}
-                              lazy={() =>
-                                 import('./pages/User/Account/UserProfile')
-                              }
                            />
                            <Route
                               path='/user/shopping-cart/:id'
                               element={<ShoppingCart />}
-                              lazy={() =>
-                                 import('./pages/User/Cart/ShoppingCart')
-                              }
                            />
                            <Route
                               path='/user/view-product'
                               element={<Product />}
-                              lazy={() =>
-                                 import('./pages/User/Product/Product')
-                              }
                            />
                            <Route
                               path='/user/view-product-detail/:id'
                               element={<UserProductDetail />}
-                              lazy={() =>
-                                 import(
-                                    './pages/User/Product/UserProductDetail'
-                                 )
-                              }
                            />
                            <Route
                               path='/user/review-order/:id'
                               element={<OrderReview />}
-                              lazy={() =>
-                                 import('./pages/User/Order/OrderReview')
-                              }
                            />
                            <Route
                               path='/user/order-management/:id'
                               element={<OrderManagement />}
-                              lazy={() =>
-                                 import('./pages/User/Order/OrderManagement')
-                              }
+                           />
+                           <Route
+                              path='/user/order-detail/:id'
+                              element={<OrderDetailUser />}
+                           />
+                           <Route
+                              path='/shipper/notification/:id'
+                              element={<Notification />}
+                           />
+                           <Route
+                              path='/shipper/order-list/:id'
+                              element={<OrderList />}
                            />
                            <Route
                               path='/*'
@@ -103,68 +100,41 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                            <Route
                               path='/login'
                               element={<Login />}
-                              lazy={() => import('./pages/Auth/Login')}
                            />
                            <Route
                               path='/register'
                               element={<Register />}
-                              lazy={() => import('./pages/Auth/Register')}
                            />
                         </Route>
                         <Route element={<AdminTemplate />}>
                            <Route
                               path='/admin/account-management'
                               element={<AccountManagement />}
-                              lazy={() =>
-                                 import(
-                                    './pages/Admin/Account/AccountManagement'
-                                 )
-                              }
                            />
                            <Route
                               path='/admin/account-management/view-detail/:id'
                               element={<AccountDetail />}
-                              lazy={() =>
-                                 import('./pages/Admin/Account/AccountDetail')
-                              }
                            />
                            <Route
                               path='/admin/account-management/deleted-account'
                               element={<DeletedAccount />}
-                              lazy={() =>
-                                 import('./pages/Admin/Account/DeletedAccount')
-                              }
                            />
                            <Route
                               path='/admin/product-management'
                               element={<ProductManagement />}
-                              lazy={() =>
-                                 import(
-                                    './pages/Admin/Product/ProductManagement'
-                                 )
-                              }
                            />
                            <Route
                               path='/admin/product-management/new-product'
                               element={<AddProduct />}
-                              lazy={() =>
-                                 import('./pages/Admin/Product/AddProduct')
-                              }
                            />
                            <Route
                               path='/admin/product-management/product-detail/:id'
                               element={<ProductDetail />}
-                              lazy={() =>
-                                 import('./pages/Admin/Product/ProductDetail')
-                              }
                            />
                         </Route>
                         <Route
                            path='/user/order-complete'
                            element={<OrderComplete />}
-                           lazy={() =>
-                              import('./pages/User/Order/OrderComplete')
-                           }
                         />
                      </Route>
                   </Routes>
