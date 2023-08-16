@@ -27,54 +27,7 @@ const LazyOutlet = React.lazy(() =>
 );
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 function App() {
-   const dispatch = useDispatch();
-   const navigate = useNavigate();
    const cookies = cookie.parse(document.cookie);
-   const signedInUser = getUserFromLocal();
-
-   // useEffect(() => {
-   //    if (typeof cookies.access_token == 'undefined' && signedInUser) {
-   //       dispatch(resetTokenAction());
-   //    } else if (cookies.refresh_token == undefined && signedInUser !== null) {
-   //       toast.error('Your session has expired, please login again');
-   //       navigate('/login');
-   //    }
-   // }, []);
-   // useEffect(() => {
-   //    if (signedInUser?.id) {
-   //       socket.emit(SocketMessage.JoinRoom, {
-   //          userId: signedInUser?.id,
-   //          role: signedInUser?.role,
-   //       });
-   //       socket.on(SocketMessage.NewNotification, (data) => {
-   //          playNotificationSound();
-   //          dispatch(getListNotificationAction(signedInUser?.id));
-   //       });
-   //       socket.on(SocketMessage.ReadNoti, () => {
-   //          console.log('read_noti');
-   //          dispatch(getListNotificationAction(signedInUser?.id));
-   //       });
-   //    }
-   // }, []);
-   // useEffect(() => {
-   //    if (signedInUser?.role === Shipper) {
-   //       socket.on(SocketMessage.NewOrder, (data) => {
-   //          console.log(data);
-   //       });
-   //       socket.on(SocketMessage.NewFreepick, () => {
-   //          dispatch(getListPendingDeliveryOrderAction());
-   //       });
-   //       socket.on(SocketMessage.UpdateFreepick, () => {
-   //          dispatch(getListPendingDeliveryOrderAction());
-   //       });
-   //       socket.on(SocketMessage.UpdateOrderInProgress, () => {
-   //          dispatch(getOrderInProgressAction(signedInUser?.id));
-   //       });
-   //       socket.on(SocketMessage.UpdateWaitingDone, () => {
-   //          dispatch(getListWaitingDoneOrderAction(signedInUser?.id));
-   //       });
-   //    }
-   // }, []);
 
    return (
       <>

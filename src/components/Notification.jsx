@@ -10,6 +10,7 @@ import orderNotiImg from '../assets/img/order-noti.png';
 import deliveryTruck from '../assets/img/delivery_truck.png';
 import shipperImg from '../assets/img/shipper.png';
 import holdingBox from '../assets/img/holding_box.png';
+import cancelOrder from '../assets/img/order_cancel.png';
 import { getOrderDetailAction } from '../redux/action/order-action';
 const Notification = ({ item }) => {
    const navigate = useNavigate();
@@ -50,7 +51,7 @@ const Notification = ({ item }) => {
                >
                   <div className='py-3 flex items-center'>
                      <img
-                        className='w-20 h-20 rounded-sm object-contain'
+                        className='w-14 h-14 md:w-20 md:h-20 rounded-sm object-contain'
                         src={item?.Product?.image}
                      />
                      <div className='mx-2'>
@@ -83,7 +84,7 @@ const Notification = ({ item }) => {
                >
                   <div className='py-3 flex items-center'>
                      <img
-                        className='w-20 h-20 rounded-sm object-contain'
+                        className='w-14 h-14 md:w-20 md:h-20 rounded-sm object-contain'
                         src={orderNotiImg}
                      />
                      <div className='mx-2'>
@@ -116,7 +117,7 @@ const Notification = ({ item }) => {
                >
                   <div className='py-3 flex items-center'>
                      <img
-                        className='w-20 h-20 rounded-sm object-contain'
+                        className='w-14 h-14 md:w-20 md:h-20 rounded-sm object-contain'
                         src={shipperImg}
                      />
                      <div className='mx-2'>
@@ -149,7 +150,7 @@ const Notification = ({ item }) => {
                >
                   <div className='py-3 flex items-center'>
                      <img
-                        className='w-20 h-20 rounded-sm object-contain'
+                        className='w-14 h-14 md:w-20 md:h-20 rounded-sm object-contain'
                         src={deliveryTruck}
                      />
                      <div className='mx-2'>
@@ -182,8 +183,41 @@ const Notification = ({ item }) => {
                >
                   <div className='py-3 flex items-center'>
                      <img
-                        className='w-20 h-20 rounded-sm object-contain'
+                        className='w-14 h-14 md:w-20 md:h-20 rounded-sm object-contain'
                         src={holdingBox}
+                     />
+                     <div className='mx-2'>
+                        <div className='text-[#374b73]'>
+                           {renderNotiContent()}
+                        </div>
+                        <div className='flex'>{renderTime()}</div>
+                     </div>
+                     <div>
+                        {item?.is_read ? (
+                           <></>
+                        ) : (
+                           <div className='h-3 w-3 rounded-full bg-[#ffb4b4]'></div>
+                        )}
+                     </div>
+                  </div>
+               </div>
+            );
+         case NotificationType.ORDER_CANCELLED:
+            return (
+               <div
+                  onClick={() => {
+                     dispatch(
+                        changeReadingStatusAction(signedInUser.id, item.id)
+                     );
+                     dispatch(getOrderDetailAction(item?.order_id));
+                     navigate(`user/order-detail/${item?.link}`);
+                  }}
+                  className='bg-white px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 border-b border-gray-300'
+               >
+                  <div className='py-3 flex items-center'>
+                     <img
+                        className='w-14 h-14 md:w-20 md:h-20 rounded-sm object-contain'
+                        src={cancelOrder}
                      />
                      <div className='mx-2'>
                         <div className='text-[#374b73]'>

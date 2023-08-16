@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import alterAvatar from '../assets/img/alter-ava.png';
-import Modal from './Modal.jsx';
+import ModalLogout from './ModalLogout.jsx';
 import { logoutAction } from '../redux/action/auth-action';
 import { User } from '../utils/variables';
 import { NavLink } from 'react-router-dom';
@@ -125,7 +125,7 @@ const AvatarNav = ({ dispatch, navigate }) => {
          ) : (
             <></>
          )}
-         <Modal
+         <ModalLogout
             isOpen={isOpen}
             closeModal={closeModal}
             title='sign out'

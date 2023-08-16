@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Button } from 'flowbite-react';
 
-const Modal = ({
+const ModalLogout = ({
    isOpen,
    closeModal,
    title,
@@ -84,4 +84,4 @@ const Modal = ({
    );
 };
 
-export default Modal;
+export default ModalLogout;

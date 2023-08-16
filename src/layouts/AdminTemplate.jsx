@@ -6,10 +6,15 @@ import { Helmet } from 'react-helmet';
 import SideBar from '../components/SideBar';
 import NavBar from '../components/NavBar';
 import { useEffect, useState } from 'react';
-import { getUserFromLocal } from '../utils/utils-functions';
 import { Admin } from '../utils/variables';
 import notFound from '../assets/img/not_found.jpg';
 import { Link } from '@chakra-ui/react';
+import { socket } from '../socket';
+import { SocketMessage } from '../enums/SocketMessage';
+import {
+   getUserFromLocal,
+   playNotificationSound,
+} from '../utils/utils-functions';
 const AdminTemplate = () => {
    const [windowSize, setWindowSize] = useState({
       width: window.innerWidth,
@@ -20,6 +25,7 @@ const AdminTemplate = () => {
    const location = useLocation();
    const navigate = useNavigate();
    const dispatch = useDispatch();
+   const userSignedIn = getUserFromLocal();
    const generateMetaData = () => {
       return location.pathname
          .slice(1)
@@ -61,6 +67,23 @@ const AdminTemplate = () => {
          setShowBanner(false);
       }
    }, [windowSize.width]);
+
+   useEffect(() => {
+      if (userSignedIn?.id) {
+         socket.emit(SocketMessage.JoinRoom, {
+            userId: userSignedIn?.id,
+            role: userSignedIn?.role,
+         });
+         socket.on(SocketMessage.NewNotification, (data) => {
+            playNotificationSound();
+            dispatch(getListNotificationAction(userSignedIn?.id));
+         });
+         socket.on(SocketMessage.ReadNoti, () => {
+            console.log('read_noti');
+            dispatch(getListNotificationAction(userSignedIn?.id));
+         });
+      }
+   }, []);
    return (
       <>
          {isAdmin ? (

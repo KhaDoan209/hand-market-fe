@@ -108,7 +108,7 @@ const OrderCardShipper = ({ item, tab }) => {
             isMenuVisible ? 'translate-x-[-40px]' : 'translate-x-0'
          }`}
       >
-         <div className='block bg-white rounded-md px-4 py-3'>
+         <div className='block bg-white rounded-md px-4 py-3 w-full min-h-[130px]'>
             <div className='flex items-center text-gray-400 text-sm'>
                <MapPinIcon className='w-5 h-5 text-green-500' />
                <h1 className='mx-1'>Ship to:</h1>
