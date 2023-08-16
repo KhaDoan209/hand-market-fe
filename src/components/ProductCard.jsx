@@ -223,12 +223,12 @@ const ProductCard = ({ item, type, letter_length }) => {
                   key={Math.random()}
                   className='border-b border-gray-200 mt-4'
                >
-                  <div className='flex py-2'>
+                  <div className='block md:flex py-2'>
                      <img
-                        className='w-1/6 object-cover'
+                        className='w-full md:w-2/6 lg:w-1/6 object-cover'
                         src={item?.Product?.image}
                      />
-                     <div className='w-5/6 px-5'>
+                     <div className='w-full px-2 md:w-5/6 md:px-5'>
                         <div className='flex items-center'>
                            <h2 className='text-xl font-bold text-[#374b73] my-2 w-11/12'>
                               {item?.Product?.name}

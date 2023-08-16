@@ -20,21 +20,7 @@ import 'slick-carousel/slick/slick-theme.css';
 
 import { isMobile } from 'react-device-detect';
 import { Admin, Shipper, User } from '../utils/variables';
-import {
-   Tabs,
-   Tab,
-   TabList,
-   TabPanels,
-   TabPanel,
-   IconButton,
-   Modal,
-   ModalOverlay,
-   ModalContent,
-   ModalHeader,
-   ModalFooter,
-   ModalBody,
-   ModalCloseButton,
-} from '@chakra-ui/react';
+import { Tabs, Tab, TabList, TabPanels, TabPanel } from '@chakra-ui/react';
 import {
    getListPendingDeliveryOrderAction,
    getListWaitingDoneOrderAction,
@@ -42,9 +28,6 @@ import {
 } from '../redux/action/order-action';
 import OrderCardShipper from '../components/OrderCardShipper';
 import OrderInProgress from '../components/OrderInProgress';
-import { socket } from '../socket';
-import { SocketMessage } from '../enums/SocketMessage';
-import { playNotificationSound } from '../utils/utils-functions';
 const Home = (props) => {
    const { navigate, dispatch } = useOutletContext();
    const userSignedIn = getUserFromLocal();
@@ -91,22 +74,7 @@ const Home = (props) => {
          dispatch(getListWaitingDoneOrderAction(userSignedIn?.id));
       }
    }, []);
-   useEffect(() => {
-      if (userSignedIn?.id) {
-         socket.emit(SocketMessage.JoinRoom, {
-            userId: userSignedIn?.id,
-            role: userSignedIn?.role,
-         });
-         socket.on(SocketMessage.NewNotification, (data) => {
-            playNotificationSound();
-            dispatch(getListNotificationAction(userSignedIn?.id));
-         });
-         socket.on(SocketMessage.ReadNoti, () => {
-            console.log('read_noti');
-            dispatch(getListNotificationAction(userSignedIn?.id));
-         });
-      }
-   }, []);
+
    return (
       <>
          {isMobile && userSignedIn?.role === Shipper ? (

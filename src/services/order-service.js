@@ -54,3 +54,7 @@ export const changeOrderStatusService = (data) => {
       error: (error) => `${error.message}`,
    });
 };
+
+export const cancelOrderService = (data) => {
+   return http.post(`/order/cancel-order`, data);
+};

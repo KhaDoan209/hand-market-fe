@@ -133,30 +133,30 @@ const OrderReview = () => {
       dispatch(createNewOrderAction(navigate, newOrder));
    };
    return (
-      <div className='w-3/4 mx-auto grid grid-cols-12 gap-5 mb-10'>
-         <div className='col-span-9 mt-5 bg-white py-5 px-10 rounded-md shadow-md shadow-gray-300'>
+      <div className='w-10/12 md:w-3/4 mx-auto grid grid-cols-12 gap-5 mb-10'>
+         <div className='col-span-12 lg:col-span-9 mt-5 bg-white py-3 px-4 md:py-5 md:px-10 rounded-md shadow-md shadow-gray-300'>
             <div className='my-3'>
-               <h1 className='text-[#374b73] text-4xl font-bold mb-10'>
+               <h1 className='text-[#374b73] text-3xl md:text-4xl font-bold mb-5 md:mb-10'>
                   Review Your Order
                </h1>
             </div>
-            <div className='my-10 flex items-baseline'>
-               <h2 className='text-[#374b73] text-xl font-bold w-2/5'>
+            <div className='my-5 md:my-10 md:flex items-baseline'>
+               <h2 className='text-[#374b73] text-xl font-bold w-full md:w-2/5'>
                   Shipping Address:
                </h2>
                {userSignedIn?.Address !== null ? (
-                  <>
-                     <div className='w-3/5'>
-                        <span className='text-[#374b73] text-lg font-semibold block'>
+                  <div className='flex w-full md:w-3/5 justify-between'>
+                     <div className='mt-5 md:mt-0 w-full md:w-3/5'>
+                        <span className='text-[#374b73] text-md md:text-lg font-semibold block'>
                            {userSignedIn?.first_name}&nbsp;
                            {userSignedIn?.last_name}
                         </span>
-                        <span className='text-[#374b73] text-lg font-semibold block'>
+                        <span className='text-[#374b73] text-md md:text-lg font-semibold block'>
                            {userSignedIn?.Address?.street},&nbsp;
                            {userSignedIn?.Address?.ward}
                         </span>
-                        <span className='text-[#374b73] text-lg font-semibold block'></span>
-                        <span className='text-[#374b73] text-lg font-semibold block'>
+                        <span className='text-[#374b73] text-md md:text-lg font-semibold block'></span>
+                        <span className='text-[#374b73] text-md md:ext-lg font-semibold block'>
                            {userSignedIn?.Address?.district},&nbsp;
                            {userSignedIn?.Address?.province}
                         </span>
@@ -169,34 +169,36 @@ const OrderReview = () => {
                      >
                         <PencilSquareIcon className='h-4 w-4 lg:h-5 lg:w-5' />
                      </div>
-                  </>
+                  </div>
                ) : (
                   <h1>Please update your address</h1>
                )}
             </div>
-            <div className='my-10 flex'>
-               <h2 className='text-[#374b73] text-xl font-bold w-2/5'>
+            <div className='my-5 md:my-10 md:flex'>
+               <h2 className='text-[#374b73] text-xl font-bold w-full md:w-2/5 '>
                   Phone Number:
                </h2>
-               <div className='w-3/5'>
-                  <span className='text-[#374b73] text-lg font-semibold '>
-                     {userSignedIn?.phone}
-                  </span>
-               </div>
-               <div
-                  onClick={() => {
-                     navigate(`user/user-profile/${userSignedIn?.id}`);
-                  }}
-                  className='p-1.5 cursor-pointer hover:bg-[#374b73] rounded-md hover:text-white transition-all duration-300'
-               >
-                  <PencilSquareIcon className='h-4 w-4 lg:h-5 lg:w-5' />
+               <div className='flex w-full md:w-3/5 justify-between'>
+                  <div className='w-3/5 mt-2 md:mt-0'>
+                     <span className='text-[#374b73] text-md md:text-lg font-semibold '>
+                        {userSignedIn?.phone}
+                     </span>
+                  </div>
+                  <div
+                     onClick={() => {
+                        navigate(`user/user-profile/${userSignedIn?.id}`);
+                     }}
+                     className='p-1.5 cursor-pointer hover:bg-[#374b73] rounded-md hover:text-white transition-all duration-300'
+                  >
+                     <PencilSquareIcon className='h-4 w-4 lg:h-5 lg:w-5' />
+                  </div>
                </div>
             </div>
             <div className='my-10'>
-               <h2 className='text-[#374b73] text-xl font-bold w-2/5'>
+               <h2 className='text-[#374b73] text-xl font-bold w-full md:w-2/5'>
                   Ordered Items:
                </h2>
-               <div className='mt-5 w-full px-10'>
+               <div className='mt-5 w-full px-0 md:px-10'>
                   {itemToCheckOut?.length > 0 ? (
                      itemToCheckOut?.map((item) => {
                         return (
@@ -213,11 +215,11 @@ const OrderReview = () => {
                   )}
                </div>
             </div>
-            <div className='my-10 flex'>
-               <h2 className='text-[#374b73] text-xl font-bold w-2/5'>
+            <div className='my-5 md:my-10 md:flex'>
+               <h2 className='text-[#374b73] text-xl font-bold w-full md:w-2/5'>
                   Your payment cards:
                </h2>
-               <div className='w-3/5'>
+               <div className='w-full md:w-3/5 my-5 md:my-0'>
                   {listSavedCards?.map((item) => {
                      return (
                         <div
@@ -261,11 +263,11 @@ const OrderReview = () => {
                   })}
                </div>
             </div>
-            <div className='mt-10 flex'>
-               <h2 className='text-[#374b73] text-xl font-bold w-2/5'>
+            <div className='mt-10 md:flex'>
+               <h2 className='text-[#374b73] text-xl font-bold w-full md:w-2/5'>
                   Shipping Option:
                </h2>
-               <div className='w-3/5'>
+               <div className='w-full md:w-3/5 mt-5 md:mt-0'>
                   {shippingOptions.map((item) => {
                      return (
                         <div
@@ -308,7 +310,7 @@ const OrderReview = () => {
                </div>
             </div>
          </div>
-         <div className='col-span-3 mt-5 bg-white py-5 px-5 rounded-md shadow-md shadow-gray-300 h-fit'>
+         <div className='col-span-12 lg:col-span-3 mt-5 bg-white py-5 px-5 rounded-md shadow-md shadow-gray-300 h-fit'>
             <h1 className='text-[#374b73] font-semibold text-lg'>
                Order Summary
             </h1>

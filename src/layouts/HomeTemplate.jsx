@@ -3,13 +3,13 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import { useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import { useSelector } from 'react-redux';
 import { socket } from '../socket';
 import { SocketMessage } from '../enums/SocketMessage';
 import {
    getListPendingDeliveryOrderAction,
    getListWaitingDoneOrderAction,
    getOrderInProgressAction,
+   takeOrderAction,
 } from '../redux/action/order-action';
 import {
    Modal,
@@ -20,11 +20,15 @@ import {
    ModalBody,
    ModalCloseButton,
 } from '@chakra-ui/react';
-import { getUserFromLocal } from '../utils/utils-functions';
+import {
+   getUserFromLocal,
+   playNotificationSound,
+} from '../utils/utils-functions';
 import { Shipper, User, Admin } from '../utils/variables';
 import { useDisclosure } from '@chakra-ui/react';
 import { isMobile } from 'react-device-detect';
 import { MapPinIcon, UserIcon } from '@heroicons/react/24/outline';
+import { getListNotificationAction } from '../redux/action/noti-action';
 const HomeTemplate = () => {
    const navigate = useNavigate();
    const dispatch = useDispatch();
@@ -47,9 +51,10 @@ const HomeTemplate = () => {
    useEffect(() => {
       if (userSignedIn?.role === Shipper) {
          socket.on(SocketMessage.NewOrder, (data) => {
-            console.log(data);
-            setOrder(data);
-            onOpen();
+            if (data !== null) {
+               setOrder(data);
+               onOpen();
+            }
             setTimeout(() => {
                onClose();
             }, 6000);
@@ -68,6 +73,24 @@ const HomeTemplate = () => {
          });
       }
    }, []);
+
+   useEffect(() => {
+      if (userSignedIn?.id) {
+         socket.emit(SocketMessage.JoinRoom, {
+            userId: userSignedIn?.id,
+            role: userSignedIn?.role,
+         });
+         socket.on(SocketMessage.NewNotification, (data) => {
+            playNotificationSound();
+            dispatch(getListNotificationAction(userSignedIn?.id));
+         });
+         socket.on(SocketMessage.ReadNoti, () => {
+            console.log('read_noti');
+            dispatch(getListNotificationAction(userSignedIn?.id));
+         });
+      }
+   }, []);
+
    return (
       <>
          <Helmet>
@@ -130,7 +153,9 @@ const HomeTemplate = () => {
                         <ModalFooter>
                            <button
                               onClick={() => {
-                                 // dispatch(changeOrderStatusAction(object));
+                                 dispatch(
+                                    takeOrderAction(userSignedIn?.id, order?.id)
+                                 );
                               }}
                               className='py-3 px-4 text-white bg-gradient-to-r from-orange-400 to-orange-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-orange-300 rounded-md font-semibold text-sm w-full mb-5 shadow-md shadow-gray-200'
                            >

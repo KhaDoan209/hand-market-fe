@@ -14,6 +14,7 @@ import {
    updateUserInformationAction,
    uploadUserAvatarAction,
 } from '../../../redux/action/user-action';
+import { logoutAction } from '../../../redux/action/auth-action';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
@@ -30,8 +31,7 @@ import {
    useDisclosure,
    Button,
 } from '@chakra-ui/react';
-import NextArrow from '../../../components/NextArrow';
-import PrevArrow from '../../../components/PrevArrow';
+import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import alterAvatar from '../../../assets/img/alter-ava.png';
 import { MapPinIcon } from '@heroicons/react/24/solid';
 import PaymentCard from '../../../components/PaymentCard';
@@ -44,6 +44,7 @@ import {
 import Slider from 'react-slick';
 import { Shipper, User } from '../../../utils/variables';
 import { isMobile } from 'react-device-detect';
+import ModalLogout from '../../../components/ModalLogout';
 const UserProfile = () => {
    const { dispatch, navigate } = useOutletContext();
    const { id } = useParams();
@@ -52,6 +53,7 @@ const UserProfile = () => {
    const [enablePhone, setEnablePhone] = useState(false);
    const [uploadImg, setUploadImg] = useState(null);
    const [selectedImage, setSelectedImg] = useState(null);
+   const [isOpen, setIsOpen] = useState(false);
    const stripe = useStripe();
    const elements = useElements();
    const userDetail = useSelector((state) => state.authReducer?.user_signed_in);
@@ -516,7 +518,7 @@ const UserProfile = () => {
          <div className='mt-10 sm:mt-0 grid grid-cols-12 relative z-0'>
             <div className='col-span-12 xl:col-span-5 relative z-[5] h-fit xl:h-screen'>
                <div className='w-11/12 lg:w-9/12 mx-auto flex flex-col my-5'>
-                  <div className='w-full bg-white border border-gray-200 rounded-lg shadow-xl shadow-gray-300 backdrop-filter h-fit'>
+                  <div className='w-full bg-white border border-gray-200 rounded-lg shadow-md lg:shadow-xl shadow-gray-300 backdrop-filter h-fit'>
                      <div className='flex justify-end px-4 pt-4 relative'>
                         <button
                            onClick={() => {
@@ -564,7 +566,7 @@ const UserProfile = () => {
                            />
                            <label
                               htmlFor='uploadAvatar'
-                              className='bg-white rounded-md shadow-md text-[#374b73] shadow-gray-300 hover:bg-[#374b73] hover:text-white p-2 top-[-20px] right-0 md:top-0 md:right-5 xl:right-[-20%] absolute cursor-pointer transition-all duration-300'
+                              className='bg-white rounded-md shadow-md text-[#374b73] shadow-gray-300 hover:bg-[#374b73] hover:text-white p-2 top-[-20px] right-[-5px] md:top-0 md:right-5 xl:right-[-20%] absolute cursor-pointer transition-all duration-300'
                            >
                               <CameraIcon className='w-4 h-4' />
                            </label>
@@ -794,7 +796,34 @@ const UserProfile = () => {
                </div>
             </div>
             {isMobile && userDetail?.role === Shipper ? (
-               <div className='h-[5rem]'></div>
+               <>
+                  <div
+                     onClick={() => {
+                        setIsOpen(true);
+                     }}
+                     className='relative col-span-12 my-1'
+                  >
+                     <a className='block py-2  px-3 text-nav rounded-md shadow shadow-red-400 font-semibold bg-red-500 hover:bg-red-600 w-11/12 mx-auto'>
+                        <div className='text-center flex w-full justify-center'>
+                           <ArrowRightOnRectangleIcon className='w-6 h-6  text-white' />
+                           <h1 className='text-md ml-2 text-white'>Log out</h1>
+                        </div>
+                     </a>
+                  </div>
+                  <ModalLogout
+                     isOpen={isOpen}
+                     closeModal={() => {
+                        setIsOpen(false);
+                     }}
+                     title='sign out'
+                     message='There are customers still waiting for you 😭'
+                     actionContent='Sign Out'
+                     actionImplement={() => {
+                        dispatch(logoutAction(userDetail?.id, navigate));
+                     }}
+                  />
+                  <div className='h-[6rem] w-full col-span-12'></div>
+               </>
             ) : (
                <></>
             )}
@@ -803,7 +832,7 @@ const UserProfile = () => {
                   <div className='w-11/12 mx-auto my-5 h-fit rounded-md bg-gray-white shadow-lg shadow-gray-300 py-5 px-5 bg-white'>
                      <div className='text-[#5a6e8c] font-bold text-lg lg:text-2xl flex items-center justify-between'>
                         <div className='flex items-center'>
-                           <CreditCardIcon className='h-4 w-4 lg:h-6 lg:w-6 mr-0 lg:mr-2' />
+                           <CreditCardIcon className='h-4 w-4 lg:h-6 lg:w-6 mr-2' />
                            <h2>Card Information</h2>
                         </div>
                         <div
@@ -816,7 +845,7 @@ const UserProfile = () => {
                         </div>
                      </div>
 
-                     <div className='py-5 overflow-scroll sm:overflow-visible'>
+                     <div className='md:py-5'>
                         <div className='mx-auto payment-card'>
                            {listSavedCards?.length > 0 ? (
                               <Slider
@@ -832,7 +861,7 @@ const UserProfile = () => {
                                  {listSavedCards.map((item) => {
                                     return (
                                        <div
-                                          className='px-3 my-5'
+                                          className='md:px-3 my-5'
                                           key={Math.random()}
                                        >
                                           <PaymentCard

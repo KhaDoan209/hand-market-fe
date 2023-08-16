@@ -1,6 +1,7 @@
 import toast from 'react-hot-toast';
 import { getItemCartByUserService } from '../../services/cart-service';
 import {
+   cancelOrderService,
    changeOrderStatusService,
    createNewOrderService,
    getListOrderByUserService,
@@ -108,13 +109,20 @@ export const createNewOrderAction = (
    };
 };
 
-export const takeOrderAction = (shipperId, orderId, inProgressTabRef) => {
+export const takeOrderAction = (
+   shipperId,
+   orderId,
+   inProgressTabRef = null
+) => {
    return async (dispatch) => {
       try {
          await takeOrderService(shipperId, orderId);
          const result = await getOrderInProgressService(shipperId);
          dispatch(getOrderInProgressReducer(result.data));
-         inProgressTabRef.current.click();
+         console.log('run here');
+         if (inProgressTabRef !== null) {
+            inProgressTabRef.current.click();
+         }
       } catch (error) {
          console.log(error);
       }
@@ -125,6 +133,17 @@ export const changeOrderStatusAction = (data) => {
    return async () => {
       try {
          await changeOrderStatusService(data);
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const cancelOrderAction = (data) => {
+   return async () => {
+      try {
+         await cancelOrderService(data);
+         toast.success('Cancel order sucessfully');
       } catch (error) {
          console.log(error);
       }

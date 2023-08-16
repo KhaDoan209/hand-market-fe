@@ -29,118 +29,156 @@ import OrderComplete from './pages/User/Order/OrderComplete';
 import OrderDetailUser from './pages/User/Order/OrderDetailUser';
 import { Provider } from 'react-redux';
 import { persistor, store } from './redux/store';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import Chart from 'chart.js/auto';
-
-const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
    <>
       <BrowserRouter basename='hand-market'>
-         <QueryClientProvider client={queryClient}>
-            <PersistGate
-               loading={null}
-               persistor={persistor}
-            >
-               <Provider store={store}>
-                  <Routes>
-                     <Route
-                        path='/'
-                        element={<App />}
-                     >
-                        <Route element={<HomeTemplate />}>
-                           <Route
-                              index
-                              path='/'
-                              element={<Home />}
-                           />
-                           <Route
-                              path='/user/user-profile/:id'
-                              element={<UserProfile />}
-                           />
-                           <Route
-                              path='/user/shopping-cart/:id'
-                              element={<ShoppingCart />}
-                           />
-                           <Route
-                              path='/user/view-product'
-                              element={<Product />}
-                           />
-                           <Route
-                              path='/user/view-product-detail/:id'
-                              element={<UserProductDetail />}
-                           />
-                           <Route
-                              path='/user/review-order/:id'
-                              element={<OrderReview />}
-                           />
-                           <Route
-                              path='/user/order-management/:id'
-                              element={<OrderManagement />}
-                           />
-                           <Route
-                              path='/user/order-detail/:id'
-                              element={<OrderDetailUser />}
-                           />
-                           <Route
-                              path='/shipper/notification/:id'
-                              element={<Notification />}
-                           />
-                           <Route
-                              path='/shipper/order-list/:id'
-                              element={<OrderList />}
-                           />
-                           <Route
-                              path='/*'
-                              element={<Navigate to={'/'} />}
-                           />
-                        </Route>
-                        <Route element={<FormTemplate />}>
-                           <Route
-                              path='/login'
-                              element={<Login />}
-                           />
-                           <Route
-                              path='/register'
-                              element={<Register />}
-                           />
-                        </Route>
-                        <Route element={<AdminTemplate />}>
-                           <Route
-                              path='/admin/account-management'
-                              element={<AccountManagement />}
-                           />
-                           <Route
-                              path='/admin/account-management/view-detail/:id'
-                              element={<AccountDetail />}
-                           />
-                           <Route
-                              path='/admin/account-management/deleted-account'
-                              element={<DeletedAccount />}
-                           />
-                           <Route
-                              path='/admin/product-management'
-                              element={<ProductManagement />}
-                           />
-                           <Route
-                              path='/admin/product-management/new-product'
-                              element={<AddProduct />}
-                           />
-                           <Route
-                              path='/admin/product-management/product-detail/:id'
-                              element={<ProductDetail />}
-                           />
-                        </Route>
+         <PersistGate
+            loading={null}
+            persistor={persistor}
+         >
+            <Provider store={store}>
+               <Routes>
+                  <Route
+                     path='/'
+                     element={<App />}
+                  >
+                     <Route element={<HomeTemplate />}>
                         <Route
-                           path='/user/order-complete'
-                           element={<OrderComplete />}
+                           index
+                           path='/'
+                           element={<Home />}
+                        />
+                        <Route
+                           path='/user/user-profile/:id'
+                           element={<UserProfile />}
+                           lazy={() =>
+                              import('./pages/User/Account/UserProfile')
+                           }
+                        />
+
+                        <Route
+                           path='/user/shopping-cart/:id'
+                           element={<ShoppingCart />}
+                           lazy={() => import('./pages/User/Cart/ShoppingCart')}
+                        />
+                        <Route
+                           path='/user/view-product'
+                           element={<Product />}
+                           lazy={() => import('./pages/User/Product/Product')}
+                        />
+                        <Route
+                           path='/user/view-product-detail/:id'
+                           element={<UserProductDetail />}
+                           lazy={() =>
+                              import('./pages/User/Product/UserProductDetail')
+                           }
+                        />
+                        <Route
+                           path='/user/review-order/:id'
+                           element={<OrderReview />}
+                           lazy={() => import('./pages/User/Order/OrderReview')}
+                        />
+                        <Route
+                           path='/user/order-management/:id'
+                           element={<OrderManagement />}
+                           lazy={() =>
+                              import('./pages/User/Order/OrderManagement')
+                           }
+                        />
+                        <Route
+                           path='/user/order-detail/:id'
+                           element={<OrderDetailUser />}
+                           lazy={() =>
+                              import('./pages/User/Order/OrderDetailUser')
+                           }
+                        />
+                        <Route
+                           path='/shipper/notification/:id'
+                           element={<Notification />}
+                           lazy={() =>
+                              import(
+                                 './pages/Shipper/Notification/Notification'
+                              )
+                           }
+                        />
+                        <Route
+                           path='/shipper/order-list/:id'
+                           element={<OrderList />}
+                           lazy={() =>
+                              import('./pages/Shipper/Order/OrderList')
+                           }
+                        />
+                        <Route
+                           path='/*'
+                           element={<Navigate to={'/'} />}
                         />
                      </Route>
-                  </Routes>
-               </Provider>
-            </PersistGate>
-         </QueryClientProvider>
+                     <Route element={<FormTemplate />}>
+                        <Route
+                           path='/login'
+                           element={<Login />}
+                        />
+                        <Route
+                           path='/register'
+                           element={<Register />}
+                        />
+                     </Route>
+                     <Route element={<AdminTemplate />}>
+                        <Route
+                           path='/admin/account-management'
+                           element={<AccountManagement />}
+                           lazy={() =>
+                              import('./pages/Admin/Account/AccountManagement')
+                           }
+                        />
+                        <Route
+                           path='/admin/account-management/view-detail/:id'
+                           element={<AccountDetail />}
+                           lazy={() =>
+                              import('./pages/Admin/Account/AccountDetail')
+                           }
+                        />
+                        <Route
+                           path='/admin/account-management/deleted-account'
+                           element={<DeletedAccount />}
+                           lazy={() =>
+                              import('./pages/Admin/Account/DeletedAccount')
+                           }
+                        />
+                        <Route
+                           path='/admin/product-management'
+                           element={<ProductManagement />}
+                           lazy={() =>
+                              import('./pages/Admin/Product/ProductManagement')
+                           }
+                        />
+                        <Route
+                           path='/admin/product-management/new-product'
+                           element={<AddProduct />}
+                           lazy={() =>
+                              import('./pages/Admin/Product/AddProduct')
+                           }
+                        />
+                        <Route
+                           path='/admin/product-management/product-detail/:id'
+                           element={<ProductDetail />}
+                           lazy={() =>
+                              import('./pages/Admin/Product/ProductDetail')
+                           }
+                        />
+                     </Route>
+                     <Route
+                        path='/user/order-complete'
+                        element={<OrderComplete />}
+                        lazy={() => import('./pages/User/Order/OrderComplete')}
+                     />
+                  </Route>
+               </Routes>
+            </Provider>
+         </PersistGate>
       </BrowserRouter>
    </>
 );

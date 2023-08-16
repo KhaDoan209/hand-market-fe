@@ -17,8 +17,10 @@ const OrderManagement = () => {
       dispatch(getListOrderByUserAction(userSignedIn?.id));
    }, []);
    return (
-      <div className='w-3/4 mx-auto bg-white my-5 py-10 px-10 rounded-md shadow-md shadow-gray-300'>
-         <h1 className='text-[#374b73] text-4xl font-bold mb-5'>Your Orders</h1>
+      <div className='w-10/12 md:w-3/4 mx-auto bg-white my-5 px-2 py-4 md:py-10 md:px-10 rounded-md shadow-md shadow-gray-300'>
+         <h1 className='text-[#374b73] text-3xl md:text-4xl font-bold mb-5 md:mb-10'>
+            Your Orders
+         </h1>
          {listOrder?.data?.length > 0 ? (
             <>
                {listOrder?.data.map((item) => {

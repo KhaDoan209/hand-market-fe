@@ -21,6 +21,7 @@ const OrderDetailUser = () => {
    const { id } = useParams();
    const { dispatch, navigate } = useOutletContext();
    const orderDetail = useSelector((state) => state.orderReducer.order_detail);
+   console.log(orderDetail);
    useEffect(() => {
       socket.on(SocketMessage.OrderStatusUpdate, () => {
          dispatch(getOrderDetailAction(id));
@@ -81,9 +82,9 @@ const OrderDetailUser = () => {
             return (
                <li
                   key={Math.random()}
-                  className='flex-col md:flex-row md:h-fit flex items-center w-1/5 justify-between'
+                  className='flex-col md:flex-row md:h-fit flex items-center w-full lg:w-1/5 justify-between'
                >
-                  <div className='flex items-center w-3/4'>
+                  <div className='flex items-center w-3/4 my-4 md:my-0'>
                      <span className='flex items-center justify-center w-8 h-8 border border-[#ffb4b4] rounded-full shrink-0 bg-[#ffb4b4] text-white'>
                         {item.index}
                      </span>
@@ -105,9 +106,9 @@ const OrderDetailUser = () => {
             return (
                <li
                   key={Math.random()}
-                  className='flex-col md:flex-row flex items-center w-1/5 justify-between'
+                  className='flex-col md:flex-row flex items-center w-full lg:w-1/5 justify-between'
                >
-                  <div className='flex items-center w-3/4'>
+                  <div className='flex items-center w-3/4 my-4 md:my-0'>
                      <span className='flex items-center justify-center w-8 h-8 border border-[#374b73] rounded-full shrink-0  text-[#374b73]'>
                         {item.index}
                      </span>
@@ -139,12 +140,12 @@ const OrderDetailUser = () => {
       <>
          <div className='w-10/12 mx-auto my-10 bg-white shadow-md  shadow-gray-300 rounded-md px-4 py-3'>
             <div className='px-2'>
-               <div className='w-full border-b-2 border-gray-300 text-[#374b73] font-semibold flex items-center justify-between'>
-                  <div className='px-4 py-2 border-r-2 border-gray-200 w-full'>
+               <div className='w-full border-b-2 border-gray-300 text-[#374b73] font-semibold md:flex items-center justify-between'>
+                  <div className='px-4 py-2 md:border-r-2 border-gray-200 w-full'>
                      <h1 className='text-gray-400'>Order#</h1>
                      <p className='text-lg'>{orderDetail?.order?.order_code}</p>
                   </div>
-                  <div className='px-4 py-2 border-r-2 border-gray-200 w-full'>
+                  <div className='px-4 py-2 md:border-r-2 border-gray-200 w-full'>
                      <h1 className='text-gray-400'>Placed At</h1>
                      <p className='text-lg'>
                         {moment(orderDetail?.order?.order_date).format('LLLL')}
@@ -160,7 +161,18 @@ const OrderDetailUser = () => {
                   </div>
                </div>
                <ol className='flex-col flex md:flex-row justify-between items-center w-full space-y-4 sm:flex sm:space-x-8 sm:space-y-0 my-10'>
-                  {renderStepper()}
+                  {orderDetail?.order?.status === OrderStatus.Canceled ? (
+                     <div className='w-full text-center'>
+                        <h1 className='text-2xl font-semibold w-full text-red-500'>
+                           Your order has been canceled
+                        </h1>
+                        <p className='mt-5 font-semibold text-[#374b73]'>
+                           {orderDetail?.order?.cancel_reason}
+                        </p>
+                     </div>
+                  ) : (
+                     renderStepper()
+                  )}
                </ol>
             </div>
          </div>
@@ -170,14 +182,14 @@ const OrderDetailUser = () => {
                   <h1 className='text-2xl font-bold mt-5'>Order Information</h1>
                </div>
                <div className='w-full mt-5 text-[#374b73]'>
-                  <div className='flex w-full px-5 justify-between'>
-                     <h1 className='text-xl font-semibold w-2/4'>
+                  <div className='flex w-full px-1 md:px-5 justify-between'>
+                     <h1 className='text-md md:text-lg lg:text-xl font-semibold w-2/4'>
                         Product Name
                      </h1>
-                     <h1 className='text-xl font-semibold text-center w-1/4'>
+                     <h1 className='text-md md:text-lg lg:text-xl font-semibold text-center w-1/4'>
                         Quantity
                      </h1>
-                     <h1 className='text-xl font-semibold w-1/4 text-end'>
+                     <h1 className='text-md md:text-lg lg:text-xl font-semibold w-1/4 text-end'>
                         Price
                      </h1>
                   </div>
@@ -185,7 +197,7 @@ const OrderDetailUser = () => {
                      {orderDetail?.order?.OrderDetail?.map((item) => {
                         return (
                            <div
-                              className='flex justify-between py-5 px-5 border-b border-gray-200'
+                              className='flex justify-between py-5 px-1 md:px-5 border-b border-gray-200'
                               key={Math.random()}
                            >
                               <p className='text-gray-500 font-semibold text-md w-2/4'>
@@ -201,10 +213,10 @@ const OrderDetailUser = () => {
                         );
                      })}
                      <div className='flex items-center w-full justify-between'>
-                        <p className='text-gray-500 text-lg font-semibold w-1/4 px-5 my-5'>
+                        <p className='text-gray-500 text-lg font-semibold w-2/4 md:w-1/4 px-1 md:px-5 my-5'>
                            Total:
                         </p>
-                        <p className='text-gray-500 text-lg font-semibold w-1/4 px-5 my-5 text-end'>
+                        <p className='text-gray-500 text-lg font-semibold w-2/4 md:w-1/4 px-1 md:px-5 my-5 text-end'>
                            {renderOrderTotalPrice()}
                         </p>
                      </div>
@@ -221,7 +233,7 @@ const OrderDetailUser = () => {
                </div>
                <div className='w-full mt-5 text-[#374b73]'>
                   {orderDetail?.shipper === null ? (
-                     <h1 className='text-center text-xl'>
+                     <h1 className='text-center text-md md:text-xl'>
                         Your order is waiting for a shipper to pick
                      </h1>
                   ) : (
@@ -251,13 +263,7 @@ const OrderDetailUser = () => {
                   <div className='flex w-full justify-end'>
                      {orderDetail?.order?.status !== OrderStatus.Delivered &&
                      orderDetail?.order?.status !== OrderStatus.Done ? (
-                        <button
-                           type='button'
-                           className='text-white bg-red-500 hover:bg-red-600 border border-gray-200 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 mb-2 duration-200 transition-all'
-                        >
-                           <XMarkIcon className='w-5 h-5 mr-2' />
-                           Cancel Order
-                        </button>
+                        <></>
                      ) : (
                         <button
                            onClick={() => {

@@ -6,19 +6,47 @@ import mapPin from '../assets/img/map_pin.png';
 import { OrderStatus } from '../enums/OrderStatus';
 import { convertToCurrency } from '../utils/utils-functions';
 import alterImg from '../assets/img/alter-ava.png';
-import { changeOrderStatusAction } from '../redux/action/order-action';
+import {
+   cancelOrderAction,
+   changeOrderStatusAction,
+   getOrderInProgressAction,
+} from '../redux/action/order-action';
+import { getUserFromLocal } from '../utils/utils-functions';
 import MapBox from './MapBox';
+import {
+   Modal,
+   ModalOverlay,
+   ModalContent,
+   ModalHeader,
+   ModalFooter,
+   ModalBody,
+   ModalCloseButton,
+   useDisclosure,
+   Button,
+   Select,
+} from '@chakra-ui/react';
 
 const OrderInProgress = () => {
+   const { isOpen, onOpen, onClose } = useDisclosure();
    const dispatch = useDispatch();
    const navigate = useNavigate();
-   const [isConfirmed, setIsConfirmed] = useState(false);
-   const handleSliderChange = (event) => {
-      setIsConfirmed(event.target.checked);
-   };
+   const signedInUser = getUserFromLocal();
    const order_in_progress = useSelector(
       (state) => state.orderReducer.order_in_progress
    );
+   const reasonsToCancel = [
+      { id: 1, value: 'Không thể đảm bảo giao hàng đúng thời hạn' },
+      { id: 2, value: 'Vấn đề sức khỏe cá nhân' },
+      { id: 3, value: 'Lý do gia đình' },
+      { id: 4, value: 'Không phù hợp với đặc điểm hàng hóa' },
+      { id: 5, value: 'Không thể liên hệ với người gửi/người nhận' },
+      { id: 6, value: 'Vị trí giao hàng xa quá mức' },
+      { id: 7, value: 'Lý do an toàn' },
+      { id: 8, value: 'Hàng hóa không đáp ứng yêu cầu' },
+      { id: 9, value: 'Lý do tài chính' },
+      { id: 10, value: 'Vấn đề vận chuyển' },
+   ];
+   const [reason, setReason] = useState(reasonsToCancel[0].value);
    const checkIfDateIsLate = (dateString) => {
       const targetDate = moment(dateString);
       const currentTime = moment();
@@ -56,6 +84,7 @@ const OrderInProgress = () => {
                      status: OrderStatus.Delivered,
                   };
                   dispatch(changeOrderStatusAction(object));
+                  dispatch(getOrderInProgressAction(signedInUser?.id));
                }}
                className='py-3 px-4 text-white bg-gradient-to-r from-yellow-300 to-yellow-400 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-yellow-300 rounded-full font-semibold text-sm w-full mb-5 shadow-md shadow-gray-300'
             >
@@ -64,7 +93,6 @@ const OrderInProgress = () => {
          );
       }
    };
-   console.log(order_in_progress);
    return (
       <div className='text-[#374b73] order_in_progress'>
          <h1 className='text-2xl font-bold'>
@@ -101,9 +129,9 @@ const OrderInProgress = () => {
                {order_in_progress?.district}, {order_in_progress?.province}
             </h1>
          </div>
-         <div className='h-[400px] my-5'>
-            <MapBox />
-         </div>
+
+         <MapBox order_in_progress={order_in_progress} />
+
          <div className='flex my-5'>
             <p className='text-md text-[#374b73] font-bold'>Ordered date:</p>
             <span className='text-md ml-2 font-semibold text-yellow-400'>
@@ -163,9 +191,74 @@ const OrderInProgress = () => {
          </div>
          <div className='w-10/12 mx-auto justify-around mt-8'>
             {renderButton()}
-            <button className='py-3 px-4 text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 rounded-full font-semibold text-sm w-full shadow-md shadow-gray-300'>
+            <button
+               onClick={onOpen}
+               className='py-3 px-4 text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 rounded-full font-semibold text-sm w-full shadow-md shadow-gray-300'
+            >
                Cancel
             </button>
+            <Modal
+               isOpen={isOpen}
+               onClose={onClose}
+               isCentered
+            >
+               <ModalOverlay />
+               <ModalContent>
+                  <ModalHeader>
+                     <h1 className='text-md font-bold text-red-600'>
+                        Pick A Cancel Reason
+                     </h1>
+                  </ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                     <div className='w-10/12 mx-auto flex justify-center'>
+                        <select
+                           onChange={(e) => {
+                              setReason(e.target.value);
+                           }}
+                           value={reason}
+                           className='py-2 rounded-lg mx-2'
+                           placeholder='Select option'
+                        >
+                           {reasonsToCancel?.map((item) => {
+                              return (
+                                 <option
+                                    key={Math.random()}
+                                    className='flex items-center text-sm text-ellipsis whitespace-nowrap overflow-hidden'
+                                    value={item.value}
+                                 >
+                                    {item.value}
+                                 </option>
+                              );
+                           })}
+                        </select>
+                     </div>
+                  </ModalBody>
+                  <ModalFooter>
+                     <Button
+                        colorScheme='gray'
+                        mr={3}
+                        onClick={onClose}
+                     >
+                        Close
+                     </Button>
+                     <Button
+                        onClick={() => {
+                           let data = {
+                              cancel_reason: reason,
+                              order_id: order_in_progress?.id,
+                           };
+                           dispatch(cancelOrderAction(data));
+                           onClose();
+                        }}
+                        colorScheme={'red'}
+                        variant='solid'
+                     >
+                        Cancel
+                     </Button>
+                  </ModalFooter>
+               </ModalContent>
+            </Modal>
          </div>
       </div>
    );

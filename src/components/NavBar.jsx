@@ -14,16 +14,16 @@ import {
    TagIcon,
    DocumentTextIcon,
    UserIcon,
+   ChatBubbleOvalLeftEllipsisIcon,
 } from '@heroicons/react/24/solid';
-import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
+
 import { Tooltip } from '@chakra-ui/react';
-import { logoutAction } from '../redux/action/auth-action';
 import { useSelector } from 'react-redux';
 import { getItemCartByUserAction } from '../redux/action/cart-action';
 import Notification from './Notification';
 import { getListNotificationAction } from '../redux/action/noti-action';
 import { isMobile } from 'react-device-detect';
-import Modal from './Modal';
+
 const NavBar = ({ dispatch, navigate, logo }) => {
    const signedInUser = useSelector(
       (state) => state.authReducer?.user_signed_in
@@ -66,7 +66,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
       (state) => state.cartReducer.list_item_in_cart
    );
    const listNoti = useSelector((state) => state.notiReducer.list_notification);
-   const [isOpen, setIsOpen] = useState(false);
+
    const [showMenuMobi, setShowMenuMobi] = useState(true);
    const [menuItem, setMenuItem] = useState(listItem);
    const [windowSize, setWindowSize] = useState({
@@ -153,12 +153,22 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                {
                   label: (
                      <div className='z-1 text-center'>
+                        <ChatBubbleOvalLeftEllipsisIcon className='w-6 h-6 mx-auto' />
+                        <h1 className='text-sm'>Chat</h1>
+                     </div>
+                  ),
+                  link: `/asd`,
+               },
+               {
+                  label: (
+                     <div className='z-1 text-center'>
                         <DocumentTextIcon className='w-6 h-6 mx-auto' />
                         <h1 className='text-sm'>Order</h1>
                      </div>
                   ),
                   link: `/shipper/order-list/${signedInUser?.id}`,
                },
+
                {
                   label: (
                      <div className='z-1 text-center'>
@@ -243,31 +253,6 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                         </li>
                      );
                   })}
-                  <li
-                     onClick={() => {
-                        setIsOpen(true);
-                     }}
-                     className='relative list-none py-3'
-                  >
-                     <a className='block py-2 px-3 md:px-0 md:py-1 text-nav hover-underline rounded md:bg-transparent font-semibold'>
-                        <div className='z-1 text-center'>
-                           <ArrowRightOnRectangleIcon className='w-6 h-6  mx-auto text-red-500' />
-                           <h1 className='text-sm text-red-500'>Log out</h1>
-                        </div>
-                     </a>
-                  </li>
-                  <Modal
-                     isOpen={isOpen}
-                     closeModal={() => {
-                        setIsOpen(false);
-                     }}
-                     title='sign out'
-                     message='There are customers still waiting for you 😭'
-                     actionContent='Sign Out'
-                     actionImplement={() => {
-                        dispatch(logoutAction(signedInUser?.id, navigate));
-                     }}
-                  />
                </div>
             </nav>
          ) : (
@@ -359,7 +344,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                                           }
                                        />
                                     </div>
-                                    <div className='absolute z-50 top-[45px] right-[-15px]'>
+                                    <div className='absolute z-50 top-[45px] right-[-110px] md:right-[-15px]'>
                                        <div
                                           className={`flex justify-end duration-150 transition-all ${
                                              showNoti ? 'w-11/12' : 'opacity-0'
@@ -371,8 +356,8 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                                           id='notiDropdown'
                                           className={`bg-white duration-200 transition-all shadow-sm shadow-gray-400 rounded-md overflow-y-scroll ${
                                              showNoti
-                                                ? 'h-[500px] w-[25rem]'
-                                                : 'h-0 w-[25rem]'
+                                                ? 'h-[500px] w-[20rem] md:w-[25rem]'
+                                                : 'h-0 w-[20rem] md:w-[25rem]'
                                           }`}
                                        >
                                           {showNoti &&

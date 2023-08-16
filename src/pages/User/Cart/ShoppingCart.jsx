@@ -155,10 +155,10 @@ const ShoppingCart = () => {
    };
 
    return (
-      <div className='w-3/4 mx-auto grid grid-cols-12 gap-5 mb-10'>
-         <div className='col-span-9 mt-5 bg-white py-5 px-10 rounded-md shadow-md shadow-gray-300'>
+      <div className='w-10/12 md:w-3/4 mx-auto grid grid-cols-12 gap-5 mb-10'>
+         <div className='col-span-12 lg:col-span-9 mt-5 bg-white px-4 py-4 md:py-5 md:px-10 rounded-md shadow-md shadow-gray-300'>
             <div className='my-3'>
-               <h1 className='text-[#374b73] text-4xl font-bold mb-10'>
+               <h1 className='text-[#374b73] text-3xl md:text-4xl font-bold mb-5 md:mb-10'>
                   Your Shopping Cart
                </h1>
             </div>
@@ -170,8 +170,8 @@ const ShoppingCart = () => {
                            key={Math.random()}
                            className='border-b border-gray-200 mt-4'
                         >
-                           <div className='flex py-2'>
-                              <div className='flex items-center mr-5'>
+                           <div className='block md:flex py-2'>
+                              <div className='flex items-center mr-5 mb-5 md:mb-0'>
                                  <input
                                     id='checked-checkbox'
                                     type='checkbox'
@@ -183,12 +183,12 @@ const ShoppingCart = () => {
                                  />
                               </div>
                               <img
-                                 className='w-1/6 object-cover'
+                                 className='w-full md:w-2/6 lg:w-1/6 object-cover'
                                  src={item?.Product?.image}
                               />
-                              <div className='w-5/6 px-5'>
+                              <div className='w-full md:w-5/6 px-3 md:px-5'>
                                  <div className='flex items-center'>
-                                    <h2 className='text-xl font-bold text-[#374b73] my-2 w-11/12'>
+                                    <h2 className='text-md md:text-xl font-bold text-[#374b73] my-2 w-11/12'>
                                        {item?.Product?.name}
                                     </h2>
                                     <div className='w-1/12'>
@@ -203,14 +203,14 @@ const ShoppingCart = () => {
                                              hasArrow
                                              label='Remove from cart'
                                           >
-                                             <TrashIcon className='w-5 h-5' />
+                                             <TrashIcon className='w-4 h-4 md:w-5 md:h-5' />
                                           </Tooltip>
                                        </button>
                                     </div>
                                  </div>
 
                                  <div className='flex items-baseline'>
-                                    <span className='text-lg font-semibold text-[#374b73]'>
+                                    <span className='text-md md:text-lg font-semibold text-[#374b73]'>
                                        {convertToCurrency(
                                           calculateDiscountPriceInCart(
                                              item?.Product?.price,
@@ -286,7 +286,7 @@ const ShoppingCart = () => {
                                                 ) || [];
                                              setSelectedItems(listCart);
                                           }}
-                                          className='p-1 rounded-md bg-gray-100 text-[#374b73] hover:bg-[#374b73] hover:border-white hover:text-white transition-all duration-200'
+                                          className='p-1 rounded-md bg-gray-100 text-[#374b73] hover:bg-[#374b73] hover:border-white hover:text-white transition-all duration-200 mr-2'
                                        >
                                           <MinusIcon className='w-5 h-5' />
                                        </button>
@@ -314,7 +314,7 @@ const ShoppingCart = () => {
                                                 ) || [];
                                              setSelectedItems(listCart);
                                           }}
-                                          className='p-1 rounded-md bg-gray-100 text-[#374b73] hover:bg-[#374b73] hover:border-white hover:text-white transition-all duration-200'
+                                          className='p-1 rounded-md bg-gray-100 text-[#374b73] hover:bg-[#374b73] hover:border-white hover:text-white transition-all duration-200 ml-2'
                                        >
                                           <PlusIcon className='w-5 h-5' />
                                        </button>
@@ -340,7 +340,7 @@ const ShoppingCart = () => {
 
             {renderModal()}
          </div>
-         <div className='col-span-3 mt-5 bg-white py-5 px-5 rounded-md shadow-md shadow-gray-300 h-fit'>
+         <div className='col-span-12 lg:col-span-3 mt-5 bg-white py-5 px-5 rounded-md shadow-md shadow-gray-300 h-fit'>
             <div className='flex items-baseline'>
                <h1 className='text-[#374b73] font-semibold text-lg'>
                   Subtotal:
