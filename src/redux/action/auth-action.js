@@ -5,6 +5,8 @@ import {
    checkExistedEmailService,
    registerService,
    resetTokenService,
+   loginWithFacebookService,
+   loginWithGoogleService,
 } from '../../services/auth-service';
 import {
    checkExistedEmailReducer,
@@ -17,6 +19,42 @@ export const loginAction = (body, navigate) => {
    return async (dispatch) => {
       try {
          const data = await loginService(body);
+         localStorage.setItem(
+            import.meta.env.VITE_SIGNED_IN_USER,
+            JSON.stringify(data.data)
+         );
+         dispatch(getSignedInUserReducer(data.data));
+         setTimeout(() => {
+            navigate('/');
+         }, 700);
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const loginWithFacebookAction = (body, navigate) => {
+   return async (dispatch) => {
+      try {
+         const data = await loginWithFacebookService(body);
+         localStorage.setItem(
+            import.meta.env.VITE_SIGNED_IN_USER,
+            JSON.stringify(data.data)
+         );
+         dispatch(getSignedInUserReducer(data.data));
+         setTimeout(() => {
+            navigate('/');
+         }, 700);
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const loginWithGoogleAction = (body, navigate) => {
+   return async (dispatch) => {
+      try {
+         const data = await loginWithGoogleService(body);
          localStorage.setItem(
             import.meta.env.VITE_SIGNED_IN_USER,
             JSON.stringify(data.data)

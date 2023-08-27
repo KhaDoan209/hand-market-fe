@@ -29,11 +29,23 @@ import {
    Button,
 } from '@chakra-ui/react';
 import alterAvatar from '../../../assets/img/alter-ava.png';
-import { Line } from 'react-chartjs-2';
+import { Line, Pie } from 'react-chartjs-2';
 import { Doughnut } from 'react-chartjs-2';
 import { MapPinIcon } from '@heroicons/react/24/solid';
+import { getListOrderByUserForAdminAction } from '../../../redux/action/order-action';
+import { getUserFromLocal } from '../../../utils/utils-functions';
+import { OrderStatus } from '../../../enums/OrderStatus';
+import moment from 'moment/moment';
+import {
+   countOrdersByDate,
+   countOrderTypePercent,
+} from '../../../utils/utils-functions';
 const AccountDetail = () => {
    const userDetail = useSelector((state) => state.userReducer?.user_detail);
+   const list_order_by_user_for_admin = useSelector(
+      (state) => state.orderReducer.list_order_by_user_for_admin
+   );
+   const userSignedIn = getUserFromLocal();
    const {
       isOpen: isOpenChangePassword,
       onOpen: onOpenChangePassword,
@@ -81,9 +93,78 @@ const AccountDetail = () => {
          },
       },
    ];
-   useEffect(() => {
-      dispatch(getUserDetailAction(id));
-   }, []);
+   const labels = countOrdersByDate(list_order_by_user_for_admin).map(
+      (item) => item.order_date
+   );
+   const values = countOrdersByDate(list_order_by_user_for_admin).map(
+      (item) => item.order_total
+   );
+   console.log(list_order_by_user_for_admin);
+   const lineChartData = {
+      labels: labels,
+      datasets: [
+         {
+            label: 'Order Total',
+            data: values,
+            borderColor: '#5a6e8c',
+            borderWidth: 2,
+            fill: false,
+         },
+      ],
+   };
+   const lineChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+         x: {
+            type: 'time',
+            time: {
+               unit: 'day',
+               displayFormats: {
+                  day: 'MMM D',
+               },
+            },
+            title: {
+               display: true,
+               text: 'Order Date',
+            },
+         },
+         y: {
+            beginAtZero: true,
+            title: {
+               display: true,
+               text: 'Order Total',
+            },
+         },
+      },
+   };
+   const doughnutChartData = {
+      labels: countOrderTypePercent(list_order_by_user_for_admin).map(
+         (item) => item.status
+      ),
+      datasets: [
+         {
+            label: '%',
+            data: countOrderTypePercent(list_order_by_user_for_admin).map(
+               (item) => item.percentage
+            ),
+            backgroundColor: ['#66CC6B', '#FFA55A', '#ffde74', '#f95959'],
+            hoverBackgroundColor: ['#80E27E', '#ffa974', '#f5e180', '#ff847c'],
+         },
+      ],
+   };
+   const doughnutChartoptions = {
+      plugins: {
+         legend: {
+            position: 'bottom',
+         },
+         title: {
+            display: true,
+            text: 'Order Status Percentage',
+            fontSize: 16,
+         },
+      },
+   };
    const formikAddress = useFormik({
       enableReinitialize: true,
       initialValues: {
@@ -113,6 +194,12 @@ const AccountDetail = () => {
          dispatch(changePasswordAction(userDetail?.id, values));
       },
    });
+   useEffect(() => {
+      dispatch(getUserDetailAction(id));
+      if (userSignedIn?.role === Admin) {
+         dispatch(getListOrderByUserForAdminAction(id, undefined));
+      }
+   }, []);
    const renderModalChangePassword = () => {
       return (
          <>
@@ -174,7 +261,6 @@ const AccountDetail = () => {
          </>
       );
    };
-
    const renderModalUpdateInfor = () => {
       return (
          <>
@@ -221,7 +307,6 @@ const AccountDetail = () => {
          </>
       );
    };
-
    return (
       <div className='grid grid-cols-12 relative z-0'>
          <div className='col-span-5 relative z-[5] h-screen'>
@@ -506,44 +591,18 @@ const AccountDetail = () => {
             </div>
          </div>
          <div className='col-span-7'>
-            <div className='w-11/12 flex justify-center mx-auto h-1/4 lg:h-2/5 rounded-md bg-gray-white shadow-lg shadow-gray-200 my-5'>
+            <div className='w-11/12 flex justify-center mx-auto h-1/4 lg:h-2/5 rounded-md bg-white shadow-lg shadow-gray-200 my-5'>
                <Line
                   datasetIdKey='id'
-                  data={{
-                     labels: ['Jun', 'Jul', 'Aug'],
-                     datasets: [
-                        {
-                           id: 1,
-                           label: '',
-                           data: [5, 6, 7],
-                        },
-                        {
-                           id: 2,
-                           label: '',
-                           data: [3, 2, 1],
-                        },
-                     ],
-                  }}
+                  data={lineChartData}
+                  options={lineChartOptions}
                />
             </div>
-            <div className='w-11/12 flex justify-center mx-auto h-1/4 lg:h-2/5 rounded-md bg-gray-white shadow-lg shadow-gray-200 my-5'>
-               <Doughnut
+            <div className='w-11/12 flex justify-center mt-10 mx-auto h-1/4 lg:h-[50vh] rounded-md shadow-lg shadow-gray-200 my-5 bg-white'>
+               <Pie
                   datasetIdKey='id'
-                  data={{
-                     labels: ['Jun', 'Jul', 'Aug'],
-                     datasets: [
-                        {
-                           id: 1,
-                           label: '',
-                           data: [5, 6, 7],
-                        },
-                        {
-                           id: 2,
-                           label: '',
-                           data: [3, 2, 1],
-                        },
-                     ],
-                  }}
+                  data={doughnutChartData}
+                  options={doughnutChartoptions}
                />
             </div>
          </div>

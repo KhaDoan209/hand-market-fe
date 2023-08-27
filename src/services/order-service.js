@@ -1,10 +1,30 @@
 import toast from 'react-hot-toast';
 import { http } from './axios-interceptor';
 
+export const getListOrderService = (
+   pageNumber = '',
+   pageSize = '',
+   orderStatus = ''
+) => {
+   return http.get(
+      `/order/get-list-order?pageNumber=${pageNumber}&pageSize=${pageSize}&orderStatus=${orderStatus}`
+   );
+};
+
 export const getListOrderByUserService = (userId, pageNumber, pageSize) => {
    return http.get(
       `/order/get-order-by-user/${userId}?pageNumber=${pageNumber}&pageSize=${pageSize}`
    );
+};
+
+export const getListOrderByUserForAdminService = (userId, orderStatus) => {
+   if (orderStatus) {
+      return http.get(
+         `/order/get-list-order-by-user-for-admin/${userId}?orderStatus=${orderStatus}`
+      );
+   } else {
+      return http.get(`/order/get-list-order-by-user-for-admin/${userId}`);
+   }
 };
 
 export const createNewOrderService = (data) => {
