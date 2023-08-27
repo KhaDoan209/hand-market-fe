@@ -24,3 +24,11 @@ export const registerService = (body) => {
 export const resetTokenService = () => {
    return http.post('/auth/reset');
 };
+
+export const loginWithFacebookService = (data) => {
+   return toastPromise(http.post(`/auth/facebook-login`, data), 'Signing in');
+};
+
+export const loginWithGoogleService = (data) => {
+   return toastPromise(http.post(`/auth/google-login`, data), 'Signing in');
+};

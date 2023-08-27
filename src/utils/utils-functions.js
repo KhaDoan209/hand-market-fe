@@ -1,3 +1,4 @@
+import { OrderStatus } from '../enums/OrderStatus';
 export const getUserFromLocal = () => {
    if (localStorage.getItem(import.meta.env.VITE_SIGNED_IN_USER)) {
       return JSON.parse(
@@ -91,4 +92,127 @@ export const playNotificationSound = () => {
    if (notificationSound) {
       return notificationSound.play();
    }
+};
+
+export const countOrdersDoneAndCanceledByDate = (orders) => {
+   const orderCounts = {};
+   for (const order of orders) {
+      const orderDate = new Date(order.order_date).toISOString().split('T')[0];
+      if (!orderCounts[orderDate]) {
+         orderCounts[orderDate] = {
+            order_date: orderDate,
+            order_done_count: 0,
+            order_cancel_count: 0,
+         };
+      }
+      if (order.status === OrderStatus.Done) {
+         orderCounts[orderDate].order_done_count++;
+      } else if (order.status === OrderStatus.Canceled) {
+         orderCounts[orderDate].order_cancel_count++;
+      }
+   }
+   const sortedResults = Object.values(orderCounts).sort((a, b) =>
+      a.order_date.localeCompare(b.order_date)
+   );
+   return sortedResults;
+};
+
+export const countOrdersByDate = (orders) => {
+   const orderCounts = {};
+   for (const order of orders) {
+      const orderDate = new Date(order.order_date).toISOString().split('T')[0];
+      if (!orderCounts[orderDate]) {
+         orderCounts[orderDate] = {
+            order_date: orderDate,
+            order_total: 0,
+         };
+      }
+      if (order.status !== OrderStatus.Canceled) {
+         orderCounts[orderDate].order_total++;
+      }
+   }
+   const sortedResults = Object.values(orderCounts).sort((a, b) =>
+      a.order_date.localeCompare(b.order_date)
+   );
+   return sortedResults;
+};
+
+export const countOrderTypePercent = (orders) => {
+   const statusCounts = {};
+   orders.forEach((order) => {
+      const status = order.status;
+      statusCounts[status] = (statusCounts[status] || 0) + 1;
+   });
+   const totalOrders = orders.length;
+   const statusData = [];
+   for (const status in statusCounts) {
+      const percentage = ((statusCounts[status] / totalOrders) * 100).toFixed(
+         2
+      );
+      statusData.push({ status, percentage: Number(percentage) });
+   }
+   return statusData;
+};
+
+export const generateRandomColors = (count) => {
+   const randomColors = [];
+   for (let i = 0; i < count; i++) {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      const a = 0.7;
+      const randomColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+      randomColors.push(randomColor);
+   }
+
+   return randomColors;
+};
+
+export const countUserHasMostOrder = (orders) => {
+   const userOrderInfo = {};
+   orders.forEach((order) => {
+      const userId = order.User.id;
+      if (!userOrderInfo[userId]) {
+         userOrderInfo[userId] = {
+            id: order.User.id,
+            name: `${order.User.first_name} ${order.User.last_name}`,
+            avatar: order?.User?.avatar,
+            email: order?.User?.email,
+            totalOrders: 0,
+            totalAmount: 0,
+         };
+      }
+      userOrderInfo[userId].totalOrders++;
+      userOrderInfo[userId].totalAmount += parseFloat(order.order_total);
+   });
+   const sortedUsers = Object.values(userOrderInfo).sort(
+      (a, b) => b.totalAmount - a.totalAmount
+   );
+   const topUsers = sortedUsers.slice(0, 5).map((user) => ({
+      id: user.id,
+      name: user.name,
+      avatar: user.avatar,
+      email: user.email,
+      totalOrders: user.totalOrders,
+      totalAmount: user.totalAmount,
+   }));
+
+   return topUsers;
+};
+
+export const calculateTotalProfitByDate = (orders) => {
+   const profitByDate = {};
+   orders.forEach((order) => {
+      const orderDate = new Date(order.order_date).toLocaleDateString();
+      const orderTotal = parseFloat(order.order_total);
+      if (!profitByDate[orderDate]) {
+         profitByDate[orderDate] = 0;
+      }
+      profitByDate[orderDate] += orderTotal;
+   });
+   const result = Object.keys(profitByDate).map((date) => ({
+      date,
+      profit: profitByDate[date],
+   }));
+   return result;
 };

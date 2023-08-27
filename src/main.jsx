@@ -2,6 +2,7 @@ import React from 'react';
 import './assets/scss/main.scss';
 import './index.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import 'chartjs-adapter-moment';
 import App from './App.jsx';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -27,14 +28,17 @@ import OrderList from './pages/Shipper/Order/OrderList';
 import UserProfile from './pages/User/Account/UserProfile';
 import OrderComplete from './pages/User/Order/OrderComplete';
 import OrderDetailUser from './pages/User/Order/OrderDetailUser';
+import OrderDetailAdmin from './pages/Admin/Order/OrderDetailAdmin';
+import Statistic from './pages/Admin/Statistic/Statistic';
 import { Provider } from 'react-redux';
 import { persistor, store } from './redux/store';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import Chart from 'chart.js/auto';
+import OrderManagementAdmin from './pages/Admin/Order/OrderManagementAdmin';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
    <>
-      <BrowserRouter basename='hand-market'>
+      <BrowserRouter>
          <PersistGate
             loading={null}
             persistor={persistor}
@@ -167,6 +171,27 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                            element={<ProductDetail />}
                            lazy={() =>
                               import('./pages/Admin/Product/ProductDetail')
+                           }
+                        />
+                        <Route
+                           path='/admin/order-management'
+                           element={<OrderManagementAdmin />}
+                           lazy={() =>
+                              import('./pages/Admin/Order/OrderManagementAdmin')
+                           }
+                        />
+                        <Route
+                           path='/admin/statistic'
+                           element={<Statistic />}
+                           lazy={() =>
+                              import('./pages/Admin/Statistic/Statistic')
+                           }
+                        />
+                        <Route
+                           path='/admin/order-management/order-detail/:id'
+                           element={<OrderDetailAdmin />}
+                           lazy={() =>
+                              import('./pages/Admin/Order/OrderDetailAdmin')
                            }
                         />
                      </Route>

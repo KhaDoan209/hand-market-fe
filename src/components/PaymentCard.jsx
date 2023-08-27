@@ -19,6 +19,7 @@ import {
    Button,
 } from '@chakra-ui/react';
 const PaymentCard = ({ card, user }) => {
+   console.log(user.last_name == null);
    const dispatch = useDispatch();
    const { isOpen, onOpen, onClose } = useDisclosure();
    const [windowSize, setWindowSize] = useState({
@@ -85,7 +86,9 @@ const PaymentCard = ({ card, user }) => {
                <div className='flex items-center text-sm md:text-md my-2 text-[#5a6e8c]'>
                   <div className='font-bold'>Card Holder:</div>
                   <p className='mx-2 tracking-widest'>
-                     {user?.first_name + ' ' + user?.last_name}
+                     {user?.first_name +
+                        ' ' +
+                        `${user?.last_name !== null ? user?.last_name : ''}`}
                   </p>
                </div>
             </>

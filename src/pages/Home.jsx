@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { getListCategoryAction } from '../redux/action/category-action';
 import alterAvatar from '../assets/img/alter-ava.png';
 import {
+   getListProductAction,
    getListProductByDiscountAction,
    getListProductByPurchaseAction,
 } from '../redux/action/product-action';
@@ -17,7 +18,7 @@ import NextArrow from '../components/NextArrow';
 import PrevArrow from '../components/PrevArrow';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
+import { getListNotificationAction } from '../redux/action/noti-action';
 import { isMobile } from 'react-device-detect';
 import { Admin, Shipper, User } from '../utils/variables';
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from '@chakra-ui/react';
@@ -28,7 +29,9 @@ import {
 } from '../redux/action/order-action';
 import OrderCardShipper from '../components/OrderCardShipper';
 import OrderInProgress from '../components/OrderInProgress';
+import cookie from 'cookie';
 const Home = (props) => {
+   const cookies = cookie.parse(document.cookie);
    const { navigate, dispatch } = useOutletContext();
    const userSignedIn = getUserFromLocal();
    const userDetail = useSelector((state) => state.authReducer.user_signed_in);
@@ -56,6 +59,8 @@ const Home = (props) => {
    const list_pending_delivery_order = useSelector(
       (state) => state.orderReducer.list_pending_delivery_order
    );
+   console.log(list_pending_delivery_order);
+
    const list_waiting_done = useSelector(
       (state) => state.orderReducer.list_waiting_done
    );
@@ -64,11 +69,14 @@ const Home = (props) => {
    );
 
    useEffect(() => {
+      dispatch(getListProductByPurchaseAction());
+      dispatch(getListProductByDiscountAction());
+      dispatch(getListProductAction());
+      dispatch(getListCategoryAction());
       if (userSignedIn?.role === User || userSignedIn?.role === Admin) {
-         dispatch(getListProductByPurchaseAction());
-         dispatch(getListCategoryAction());
-         dispatch(getListProductByDiscountAction());
-      } else {
+         dispatch(getListNotificationAction(userSignedIn?.id));
+      } else if (userSignedIn?.role === Shipper) {
+         dispatch(getListNotificationAction(userSignedIn?.id));
          dispatch(getOrderInProgressAction(userSignedIn?.id));
          dispatch(getListPendingDeliveryOrderAction());
          dispatch(getListWaitingDoneOrderAction(userSignedIn?.id));

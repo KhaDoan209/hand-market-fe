@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import {
+   PencilSquareIcon,
+   QuestionMarkCircleIcon,
+} from '@heroicons/react/24/outline';
 import ProductCard from '../../../components/ProductCard';
 import { ProductType } from '../../../enums/ProductType';
 import {
@@ -17,6 +20,7 @@ import { calculateDiscountPriceInCart } from '../../../utils/utils-functions';
 import { createNewOrderAction } from '../../../redux/action/order-action';
 const OrderReview = () => {
    const { dispatch, navigate } = useOutletContext();
+   const [showInstruction, setShowInstruction] = useState(false);
    const userSignedIn = useSelector(
       (state) => state.authReducer.user_signed_in
    );
@@ -49,11 +53,11 @@ const OrderReview = () => {
    );
    const [itemToCheckOut, setItemToCheckOut] = useState([]);
    useEffect(() => {
-      if (userSignedIn?.Address === null) {
+      if (userSignedIn?.Address === null || userSignedIn?.phone === null) {
          toast.error(
             <div className='w-fit flex'>
                <span className='text-red-500 block'>
-                  Please enter your address before checkout
+                  Please enter your information before checkout
                </span>
                <button
                   className='text-[#5a6e8c] hover underline font-semibold ml-3'
@@ -65,7 +69,7 @@ const OrderReview = () => {
                </button>
             </div>,
             {
-               duration: 10000,
+               duration: 3000,
                id: 'updateInfor',
                style: {
                   minWidth: 'fit-content',
@@ -73,6 +77,7 @@ const OrderReview = () => {
             }
          );
       }
+
       return () => {
          toast.dismiss();
       };
@@ -110,27 +115,37 @@ const OrderReview = () => {
       }
    };
    const handleOnPlaceOrder = () => {
-      const productToCheckout = [];
-      itemToCheckOut?.map((item) => {
-         const itemInCart = {
-            id: item?.product_id,
-            quantity: item?.item_quantity,
-            price: calculateDiscountPriceInCart(
-               item?.Product?.price,
-               item?.Product?.Discount?.percentage,
-               item?.item_quantity
-            ),
+      if (userSignedIn?.Address === null || userSignedIn?.phone === null) {
+         toast.error('Please update all of your information before check out');
+      } else if (listSavedCards?.length === 0) {
+         toast.error('Please update your payment method');
+      } else if (Math.ceil(Number(calculateTotalOrder())) <= 20000) {
+         toast.error('The total order must be greater than 20,000 VND');
+      } else if (selectCard === null) {
+         toast.error('Please choose the payment method');
+      } else {
+         const productToCheckout = [];
+         itemToCheckOut?.map((item) => {
+            const itemInCart = {
+               id: item?.product_id,
+               quantity: item?.item_quantity,
+               price: calculateDiscountPriceInCart(
+                  item?.Product?.price,
+                  item?.Product?.Discount?.percentage,
+                  item?.item_quantity
+               ),
+            };
+            productToCheckout.push(itemInCart);
+         });
+         const newOrder = {
+            order_total: Math.ceil(Number(calculateTotalOrder())),
+            card_id: cardId,
+            product: productToCheckout,
+            user_id: userSignedIn?.id,
+            shipping_method: shipping,
          };
-         productToCheckout.push(itemInCart);
-      });
-      const newOrder = {
-         order_total: Math.ceil(Number(calculateTotalOrder())),
-         card_id: cardId,
-         product: productToCheckout,
-         user_id: userSignedIn?.id,
-         shipping_method: shipping,
-      };
-      dispatch(createNewOrderAction(navigate, newOrder));
+         dispatch(createNewOrderAction(navigate, newOrder));
+      }
    };
    return (
       <div className='w-10/12 md:w-3/4 mx-auto grid grid-cols-12 gap-5 mb-10'>
@@ -171,29 +186,39 @@ const OrderReview = () => {
                      </div>
                   </div>
                ) : (
-                  <h1>Please update your address</h1>
+                  <h1 className='text-md text-red-500 font-semibold'>
+                     Please update your address
+                  </h1>
                )}
             </div>
+
             <div className='my-5 md:my-10 md:flex'>
                <h2 className='text-[#374b73] text-xl font-bold w-full md:w-2/5 '>
                   Phone Number:
                </h2>
-               <div className='flex w-full md:w-3/5 justify-between'>
-                  <div className='w-3/5 mt-2 md:mt-0'>
-                     <span className='text-[#374b73] text-md md:text-lg font-semibold '>
-                        {userSignedIn?.phone}
-                     </span>
+               {userSignedIn?.phone !== null ? (
+                  <div className='flex w-full md:w-3/5 justify-between'>
+                     <div className='w-3/5 mt-2 md:mt-0'>
+                        <span className='text-[#374b73] text-md md:text-lg font-semibold '>
+                           {userSignedIn?.phone}
+                        </span>
+                     </div>
+                     <div
+                        onClick={() => {
+                           navigate(`user/user-profile/${userSignedIn?.id}`);
+                        }}
+                        className='p-1.5 cursor-pointer hover:bg-[#374b73] rounded-md hover:text-white transition-all duration-300'
+                     >
+                        <PencilSquareIcon className='h-4 w-4 lg:h-5 lg:w-5' />
+                     </div>
                   </div>
-                  <div
-                     onClick={() => {
-                        navigate(`user/user-profile/${userSignedIn?.id}`);
-                     }}
-                     className='p-1.5 cursor-pointer hover:bg-[#374b73] rounded-md hover:text-white transition-all duration-300'
-                  >
-                     <PencilSquareIcon className='h-4 w-4 lg:h-5 lg:w-5' />
-                  </div>
-               </div>
+               ) : (
+                  <h1 className='text-md text-red-500 font-semibold'>
+                     Please update your phone number
+                  </h1>
+               )}
             </div>
+
             <div className='my-10'>
                <h2 className='text-[#374b73] text-xl font-bold w-full md:w-2/5'>
                   Ordered Items:
@@ -219,49 +244,55 @@ const OrderReview = () => {
                <h2 className='text-[#374b73] text-xl font-bold w-full md:w-2/5'>
                   Your payment cards:
                </h2>
-               <div className='w-full md:w-3/5 my-5 md:my-0'>
-                  {listSavedCards?.map((item) => {
-                     return (
-                        <div
-                           key={Math.random()}
-                           className='flex items-center mb-4'
-                        >
-                           <div className='flex items-center h-5'>
-                              <input
-                                 id={item?.card_id}
-                                 name={item?.last4}
-                                 value={item?.card_id}
-                                 type='radio'
-                                 checked={
-                                    selectCard === item?.last4 ? true : false
-                                 }
-                                 onChange={(event) => {
-                                    setSelectCard(event.target.name);
-                                    setCardId(event.target.value);
-                                 }}
-                                 className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 cursor-pointer'
-                              />
+               {listSavedCards?.length > 0 ? (
+                  <div className='w-full md:w-3/5 my-5 md:my-0'>
+                     {listSavedCards?.map((item) => {
+                        return (
+                           <div
+                              key={Math.random()}
+                              className='flex items-center mb-4'
+                           >
+                              <div className='flex items-center h-5'>
+                                 <input
+                                    id={item?.card_id}
+                                    name={item?.last4}
+                                    value={item?.card_id}
+                                    type='radio'
+                                    checked={
+                                       selectCard === item?.last4 ? true : false
+                                    }
+                                    onChange={(event) => {
+                                       setSelectCard(event.target.name);
+                                       setCardId(event.target.value);
+                                    }}
+                                    className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 cursor-pointer'
+                                 />
+                              </div>
+                              {renderCardImage(item)}
+                              <div className='text-sm'>
+                                 <label
+                                    htmlFor={item.label}
+                                    className='font-medium text-[#374b73] text-[16px] h-5'
+                                 >
+                                    {item?.brand.toUpperCase()} ending in{' '}
+                                    {item?.last4}
+                                 </label>
+                                 <p
+                                    id='helper-radio-text'
+                                    className='text-xs font-semibold text-gray-500 '
+                                 >
+                                    Expire on {item?.exp_month}/{item?.exp_year}
+                                 </p>
+                              </div>
                            </div>
-                           {renderCardImage(item)}
-                           <div className='text-sm'>
-                              <label
-                                 htmlFor={item.label}
-                                 className='font-medium text-[#374b73] text-[16px] h-5'
-                              >
-                                 {item?.brand.toUpperCase()} ending in{' '}
-                                 {item?.last4}
-                              </label>
-                              <p
-                                 id='helper-radio-text'
-                                 className='text-xs font-semibold text-gray-500 '
-                              >
-                                 Expire on {item?.exp_month}/{item?.exp_year}
-                              </p>
-                           </div>
-                        </div>
-                     );
-                  })}
-               </div>
+                        );
+                     })}
+                  </div>
+               ) : (
+                  <h1 className='text-md text-red-500 font-semibold'>
+                     You have no added payment method
+                  </h1>
+               )}
             </div>
             <div className='mt-10 md:flex'>
                <h2 className='text-[#374b73] text-xl font-bold w-full md:w-2/5'>
@@ -311,9 +342,42 @@ const OrderReview = () => {
             </div>
          </div>
          <div className='col-span-12 lg:col-span-3 mt-5 bg-white py-5 px-5 rounded-md shadow-md shadow-gray-300 h-fit'>
-            <h1 className='text-[#374b73] font-semibold text-lg'>
-               Order Summary
-            </h1>
+            <div className='flex w-full justify-between items-center'>
+               <h1 className='text-[#374b73] font-semibold text-lg'>
+                  Order Summary
+               </h1>
+               <div className='h-fit relative'>
+                  <QuestionMarkCircleIcon
+                     onMouseEnter={() => {
+                        setShowInstruction(true);
+                     }}
+                     onMouseLeave={() => {
+                        setShowInstruction(false);
+                     }}
+                     className='h-5 w-5 text-purple-800 cursor-pointer'
+                  />
+                  {showInstruction ? (
+                     <div className='absolute right-0'>
+                        <div class='w-72 text-sm font-medium bg-white border border-gray-200 rounded-lg'>
+                           <ul class='w-full px-4 py-2 font-medium text-left  border-b border-gray-200 list-disc'>
+                              <li className='text-purple-600 py-2 list-disc ml-4'>
+                                 Phone number and address are required
+                              </li>
+                              <li className='text-purple-600 py-2 list-disc ml-4'>
+                                 Enter at least one payment method before
+                                 checkout
+                              </li>
+                              <li className='text-purple-600 py-2 list-disc ml-4'>
+                                 The total order must be greater than 20,000 VNĐ
+                              </li>
+                           </ul>
+                        </div>
+                     </div>
+                  ) : (
+                     <></>
+                  )}
+               </div>
+            </div>
             &nbsp;
             <div className='flex justify-between text-[#374b73] font-semibold my-1'>
                <p>Item({itemToCheckOut?.length}):</p>
@@ -368,7 +432,7 @@ const OrderReview = () => {
             <div className='w-full flex justify-center mt-2'>
                <button
                   onClick={handleOnPlaceOrder}
-                  className='py-2 px-3 mt-5 rounded-md bg-gray-100 text-[#5a6e8c] transition-all duration-200 text-sm shadow-sm shadow-gray-300  hover:bg-[#ffdeb4] hover:border-white  font-semibold'
+                  className='py-2 px-3 mt-5 rounded-md bg-gray-100 text-[#5a6e8c] transition-all duration-200 text-sm shadow-sm shadow-gray-300 hover:bg-[#ffdeb4] hover:border-white  font-semibold'
                >
                   Place order
                </button>

@@ -7,6 +7,7 @@ import { Bars3Icon } from '@heroicons/react/24/outline';
 import AvatarNav from './AvatarNav';
 import { Admin, Shipper, User } from '../utils/variables';
 import NumberCircle from './NumberCircle';
+import statisticIcon from '../assets/svg/statistics.svg';
 import {
    ShoppingCartIcon,
    BellAlertIcon,
@@ -15,14 +16,19 @@ import {
    DocumentTextIcon,
    UserIcon,
    ChatBubbleOvalLeftEllipsisIcon,
+   PresentationChartLineIcon,
 } from '@heroicons/react/24/solid';
-
 import { Tooltip } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { getItemCartByUserAction } from '../redux/action/cart-action';
 import Notification from './Notification';
 import { getListNotificationAction } from '../redux/action/noti-action';
 import { isMobile } from 'react-device-detect';
+import {
+   ArchiveBoxIcon,
+   DocumentChartBarIcon,
+   UserGroupIcon,
+} from '@heroicons/react/20/solid';
 
 const NavBar = ({ dispatch, navigate, logo }) => {
    const signedInUser = useSelector(
@@ -31,7 +37,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
    const listItem = [
       {
          label:
-            signedInUser?.role === User ? (
+            signedInUser?.role === User || signedInUser?.role === Admin ? (
                <>
                   <HomeIcon className='w-7 h-7 mx-auto' />
                   <span className='text-sm'>Home</span>
@@ -81,10 +87,42 @@ const NavBar = ({ dispatch, navigate, logo }) => {
          );
          if (signedInUser?.role === Admin) {
             const adminNav = [
-               { label: 'Account', link: '/admin/account-management' },
-               { label: 'Product', link: '/admin/product-management' },
-               { label: 'Blog', link: '/admin/blog-management' },
-               { label: 'Order', link: '/admin/order-management' },
+               {
+                  label: (
+                     <>
+                        <UserGroupIcon className='w-7 h-7 mx-auto' />
+                        <span className='text-sm'>Account</span>
+                     </>
+                  ),
+                  link: '/admin/account-management',
+               },
+               {
+                  label: (
+                     <>
+                        <ArchiveBoxIcon className='w-7 h-7 mx-auto' />
+                        <span className='text-sm'>Product</span>
+                     </>
+                  ),
+                  link: '/admin/product-management',
+               },
+               {
+                  label: (
+                     <>
+                        <DocumentTextIcon className='w-7 h-7 mx-auto' />
+                        <span className='text-sm'>Order</span>
+                     </>
+                  ),
+                  link: '/admin/order-management',
+               },
+               {
+                  label: (
+                     <>
+                        <PresentationChartLineIcon className='w-7 h-7 mx-auto' />
+                        <span className='text-sm'>Statistic</span>
+                     </>
+                  ),
+                  link: '/admin/statistic',
+               },
             ];
             const navAdmin = updatedListItems.slice(0, 1).concat(adminNav);
             setMenuItem(navAdmin);
@@ -208,7 +246,6 @@ const NavBar = ({ dispatch, navigate, logo }) => {
       if (signedInUser?.id && signedInUser?.role === User) {
          dispatch(getItemCartByUserAction(signedInUser?.id));
       }
-      dispatch(getListNotificationAction(signedInUser?.id));
    }, []);
    useEffect(() => {
       document.addEventListener('click', handleClickOutside);

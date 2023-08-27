@@ -47,11 +47,13 @@ const HomeTemplate = () => {
    };
    const userSignedIn = getUserFromLocal();
    const { isOpen, onOpen, onClose } = useDisclosure();
+
    const [order, setOrder] = useState(null);
    useEffect(() => {
       if (userSignedIn?.role === Shipper) {
          socket.on(SocketMessage.NewOrder, (data) => {
             if (data !== null) {
+               console.log(data);
                setOrder(data);
                onOpen();
             }

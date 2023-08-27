@@ -17,6 +17,7 @@ const AvatarNav = ({ dispatch, navigate }) => {
    });
    const isUserExisted = getUserFromLocal();
    const userDetail = useSelector((state) => state.authReducer.user_signed_in);
+
    const [isOpen, setIsOpen] = useState(false);
    useEffect(() => {
       const handleResize = () => {

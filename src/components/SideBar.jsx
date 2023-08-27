@@ -5,12 +5,14 @@ import homeIcon from '../assets/svg/home.svg';
 import usersIcon from '../assets/svg/users.svg';
 import productIcon from '../assets/svg/product.svg';
 import addProduct from '../assets/svg/add-product.svg';
+import orderIcon from '../assets/svg/order.svg';
+import statisticsIcon from '../assets/svg/statistics.svg';
 import trash from '../assets/svg/trash.svg';
-import { Bars3Icon } from '@heroicons/react/20/solid';
 import {
    Bars3BottomLeftIcon,
    ChevronDownIcon,
    Bars3BottomRightIcon,
+   DocumentTextIcon,
 } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 const SideBar = ({ dispatch, navigate, handleShowOverlay, showOverLay }) => {
@@ -18,6 +20,7 @@ const SideBar = ({ dispatch, navigate, handleShowOverlay, showOverLay }) => {
    const url = useLocation();
    const [openProduct, setOpenProduct] = useState(false);
    const [openUser, setOpenUser] = useState(false);
+   const [openOrder, setOpenOrder] = useState(false);
    const listItem = [
       {
          id: 1,
@@ -65,6 +68,27 @@ const SideBar = ({ dispatch, navigate, handleShowOverlay, showOverLay }) => {
             setOpenProduct(false);
          },
          idOpen: openProduct,
+      },
+      {
+         id: 4,
+         label: 'Order',
+         link: '/admin/order-management',
+         icon: orderIcon,
+         subItem: [],
+         open: () => {
+            setOpenOrder(true);
+         },
+         close: () => {
+            setOpenOrder(false);
+         },
+         idOpen: openOrder,
+      },
+      {
+         id: 5,
+         label: 'Statistic',
+         link: '/admin/statistic',
+         icon: statisticsIcon,
+         subItem: [],
       },
    ];
    const showActiveStyle = () => {

@@ -8,8 +8,6 @@ import {
 } from '../../redux/action/auth-action';
 import { Link, useOutletContext } from 'react-router-dom';
 import useDebounce from '../../hooks/useDebounce';
-import google from '../../assets/img/google-icon.png';
-import facebook from '../../assets/img/facebook-icon.png';
 import warning from '../../assets/svg/warning.svg';
 import tick from '../../assets/svg/tick.svg';
 import cross from '../../assets/svg/cross.svg';
@@ -23,7 +21,6 @@ const Register = (props) => {
    const handleCheckEmail = (event) => {
       setEmailCheck(event.target.value);
    };
-
    const formik = useFormik({
       initialValues: {
          email: '',
@@ -258,41 +255,6 @@ const Register = (props) => {
                   className='text-white font-bold bg-[#FFB4B4] hover:bg-opacity-90 hover:shadow-lg hover:shadow-zinc-200 duration-200 focus:ring-4 focus:outline-none rounded-lg text-md w-full px-5 py-3 text-center my-2'
                >
                   Register
-               </button>
-               <div className='w-full text-center'>
-                  <span className='font-semibold text-[#374b73] text-sm md:text-md lg:text-lg'>
-                     Or
-                  </span>
-               </div>
-               <button
-                  type='submit'
-                  className='font-bold bg-white hover:bg-opacity-90 shadow-md shadow-zinc-200 hover:shadow-lg hover:shadow-zinc-200 duration-200 focus:ring-4 focus:outline-none rounded-lg w-full px-5 py-3 my-2'
-               >
-                  <div className='flex items-center justify-center'>
-                     <img
-                        className='rounded-full w-8 h-8'
-                        src={google}
-                        alt='image description'
-                     />
-                     <span className='ml-2 text-[#374b73] text-sm md:text-md lg:text-lg'>
-                        Log in with Google
-                     </span>
-                  </div>
-               </button>
-               <button
-                  type='submit'
-                  className='font-bold bg-[#1877F2] hover:bg-opacity-90 shadow-md shadow-zinc-200 hover:shadow-lg hover:shadow-zinc-200 duration-200 focus:ring-4 focus:outline-none rounded-lg w-full px-5 py-3 my-2'
-               >
-                  <div className='flex items-center justify-center '>
-                     <img
-                        className='rounded-full w-8 h-8'
-                        src={facebook}
-                        alt='image description'
-                     />
-                     <span className='ml-2 text-sm md:text-md lg:text-lg text-white'>
-                        Log in with Facebook
-                     </span>
-                  </div>
                </button>
             </form>
 

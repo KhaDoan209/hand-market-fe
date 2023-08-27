@@ -8,7 +8,6 @@ import {
 } from '../../../redux/action/product-action';
 import ProductCard from '../../../components/ProductCard';
 import { ProductType } from '../../../enums/ProductType';
-import { useLocation } from 'react-router-dom';
 const Product = () => {
    const listProduct = useSelector(
       (state) => state.productReducer.list_product_for_user

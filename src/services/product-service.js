@@ -37,3 +37,4 @@ export const changeProductImageService = (data, id) => {
 export const deleteProductService = (id) => {
    return http.delete(`/product/delete-product/${id}`);
 };
+

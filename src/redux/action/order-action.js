@@ -4,7 +4,9 @@ import {
    cancelOrderService,
    changeOrderStatusService,
    createNewOrderService,
+   getListOrderByUserForAdminService,
    getListOrderByUserService,
+   getListOrderService,
    getListPendingDeliveryOrderService,
    getListWaitingDoneOrderService,
    getOrderDetailService,
@@ -13,12 +15,29 @@ import {
 } from '../../services/order-service';
 import { getItemCartByUserReducer } from '../reducer/cart-reducer';
 import {
+   getListOrderByUserForAdminReducer,
    getListOrderByUserReducer,
+   getListOrderReducer,
    getListPendingDeliveryOrderReducer,
    getListWatingDoneOrderReducer,
    getOrderDetailReducer,
    getOrderInProgressReducer,
 } from '../reducer/order-reducer';
+
+export const getListOrderAction = (pageNumber, pageSize, orderStatus) => {
+   return async (dispatch) => {
+      try {
+         const result = await getListOrderService(
+            pageNumber,
+            pageSize,
+            orderStatus
+         );
+         dispatch(getListOrderReducer(result.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
 
 export const getListOrderByUserAction = (
    userId,
@@ -119,7 +138,6 @@ export const takeOrderAction = (
          await takeOrderService(shipperId, orderId);
          const result = await getOrderInProgressService(shipperId);
          dispatch(getOrderInProgressReducer(result.data));
-         console.log('run here');
          if (inProgressTabRef !== null) {
             inProgressTabRef.current.click();
          }
@@ -144,6 +162,20 @@ export const cancelOrderAction = (data) => {
       try {
          await cancelOrderService(data);
          toast.success('Cancel order sucessfully');
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const getListOrderByUserForAdminAction = (userId, orderStatus) => {
+   return async (dispatch) => {
+      try {
+         const result = await getListOrderByUserForAdminService(
+            userId,
+            orderStatus
+         );
+         dispatch(getListOrderByUserForAdminReducer(result.data));
       } catch (error) {
          console.log(error);
       }
