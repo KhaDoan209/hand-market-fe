@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect } from 'react';
-import { Checkbox, Table } from 'flowbite-react';
+import { Table } from 'flowbite-react';
 import Filter from '../../../components/Filter';
 import { useOutletContext } from 'react-router-dom';
 import {

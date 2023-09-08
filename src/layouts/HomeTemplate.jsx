@@ -47,7 +47,6 @@ const HomeTemplate = () => {
    };
    const userSignedIn = getUserFromLocal();
    const { isOpen, onOpen, onClose } = useDisclosure();
-
    const [order, setOrder] = useState(null);
    useEffect(() => {
       if (userSignedIn?.role === Shipper) {
@@ -87,7 +86,6 @@ const HomeTemplate = () => {
             dispatch(getListNotificationAction(userSignedIn?.id));
          });
          socket.on(SocketMessage.ReadNoti, () => {
-            console.log('read_noti');
             dispatch(getListNotificationAction(userSignedIn?.id));
          });
       }
@@ -133,8 +131,8 @@ const HomeTemplate = () => {
                                        to:
                                     </h1>
                                     <p className='text-gray-400 font-semibold'>
-                                       {order?.User?.first_name},{' '}
-                                       {order?.User?.last_name}
+                                       {order?.Order_user?.first_name},{' '}
+                                       {order?.Order_user?.last_name}
                                     </p>
                                  </div>
                                  <div className=' my-2'>

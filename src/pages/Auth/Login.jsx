@@ -54,7 +54,6 @@ const Login = (props) => {
          last_name: family_name,
          avatar: picture,
       };
-      console.log(loginGoogleData);
       dispatch(loginWithGoogleAction(loginGoogleData, navigate));
       setShowLoginGoogle(false);
    };

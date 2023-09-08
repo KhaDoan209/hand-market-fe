@@ -113,7 +113,8 @@ const OrderCardShipper = ({ item, tab }) => {
                <MapPinIcon className='w-5 h-5 text-green-500' />
                <h1 className='mx-1'>Ship to:</h1>
                <p>
-                  {item?.User?.first_name}&nbsp;{item?.User?.last_name}
+                  {item?.Order_user?.first_name}&nbsp;
+                  {item?.Order_user?.last_name}
                </p>
             </div>
             <h1 className='text-sm font-bold ml-1 my-2'>

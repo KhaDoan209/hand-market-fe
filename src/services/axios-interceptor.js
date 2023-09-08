@@ -28,13 +28,14 @@ http.interceptors.response.use(
          ) {
             if (resetTokenCount < 2) {
                resetTokenCount++;
+               console.log(resetTokenCount);
                let result = await resetTokenService();
                if (result.status === 200) {
                   const originalRequest = error.config;
                   return await http.request(originalRequest);
                }
             } else {
-               window.location.href = '/hand-market/login';
+               window.location.href = '/login';
                toast.error('Please login again');
             }
          }

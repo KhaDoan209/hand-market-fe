@@ -5,11 +5,7 @@ import { getListOrderAction } from '../../../redux/action/order-action';
 import { OrderStatus } from '../../../enums/OrderStatus';
 import Filter from '../../../components/Filter';
 import Pagination from '../../../components/Pagination';
-import {
-   MagnifyingGlassIcon,
-   Cog8ToothIcon,
-   ChatBubbleOvalLeftIcon,
-} from '@heroicons/react/24/solid';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { Table } from 'flowbite-react';
 import { Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import moment from 'moment/moment';
@@ -39,6 +35,8 @@ const OrderManagementAdmin = () => {
    ];
    const { dispatch, navigate } = useOutletContext();
    const list_order = useSelector((state) => state.orderReducer.list_order);
+   console.log(list_order);
+
    useEffect(() => {
       dispatch(getListOrderAction(1, 8, undefined));
    }, []);
@@ -98,7 +96,7 @@ const OrderManagementAdmin = () => {
                   </span>
                </Table.Cell>
                <Table.Cell className='text-[16px]'>
-                  {item?.User?.email}
+                  {item?.Order_user?.email}
                </Table.Cell>
                <Table.Cell>{renderOrderStatus(item?.status)}</Table.Cell>
                <Table.Cell>{moment(item?.order_date).format('LLL')}</Table.Cell>

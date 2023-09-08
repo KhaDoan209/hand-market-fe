@@ -7,7 +7,6 @@ import { Bars3Icon } from '@heroicons/react/24/outline';
 import AvatarNav from './AvatarNav';
 import { Admin, Shipper, User } from '../utils/variables';
 import NumberCircle from './NumberCircle';
-import statisticIcon from '../assets/svg/statistics.svg';
 import {
    ShoppingCartIcon,
    BellAlertIcon,
@@ -17,18 +16,21 @@ import {
    UserIcon,
    ChatBubbleOvalLeftEllipsisIcon,
    PresentationChartLineIcon,
+   ChatBubbleOvalLeftIcon,
 } from '@heroicons/react/24/solid';
 import { Tooltip } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { getItemCartByUserAction } from '../redux/action/cart-action';
 import Notification from './Notification';
-import { getListNotificationAction } from '../redux/action/noti-action';
 import { isMobile } from 'react-device-detect';
+import { ArchiveBoxIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 import {
-   ArchiveBoxIcon,
-   DocumentChartBarIcon,
-   UserGroupIcon,
-} from '@heroicons/react/20/solid';
+   clearConversationAction,
+   getListConversationByUserAction,
+   getListUnseenMessageAction,
+} from '../redux/action/message-action';
+import { socket } from '../socket';
+import { SocketMessage } from '../enums/SocketMessage';
 
 const NavBar = ({ dispatch, navigate, logo }) => {
    const signedInUser = useSelector(
@@ -72,6 +74,9 @@ const NavBar = ({ dispatch, navigate, logo }) => {
       (state) => state.cartReducer.list_item_in_cart
    );
    const listNoti = useSelector((state) => state.notiReducer.list_notification);
+   const listUnseenMessage = useSelector(
+      (state) => state.messageReducer.list_unseen_message
+   );
 
    const [showMenuMobi, setShowMenuMobi] = useState(true);
    const [menuItem, setMenuItem] = useState(listItem);
@@ -164,6 +169,36 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                   ),
                   link: `/user/shopping-cart/${signedInUser?.id}`,
                },
+               {
+                  label: (
+                     <>
+                        <Tooltip
+                           hasArrow
+                           label='Message'
+                        >
+                           <div
+                              className='z-1'
+                              // onClick={() => {
+                              //    dispatch(
+                              //       getListConversationByUserAction(
+                              //          signedInUser?.id
+                              //       )
+                              //    );
+                              // }}
+                           >
+                              <ChatBubbleOvalLeftIcon className='w-7 h-7 mx-auto' />
+                              <div className='absolute top-[-7px] right-[5px] z-40'>
+                                 <NumberCircle
+                                    number={listUnseenMessage?.length}
+                                 />
+                              </div>
+                           </div>
+                        </Tooltip>
+                        <span className='text-sm'>Message</span>
+                     </>
+                  ),
+                  link: `/user/message/${signedInUser?.id}`,
+               },
             ];
             const navUser = updatedListItems.slice(0, 1).concat(userNav);
             setMenuItem(navUser);
@@ -181,21 +216,40 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                },
                {
                   label: (
-                     <div className='z-1 text-center'>
+                     <div className='z-1 text-center relative'>
                         <BellAlertIcon className='w-6 h-6 mx-auto' />
                         <h1 className='text-sm'>Notification</h1>
+                        <div className='absolute top-[-10px] right-[15px] z-40'>
+                           <NumberCircle
+                              number={
+                                 listNoti?.filter(
+                                    (notification) => !notification.is_read
+                                 ).length
+                              }
+                           />
+                        </div>
                      </div>
                   ),
                   link: `/shipper/notification/${signedInUser?.id}`,
                },
                {
                   label: (
-                     <div className='z-1 text-center'>
+                     <div
+                        onClick={() => {
+                           dispatch(
+                              getListConversationByUserAction(signedInUser?.id)
+                           );
+                        }}
+                        className='z-1 text-center relative'
+                     >
                         <ChatBubbleOvalLeftEllipsisIcon className='w-6 h-6 mx-auto' />
                         <h1 className='text-sm'>Chat</h1>
+                        <div className='absolute top-[-10px] right-[-8px] z-40'>
+                           <NumberCircle number={listUnseenMessage?.length} />
+                        </div>
                      </div>
                   ),
-                  link: `/asd`,
+                  link: `/shipper/message/${signedInUser?.id}`,
                },
                {
                   label: (
@@ -221,6 +275,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
          }
       }
    }, [
+      listUnseenMessage?.length,
       itemInCart?.data?.length,
       listNoti?.filter((notification) => !notification.is_read).length,
    ]);
@@ -242,11 +297,27 @@ const NavBar = ({ dispatch, navigate, logo }) => {
          setShowMenuMobi(false);
       }
    }, [windowSize.width]);
+
    useEffect(() => {
       if (signedInUser?.id && signedInUser?.role === User) {
          dispatch(getItemCartByUserAction(signedInUser?.id));
       }
+      if (signedInUser?.id) {
+         dispatch(clearConversationAction());
+         dispatch(getListConversationByUserAction(signedInUser?.id));
+         dispatch(getListUnseenMessageAction(signedInUser?.id));
+      }
    }, []);
+
+   useEffect(() => {
+      socket.on(SocketMessage.NewMessage, () => {
+         dispatch(getListUnseenMessageAction(signedInUser?.id));
+      });
+      socket.on(SocketMessage.SeenMessage, () => {
+         dispatch(getListUnseenMessageAction(signedInUser?.id));
+      });
+   }, []);
+
    useEffect(() => {
       document.addEventListener('click', handleClickOutside);
       return () => {
@@ -328,7 +399,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                            } `}
                            id='nav-mobile'
                         >
-                           <ul className='flex items-center flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white '>
+                           <ul className='flex items-center flex-col font-medium md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white'>
                               {menuItem.map((item) => {
                                  return (
                                     <li
@@ -350,11 +421,11 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                                  );
                               })}
                               {signedInUser?.id ? (
-                                 <div
+                                 <li
                                     ref={notiRef}
-                                    className='relative'
+                                    className='my-4 md:my-0 relative'
                                  >
-                                    <NavLink className='block py-2 px-3 md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent font-normal'>
+                                    <NavLink className='block py-2  md:px-0 md:py-1 text-nav md:text-sm lg:text-[16px] hover-underline rounded md:bg-transparent font-normal'>
                                        <Tooltip
                                           hasArrow
                                           label='Notification'
@@ -411,7 +482,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
                                              })}
                                        </div>
                                     </div>
-                                 </div>
+                                 </li>
                               ) : (
                                  <></>
                               )}

@@ -13,7 +13,6 @@ const Notification = () => {
       (state) => state.notiReducer.list_notification
    );
    const signedInUser = getUserFromLocal();
-   console.log(list_notification);
    const renderTime = (item) => {
       return (
          <span className='text-sm text-gray-400'>
@@ -72,6 +71,7 @@ const Notification = () => {
                </div>
             );
          })}
+         <div className='h-[5rem]'></div>
       </div>
    );
 };

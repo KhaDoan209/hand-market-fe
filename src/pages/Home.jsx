@@ -30,6 +30,7 @@ import {
 import OrderCardShipper from '../components/OrderCardShipper';
 import OrderInProgress from '../components/OrderInProgress';
 import cookie from 'cookie';
+import { getListUnseenMessageAction } from '../redux/action/message-action';
 const Home = (props) => {
    const cookies = cookie.parse(document.cookie);
    const { navigate, dispatch } = useOutletContext();
@@ -60,14 +61,12 @@ const Home = (props) => {
       (state) => state.orderReducer.list_pending_delivery_order
    );
    console.log(list_pending_delivery_order);
-
    const list_waiting_done = useSelector(
       (state) => state.orderReducer.list_waiting_done
    );
    const order_in_progress = useSelector(
       (state) => state.orderReducer.order_in_progress
    );
-
    useEffect(() => {
       dispatch(getListProductByPurchaseAction());
       dispatch(getListProductByDiscountAction());
@@ -178,7 +177,6 @@ const Home = (props) => {
                      </TabPanels>
                   </Tabs>
                </div>
-
                <div className='h-[5rem]'></div>
             </>
          ) : (

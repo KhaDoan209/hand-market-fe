@@ -8,4 +8,7 @@ export const SocketMessage = {
    UpdateFreepick: 'update_freepick',
    UpdateOrderInProgress: 'update_order_in_progress',
    UpdateWaitingDone: 'update_waiting_done',
+   NewMessage: 'new_message',
+   NewConversation: 'new_conversation',
+   SeenMessage: 'seen_message',
 };

@@ -78,3 +78,13 @@ export const changeOrderStatusService = (data) => {
 export const cancelOrderService = (data) => {
    return http.post(`/order/cancel-order`, data);
 };
+
+export const getListOrderByShipperService = (
+   shipperId,
+   pageNumber,
+   pageSize
+) => {
+   return http.get(
+      `/order/get-order-by-shipper/${shipperId}?pageNumber=${pageNumber}&pageSize=${pageSize}`
+   );
+};
