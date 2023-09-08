@@ -101,8 +101,8 @@ const OrderInProgress = () => {
          <div className='my-4 flex text-xl items-center'>
             <img
                src={
-                  order_in_progress?.User?.avatar
-                     ? order_in_progress?.User?.avatar
+                  order_in_progress?.Order_user?.avatar
+                     ? order_in_progress?.Order_user?.avatar
                      : alterImg
                }
                className='w-[3.2rem] h-[3.2rem] rounded-full'
@@ -110,11 +110,11 @@ const OrderInProgress = () => {
 
             <div className='ml-2'>
                <h1 className='text-md font-bold text-gray-500'>
-                  {order_in_progress?.User?.first_name}{' '}
-                  {order_in_progress?.User?.last_name}
+                  {order_in_progress?.Order_user?.first_name}{' '}
+                  {order_in_progress?.Order_user?.last_name}
                </h1>
                <h1 className='text-[15px] font-normal cursor-pointer text-gray-500 '>
-                  {order_in_progress?.User?.phone}
+                  {order_in_progress?.Order_user?.phone}
                </h1>
             </div>
          </div>

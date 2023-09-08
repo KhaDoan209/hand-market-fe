@@ -11,6 +11,7 @@ import paymentReducer from './reducer/payment-reducer';
 import cardReducer from './reducer/card-reducer';
 import orderReducer from './reducer/order-reducer';
 import notiReducer from './reducer/noti-reducer';
+import messageReducer from './reducer/message-reducer';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 const persistConfig = {
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
    cardReducer,
    orderReducer,
    notiReducer,
+   messageReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

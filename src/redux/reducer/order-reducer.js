@@ -3,9 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
    list_order: [],
    list_order_by_user: [],
-   list_pending_delivery_order: {},
+   list_pending_delivery_order: [],
    list_waiting_done: [],
    list_order_by_user_for_admin: [],
+   list_order_by_shipper: [],
    order_in_progress: {},
    order_detail: {},
 };
@@ -35,6 +36,9 @@ const orderReducer = createSlice({
       getListOrderByUserForAdminReducer: (state, action) => {
          state.list_order_by_user_for_admin = action.payload;
       },
+      getListOrderByShipperReducer: (state, action) => {
+         state.list_order_by_shipper = action.payload;
+      },
    },
 });
 
@@ -46,6 +50,7 @@ export const {
    getOrderDetailReducer,
    getListWatingDoneOrderReducer,
    getListOrderByUserForAdminReducer,
+   getListOrderByShipperReducer,
 } = orderReducer.actions;
 
 export default orderReducer.reducer;

@@ -14,6 +14,10 @@ import {
    clearSignedInUserReducer,
 } from '../reducer/auth-reducer';
 import { clearCardReducer } from '../reducer/card-reducer';
+import {
+   clearConversationReducer,
+   clearCurrentConversationIdReducer,
+} from '../reducer/message-reducer';
 import { persistor } from '../store';
 export const loginAction = (body, navigate) => {
    return async (dispatch) => {
@@ -25,7 +29,7 @@ export const loginAction = (body, navigate) => {
          );
          dispatch(getSignedInUserReducer(data.data));
          setTimeout(() => {
-            navigate('/');
+            window.location.href = '/';
          }, 700);
       } catch (error) {
          console.log(error);
@@ -43,7 +47,7 @@ export const loginWithFacebookAction = (body, navigate) => {
          );
          dispatch(getSignedInUserReducer(data.data));
          setTimeout(() => {
-            navigate('/');
+            window.location.href = '/';
          }, 700);
       } catch (error) {
          console.log(error);
@@ -61,7 +65,7 @@ export const loginWithGoogleAction = (body, navigate) => {
          );
          dispatch(getSignedInUserReducer(data.data));
          setTimeout(() => {
-            navigate('/');
+            window.location.href = '/';
          }, 700);
       } catch (error) {
          console.log(error);
@@ -92,6 +96,8 @@ export const logoutAction = (id, navigate) => {
          navigate('/login');
          dispatch(clearSignedInUserReducer());
          dispatch(clearCardReducer());
+         dispatch(clearConversationReducer());
+         dispatch(clearCurrentConversationIdReducer());
       } catch (error) {
          console.log(error);
       }

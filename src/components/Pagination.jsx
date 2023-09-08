@@ -1,8 +1,14 @@
 import React from 'react';
-
+import { isMobile } from 'react-device-detect';
 const Pagination = ({ data, getPrevious, getNext }) => {
    return (
-      <ul className='inline-flex items-center mt-5'>
+      <ul
+         className={`${
+            !isMobile
+               ? 'inline-flex items-center mt-5'
+               : 'flex items-center just my-2'
+         }`}
+      >
          <li>
             {data?.currentPage == data?.previousPage ? (
                <></>

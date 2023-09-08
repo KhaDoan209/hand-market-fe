@@ -29,7 +29,9 @@ import UserProfile from './pages/User/Account/UserProfile';
 import OrderComplete from './pages/User/Order/OrderComplete';
 import OrderDetailUser from './pages/User/Order/OrderDetailUser';
 import OrderDetailAdmin from './pages/Admin/Order/OrderDetailAdmin';
+import MessageShipper from './pages/Shipper/Message/MessageShipper';
 import Statistic from './pages/Admin/Statistic/Statistic';
+import Message from './pages/User/Message/Message';
 import { Provider } from 'react-redux';
 import { persistor, store } from './redux/store';
 import { PersistGate } from 'redux-persist/lib/integration/react';
@@ -62,7 +64,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                               import('./pages/User/Account/UserProfile')
                            }
                         />
-
                         <Route
                            path='/user/shopping-cart/:id'
                            element={<ShoppingCart />}
@@ -100,6 +101,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                            }
                         />
                         <Route
+                           path='/user/message/:id'
+                           element={<Message />}
+                           lazy={() => import('./pages/User/Message/Message')}
+                        />
+                        <Route
                            path='/shipper/notification/:id'
                            element={<Notification />}
                            lazy={() =>
@@ -113,6 +119,18 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                            element={<OrderList />}
                            lazy={() =>
                               import('./pages/Shipper/Order/OrderList')
+                           }
+                        />
+                        <Route
+                           path='/shipper/message/:id'
+                           element={<Message />}
+                           lazy={() => import('./pages/User/Message/Message')}
+                        />
+                        <Route
+                           path='/shipper/message-detail/:id'
+                           element={<MessageShipper />}
+                           lazy={() =>
+                              import('./pages/Shipper/Message/MessageShipper')
                            }
                         />
                         <Route

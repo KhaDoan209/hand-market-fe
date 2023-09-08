@@ -96,6 +96,14 @@ export const playNotificationSound = () => {
 
 export const countOrdersDoneAndCanceledByDate = (orders) => {
    const orderCounts = {};
+   if (
+      orders === null ||
+      typeof orders === 'undefined' ||
+      !Array.isArray(orders) ||
+      orders.length === 0
+   ) {
+      return [];
+   }
    for (const order of orders) {
       const orderDate = new Date(order.order_date).toISOString().split('T')[0];
       if (!orderCounts[orderDate]) {
@@ -119,6 +127,14 @@ export const countOrdersDoneAndCanceledByDate = (orders) => {
 
 export const countOrdersByDate = (orders) => {
    const orderCounts = {};
+   if (
+      orders === null ||
+      typeof orders === 'undefined' ||
+      !Array.isArray(orders) ||
+      orders.length === 0
+   ) {
+      return [];
+   }
    for (const order of orders) {
       const orderDate = new Date(order.order_date).toISOString().split('T')[0];
       if (!orderCounts[orderDate]) {
@@ -139,7 +155,15 @@ export const countOrdersByDate = (orders) => {
 
 export const countOrderTypePercent = (orders) => {
    const statusCounts = {};
-   orders.forEach((order) => {
+   if (
+      orders === null ||
+      typeof orders === 'undefined' ||
+      !Array.isArray(orders) ||
+      orders.length === 0
+   ) {
+      return [];
+   }
+   orders?.forEach((order) => {
       const status = order.status;
       statusCounts[status] = (statusCounts[status] || 0) + 1;
    });
@@ -169,15 +193,23 @@ export const generateRandomColors = (count) => {
 };
 
 export const countUserHasMostOrder = (orders) => {
+   if (
+      orders === null ||
+      typeof orders === 'undefined' ||
+      !Array.isArray(orders) ||
+      orders.length === 0
+   ) {
+      return [];
+   }
    const userOrderInfo = {};
-   orders.forEach((order) => {
-      const userId = order.User.id;
+   orders?.forEach((order) => {
+      const userId = order?.Order_user?.id;
       if (!userOrderInfo[userId]) {
          userOrderInfo[userId] = {
-            id: order.User.id,
-            name: `${order.User.first_name} ${order.User.last_name}`,
-            avatar: order?.User?.avatar,
-            email: order?.User?.email,
+            id: order?.Order_user.id,
+            name: `${order?.Order_user.first_name} ${order?.Order_user.last_name}`,
+            avatar: order?.Order_user?.avatar,
+            email: order?.Order_user?.email,
             totalOrders: 0,
             totalAmount: 0,
          };
@@ -201,8 +233,16 @@ export const countUserHasMostOrder = (orders) => {
 };
 
 export const calculateTotalProfitByDate = (orders) => {
+   if (
+      orders === null ||
+      typeof orders === 'undefined' ||
+      !Array.isArray(orders) ||
+      orders.length === 0
+   ) {
+      return [];
+   }
    const profitByDate = {};
-   orders.forEach((order) => {
+   orders?.forEach((order) => {
       const orderDate = new Date(order.order_date).toLocaleDateString();
       const orderTotal = parseFloat(order.order_total);
       if (!profitByDate[orderDate]) {

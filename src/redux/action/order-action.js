@@ -4,6 +4,7 @@ import {
    cancelOrderService,
    changeOrderStatusService,
    createNewOrderService,
+   getListOrderByShipperService,
    getListOrderByUserForAdminService,
    getListOrderByUserService,
    getListOrderService,
@@ -15,6 +16,7 @@ import {
 } from '../../services/order-service';
 import { getItemCartByUserReducer } from '../reducer/cart-reducer';
 import {
+   getListOrderByShipperReducer,
    getListOrderByUserForAdminReducer,
    getListOrderByUserReducer,
    getListOrderReducer,
@@ -52,6 +54,25 @@ export const getListOrderByUserAction = (
             pageSize
          );
          dispatch(getListOrderByUserReducer(listOrderByUser.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const getListOrderByShipperAction = (
+   shipperId,
+   pageNumber = 1,
+   pageSize = 6
+) => {
+   return async (dispatch) => {
+      try {
+         const result = await getListOrderByShipperService(
+            shipperId,
+            pageNumber,
+            pageSize
+         );
+         dispatch(getListOrderByShipperReducer(result.data));
       } catch (error) {
          console.log(error);
       }
