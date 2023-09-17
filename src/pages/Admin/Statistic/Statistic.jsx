@@ -54,10 +54,29 @@ const Statistic = () => {
          console.log(error);
       }
    };
+
+   const barChartData = {
+      labels: productByCategory.map((category) => category.name),
+      datasets: [
+         {
+            label: '',
+            data: productByCategory.map((category) => category.productCount),
+            backgroundColor: generateRandomColors(productByCategory.length),
+            borderWidth: 1,
+         },
+      ],
+   };
    useEffect(() => {
       dispatch(getListOrderAction());
+   }, []);
+
+   useEffect(() => {
+      const fetchAPI = setInterval(() => {
+         dispatch(getListOrderAction());
+      }, 30000);
       getListProductByPurchase();
       getListProductByCategory();
+      return () => clearInterval(fetchAPI);
    }, []);
 
    const lineChartData = {
@@ -103,17 +122,7 @@ const Statistic = () => {
          },
       ],
    };
-   const barChartData = {
-      labels: productByCategory.map((category) => category.name),
-      datasets: [
-         {
-            label: '',
-            data: productByCategory.map((category) => category.productCount),
-            backgroundColor: generateRandomColors(productByCategory.length),
-            borderWidth: 1,
-         },
-      ],
-   };
+
    const pieChartData = {
       labels: labels,
       datasets: [

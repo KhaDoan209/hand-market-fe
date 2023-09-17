@@ -15,10 +15,16 @@ const categoryReducer = createSlice({
       getListProductTypeReducer: (state, action) => {
          state.product_type = action.payload;
       },
+      clearProductTypeReducer: (state, action) => {
+         state.product_type = { types_list: [] };
+      },
    },
 });
 
-export const { getListCategoryReducer, getListProductTypeReducer } =
-   categoryReducer.actions;
+export const {
+   getListCategoryReducer,
+   getListProductTypeReducer,
+   clearProductTypeReducer,
+} = categoryReducer.actions;
 
 export default categoryReducer.reducer;

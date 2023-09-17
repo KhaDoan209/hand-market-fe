@@ -8,8 +8,16 @@ import {
    deleteProductService,
    getListProductByPurchaseService,
    getListProductByDiscountService,
+   increaseProductViewService,
+   getListProductByCategoryService,
+   getListProductByTypeService,
+   arrangeProductByNameService,
+   searchProductByNameService,
+   arrangeProductByPriceService,
+   arrangeProductByViewService,
+   getListProductByViewService,
 } from '../../services/product-service';
-import { clearSignedInUserReducer } from '../reducer/auth-reducer';
+
 import {
    getListProductByPurchaseReducer,
    getListProductReducer,
@@ -17,6 +25,7 @@ import {
    getListProductByDiscountReducer,
    getListProductForUserReducer,
    clearListProductForUserReducer,
+   getListProductByViewReducer,
 } from '../reducer/product-reducer';
 
 export const getListProductAction = (pageNumber = 1, pageSize = 8) => {
@@ -46,6 +55,20 @@ export const getProductDetailAction = (id) => {
       try {
          const product_detail = await getProductDetailService(id);
          dispatch(getProductDetailReducer(product_detail.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const getListProductByViewAction = (pageNumber = 1, pageSize = 8) => {
+   return async (dispatch) => {
+      try {
+         const list_product_by_view = await getListProductByViewService(
+            pageNumber,
+            pageSize
+         );
+         dispatch(getListProductByViewReducer(list_product_by_view.data));
       } catch (error) {
          console.log(error);
       }
@@ -145,8 +168,148 @@ export const deleteProductAction = (id, pageNumber = 1, pageSize = 8) => {
    };
 };
 
+export const increaseProductViewAction = (id) => {
+   return async (dispatch) => {
+      try {
+         await increaseProductViewService(id);
+         const product_detail = await getProductDetailService(id);
+         dispatch(getProductDetailReducer(product_detail.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
 export const clearListProductForUserAction = () => {
    return (dispatch) => {
       dispatch(clearListProductForUserReducer());
+   };
+};
+
+export const getListProductByCategoryAction = (
+   id,
+   pageNumber = 1,
+   pageSize = 8
+) => {
+   return async (dispatch) => {
+      try {
+         const result = await getListProductByCategoryService(
+            id,
+            pageNumber,
+            pageSize
+         );
+         dispatch(getListProductForUserReducer(result.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const getListProductByTypeAction = (
+   categoryId,
+   type,
+   pageNumber = 1,
+   pageSize = 8
+) => {
+   return async (dispatch) => {
+      try {
+         const result = await getListProductByTypeService(
+            categoryId,
+            type,
+            pageNumber,
+            pageSize
+         );
+         dispatch(getListProductForUserReducer(result.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const arrangeProductByNameAction = (
+   chosenCategory,
+   chosenProductType,
+   orderBy,
+   pageNumber = 1,
+   pageSize = 8
+) => {
+   return async (dispatch) => {
+      try {
+         const result = await arrangeProductByNameService(
+            chosenCategory,
+            chosenProductType,
+            orderBy,
+            pageNumber,
+            pageSize
+         );
+         dispatch(getListProductForUserReducer(result.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const arrangeProductByPriceAction = (
+   chosenCategory,
+   chosenProductType,
+   orderBy,
+   pageNumber = 1,
+   pageSize = 8
+) => {
+   return async (dispatch) => {
+      try {
+         const result = await arrangeProductByPriceService(
+            chosenCategory,
+            chosenProductType,
+            orderBy,
+            pageNumber,
+            pageSize
+         );
+         dispatch(getListProductForUserReducer(result.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const searchProductByNameAction = (
+   name,
+   pageNumber = 1,
+   pageSize = 8
+) => {
+   return async (dispatch) => {
+      try {
+         const result = await searchProductByNameService(
+            name,
+            pageNumber,
+            pageSize
+         );
+         dispatch(getListProductForUserReducer(result.data));
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const arrangeProductByViewAction = (
+   chosenCategory,
+   chosenProductType,
+   orderBy,
+   pageNumber = 1,
+   pageSize = 8
+) => {
+   return async (dispatch) => {
+      try {
+         const result = await arrangeProductByViewService(
+            chosenCategory,
+            chosenProductType,
+            orderBy,
+            pageNumber,
+            pageSize
+         );
+         dispatch(getListProductForUserReducer(result.data));
+      } catch (error) {
+         console.log(error);
+      }
    };
 };

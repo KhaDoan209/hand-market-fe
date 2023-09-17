@@ -29,6 +29,7 @@ import { useDisclosure } from '@chakra-ui/react';
 import { isMobile } from 'react-device-detect';
 import { MapPinIcon, UserIcon } from '@heroicons/react/24/outline';
 import { getListNotificationAction } from '../redux/action/noti-action';
+import Footer from '../components/Footer';
 const HomeTemplate = () => {
    const navigate = useNavigate();
    const dispatch = useDispatch();
@@ -52,7 +53,6 @@ const HomeTemplate = () => {
       if (userSignedIn?.role === Shipper) {
          socket.on(SocketMessage.NewOrder, (data) => {
             if (data !== null) {
-               console.log(data);
                setOrder(data);
                onOpen();
             }
@@ -95,11 +95,7 @@ const HomeTemplate = () => {
       <>
          <Helmet>
             <meta charSet='utf-8' />
-            <title>{generateMetaData()} - Hand Market</title>
-            <link
-               rel='canonical'
-               href='http://mysite.com/example'
-            />
+            <title>Hand Market</title>
          </Helmet>
          <div className='container max-w-full'>
             <NavBar

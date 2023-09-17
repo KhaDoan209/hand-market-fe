@@ -99,7 +99,6 @@ const AccountDetail = () => {
    const values = countOrdersByDate(list_order_by_user_for_admin).map(
       (item) => item.order_total
    );
-   console.log(list_order_by_user_for_admin);
    const lineChartData = {
       labels: labels,
       datasets: [

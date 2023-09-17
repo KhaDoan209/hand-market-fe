@@ -5,6 +5,7 @@ const initialState = {
    product_detail: {},
    list_product_by_purchase: [],
    list_product_by_discount: [],
+   list_product_by_view: [],
    list_product_for_user: {
       data: [],
       pageSize: 0,
@@ -33,6 +34,9 @@ const productReducer = createSlice({
       },
       getListProductByDiscountReducer: (state, action) => {
          state.list_product_by_discount = action.payload;
+      },
+      getListProductByViewReducer: (state, action) => {
+         state.list_product_by_view = action.payload;
       },
       getListProductForUserReducer: (state, action) => {
          const {
@@ -82,6 +86,7 @@ export const {
    getListProductByDiscountReducer,
    getListProductForUserReducer,
    clearListProductForUserReducer,
+   getListProductByViewReducer,
 } = productReducer.actions;
 
 export default productReducer.reducer;

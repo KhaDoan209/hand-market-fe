@@ -79,7 +79,6 @@ const AdminTemplate = () => {
             dispatch(getListNotificationAction(userSignedIn?.id));
          });
          socket.on(SocketMessage.ReadNoti, () => {
-            console.log('read_noti');
             dispatch(getListNotificationAction(userSignedIn?.id));
          });
       }

@@ -22,7 +22,7 @@ const FormTemplate = () => {
       <>
          <Helmet>
             <meta charSet='utf-8' />
-            <title>{generateMetaData()} - Hand Market</title>
+            <title>{generateMetaData()} | Hand Market</title>
             <link
                rel='canonical'
                href='http://mysite.com/example'
