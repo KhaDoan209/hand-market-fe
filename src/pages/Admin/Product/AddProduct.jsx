@@ -3,7 +3,7 @@ import { Textarea, FormLabel, Input, Button } from '@chakra-ui/react';
 import { useOutletContext } from 'react-router-dom';
 import {
    getListCategoryAction,
-   getListProductTypesAction,
+   getListProductTypeAction,
 } from '../../../redux/action/category-action';
 import { getListDiscountAction } from '../../../redux/action/discount-action';
 import { useSelector } from 'react-redux';
@@ -65,7 +65,7 @@ const AddProduct = () => {
          brand: Yup.string().max(100, 'Brand is too long !'),
          price: Yup.number()
             .required('Price is empty !')
-            .min(1000, 'Price must be greater than 1000')
+            .min(1000, 'Price must be greater than 1,000đ')
             .max(9999999.99, 'Price is too high'),
          description: Yup.string().max(
             1000,
@@ -244,7 +244,7 @@ const AddProduct = () => {
                               setCategoryId(e.target.value);
                               formik.setFieldValue('type', '');
                               dispatch(
-                                 getListProductTypesAction(e.target.value)
+                                 getListProductTypeAction(e.target.value)
                               );
                               handleChangeForm(e);
                            }}

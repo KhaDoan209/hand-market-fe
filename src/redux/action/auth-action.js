@@ -7,6 +7,7 @@ import {
    resetTokenService,
    loginWithFacebookService,
    loginWithGoogleService,
+   sendContactFormService,
 } from '../../services/auth-service';
 import {
    checkExistedEmailReducer,
@@ -134,6 +135,16 @@ export const resetTokenAction = () => {
    return async () => {
       try {
          await resetTokenService();
+      } catch (error) {
+         console.log(error);
+      }
+   };
+};
+
+export const sendContactFormAction = (body) => {
+   return async () => {
+      try {
+         await sendContactFormService(body);
       } catch (error) {
          console.log(error);
       }

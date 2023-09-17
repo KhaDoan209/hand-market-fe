@@ -28,6 +28,7 @@ const orderReducer = createSlice({
          state.order_in_progress = action.payload;
       },
       getOrderDetailReducer: (state, action) => {
+         console.log(action.payload);
          state.order_detail = action.payload;
       },
       getListWatingDoneOrderReducer: (state, action) => {

@@ -55,7 +55,7 @@ const NavBar = ({ dispatch, navigate, logo }) => {
       },
       {
          label: 'About Us',
-         link: '/about',
+         link: '/about-us',
       },
       {
          label: 'Contact',

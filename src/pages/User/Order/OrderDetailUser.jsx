@@ -21,7 +21,6 @@ const OrderDetailUser = () => {
    const { id } = useParams();
    const { dispatch, navigate } = useOutletContext();
    const orderDetail = useSelector((state) => state.orderReducer.order_detail);
-   console.log(orderDetail);
    useEffect(() => {
       socket.on(SocketMessage.OrderStatusUpdate, () => {
          dispatch(getOrderDetailAction(id));

@@ -55,9 +55,13 @@ const OrderList = () => {
       <div className='bg-white min-h-screen'>
          <div className='min-h-[85vh]'>
             {listOrder?.data?.map((item) => {
-               console.log(item);
                return (
-                  <h1 key={item?.id}>
+                  <div
+                     onClick={() => {
+                        navigate(`/shipper/order-detail/${item?.id}`);
+                     }}
+                     key={item?.id}
+                  >
                      <div className='block bg-white rounded-md px-4 py-3 w-full min-h-[120px] border-y-[0.5px] border-gray-200'>
                         <div className='flex items-center text-[#374b73] text-md font-bold'>
                            <h1 className='mx-1'>Order #</h1>
@@ -81,7 +85,7 @@ const OrderList = () => {
                            </p>
                         </div>
                      </div>
-                  </h1>
+                  </div>
                );
             })}
          </div>

@@ -3,13 +3,18 @@ import { calculatePriceAfterDiscount } from '../utils/utils-functions';
 import star from '../assets/svg/rate-star.svg';
 import emptyStar from '../assets/svg/rate-empty-star.svg';
 import { ProductType } from '../enums/ProductType';
-import { ShoppingBagIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
+import {
+   ShoppingBagIcon,
+   ShoppingCartIcon,
+   EyeIcon,
+} from '@heroicons/react/24/outline';
 import { getUserFromLocal } from '../utils/utils-functions';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItemToCartAction } from '../redux/action/cart-action';
 import toast from 'react-hot-toast';
 import { calculateDiscountPriceInCart } from '../utils/utils-functions';
+import { increaseProductViewAction } from '../redux/action/product-action';
 import { convertToCurrency } from '../utils/utils-functions';
 const ProductCard = ({ item, type, letter_length }) => {
    const navigate = useNavigate();
@@ -63,15 +68,17 @@ const ProductCard = ({ item, type, letter_length }) => {
                </span>
             </>
          );
-      } else if (type === ProductType.normal) {
-         <>
-            <span className='text-xl font-bold text-[#5a6e8c]'>
-               {calculatePriceAfterDiscount(
-                  item?.price,
-                  item?.Discount?.percentage
-               )}
-            </span>
-         </>;
+      } else if (type === ProductType.view) {
+         return (
+            <>
+               <span className='text-xl font-bold text-[#5a6e8c]'>
+                  {calculatePriceAfterDiscount(
+                     item?.price,
+                     item?.Discount?.percentage
+                  )}
+               </span>
+            </>
+         );
       } else if (type === ProductType.checkout) {
          return (
             <div className='flex items-baseline mt-4'>
@@ -134,13 +141,23 @@ const ProductCard = ({ item, type, letter_length }) => {
          case ProductType.discount:
             return (
                <>
-                  <div className='max-w-sm w-9/12 mx-auto md:w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer min-h-[420px] h-fit'>
+                  <div className='max-w-sm w-10/12 mx-auto md:w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer min-h-[420px] h-fit'>
                      <img
+                        onClick={() => {
+                           dispatch(increaseProductViewAction(item?.id));
+                           navigate(`/user/view-product-detail/${item?.id}`);
+                        }}
                         className='rounded-t-lg w-full object-cover'
                         src={item.image}
                      />
                      <div className='p-5 relative'>
-                        <h5 className='mb-2 text-xl xl:text-2xl font-semibold tracking-tight text-[#374b73]'>
+                        <h5
+                           onClick={() => {
+                              dispatch(increaseProductViewAction(item?.id));
+                              navigate(`/user/view-product-detail/${item?.id}`);
+                           }}
+                           className='mb-2 text-xl xl:text-2xl font-semibold tracking-tight text-[#374b73]'
+                        >
                            {item?.name?.length < letter_length
                               ? item.name
                               : item.name.substring(0, letter_length) + ` ...`}
@@ -148,7 +165,7 @@ const ProductCard = ({ item, type, letter_length }) => {
                         <div className='mb-3'>{renderProductPrice()}</div>
                         <button
                            onClick={handleOnAddToCart}
-                           className='p-2 rounded-md bg-white right-[10%] absolute top-[-15%] text-[#FFB4B4] border border-gray-200 shadow-sm shadow-gray-300  transition-all duration-300 hover:shadow-lg hover:shadow-gray-400 hover:text-white hover:bg-[#374b73]'
+                           className='p-2 rounded-md bg-white right-[10%] absolute top-[-15%] text-[#FFB4B4] border border-gray-200 shadow-sm shadow-gray-300  transition-all duration-300 hover:shadow-lg hover:shadow-gray-400 hover:text-white hover:bg-[#374b73] z-[50]'
                         >
                            <ShoppingCartIcon className='w-7 h-7' />
                         </button>
@@ -160,14 +177,24 @@ const ProductCard = ({ item, type, letter_length }) => {
          case ProductType.purchase:
             return (
                <>
-                  <div className='max-w-sm w-9/12 mx-auto md:w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer min-h-[420px] h-fit'>
+                  <div className='max-w-sm w-10/12 mx-auto md:w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer min-h-[420px] h-fit'>
                      <img
+                        onClick={() => {
+                           dispatch(increaseProductViewAction(item?.id));
+                           navigate(`/user/view-product-detail/${item?.id}`);
+                        }}
                         className='rounded-t-lg w-full object-cover'
                         src={item.image}
                      />
 
                      <div className='p-5 relative'>
-                        <h5 className='mb-2 text-xl xl:text-2xl font-semibold tracking-tight text-[#374b73]'>
+                        <h5
+                           onClick={() => {
+                              dispatch(increaseProductViewAction(item?.id));
+                              navigate(`/user/view-product-detail/${item?.id}`);
+                           }}
+                           className='mb-2 text-xl xl:text-2xl font-semibold tracking-tight text-[#374b73]'
+                        >
                            {item?.name?.length < letter_length
                               ? item.name
                               : item.name.substring(0, letter_length) + ' ...'}
@@ -191,21 +218,39 @@ const ProductCard = ({ item, type, letter_length }) => {
                   </div>
                </>
             );
-         case ProductType.normal:
+         case ProductType.view:
             return (
                <>
-                  <div className='max-w-sm w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer min-h-[420px] h-fit'>
+                  <div className='max-w-sm w-10/12 mx-auto md:w-full bg-white rounded-lg shadow-md shadow-gray-200 hover:shadow-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer min-h-[420px] h-fit'>
                      <img
+                        onClick={() => {
+                           dispatch(increaseProductViewAction(item?.id));
+                           navigate(`/user/view-product-detail/${item?.id}`);
+                        }}
                         className='rounded-t-lg w-full object-cover'
                         src={item.image}
                      />
+
                      <div className='p-5 relative'>
-                        <h5 className='mb-2 text-xl xl:text-2xl font-semibold tracking-tight text-[#374b73]'>
+                        <h5
+                           onClick={() => {
+                              dispatch(increaseProductViewAction(item?.id));
+                              navigate(`/user/view-product-detail/${item?.id}`);
+                           }}
+                           className='mb-2 text-xl xl:text-2xl font-semibold tracking-tight text-[#374b73]'
+                        >
                            {item?.name?.length < letter_length
                               ? item.name
-                              : item.name.substring(0, letter_length) + ` ...`}
+                              : item.name.substring(0, letter_length) + ' ...'}
                         </h5>
                         <div className='mb-3'>{renderProductPrice()}</div>
+                        <div className='flex items-center'>
+                           <EyeIcon className='w-6 h-6 text-[#374b73]' />
+                           <span className='text-xl font-bold text-red-500 mx-1'>
+                              {item?.views}
+                           </span>
+                           <span className='text-gray-500'>views</span>
+                        </div>
                         <button
                            onClick={handleOnAddToCart}
                            className='p-2 rounded-md bg-white right-[10%] absolute top-[-15%] text-[#FFB4B4] border border-gray-200 shadow-sm shadow-gray-300  transition-all duration-300 hover:shadow-lg hover:shadow-gray-400 hover:text-white hover:bg-[#374b73]'

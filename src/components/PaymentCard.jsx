@@ -19,7 +19,6 @@ import {
    Button,
 } from '@chakra-ui/react';
 const PaymentCard = ({ card, user }) => {
-   console.log(user.last_name == null);
    const dispatch = useDispatch();
    const { isOpen, onOpen, onClose } = useDisclosure();
    const [windowSize, setWindowSize] = useState({

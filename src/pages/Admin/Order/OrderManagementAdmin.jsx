@@ -35,7 +35,7 @@ const OrderManagementAdmin = () => {
    ];
    const { dispatch, navigate } = useOutletContext();
    const list_order = useSelector((state) => state.orderReducer.list_order);
-   console.log(list_order);
+
 
    useEffect(() => {
       dispatch(getListOrderAction(1, 8, undefined));

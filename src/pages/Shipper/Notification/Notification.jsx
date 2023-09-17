@@ -26,6 +26,7 @@ const Notification = () => {
             return (
                <div
                   onClick={() => {
+                     navigate(`/shipper/order-detail/item?.Order?.id`);
                      dispatch(
                         changeReadingStatusAction(signedInUser.id, item.id)
                      );
@@ -57,7 +58,6 @@ const Notification = () => {
                   </div>
                </div>
             );
-
          default:
             break;
       }

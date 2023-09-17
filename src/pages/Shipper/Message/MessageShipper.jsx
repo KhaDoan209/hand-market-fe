@@ -73,7 +73,6 @@ const MessageShipper = () => {
             .max(5000, 'Message is too long'),
       }),
       onSubmit: (values) => {
-         console.log(values);
          dispatch(sendMessageAction(values));
       },
    });

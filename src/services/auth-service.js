@@ -32,3 +32,11 @@ export const loginWithFacebookService = (data) => {
 export const loginWithGoogleService = (data) => {
    return toastPromise(http.post(`/auth/google-login`, data), 'Signing in');
 };
+
+export const sendContactFormService = (body) => {
+   return toast.promise(http.post('/auth/send-contact-form', body), {
+      loading: 'Wait a sec !',
+      success: (mess) => `${mess.message.toString()}`,
+      error: (err) => `${err.message.toString()}`,
+   });
+};
