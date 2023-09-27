@@ -44,6 +44,8 @@ const Product = () => {
    const listProduct = useSelector(
       (state) => state.productReducer.list_product_for_user
    );
+   console.log(listProduct);
+
    const listCategory = useSelector(
       (state) => state.categoryReducer.list_category
    );
@@ -102,7 +104,6 @@ const Product = () => {
    ];
    useEffect(() => {
       dispatch(clearListProductForUserAction());
-      dispatch(getListProductForUserAction());
       dispatch(getListCategoryAction());
       return () => {
          dispatch(clearProductTypeAction());

@@ -152,6 +152,7 @@ const HomeTemplate = () => {
                                  dispatch(
                                     takeOrderAction(userSignedIn?.id, order?.id)
                                  );
+                                 onClose();
                               }}
                               className='py-3 px-4 text-white bg-gradient-to-r from-orange-400 to-orange-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-orange-300 rounded-md font-semibold text-sm w-full mb-5 shadow-md shadow-gray-200'
                            >
