@@ -77,6 +77,7 @@ const Home = () => {
    const list_view = useSelector(
       (state) => state.productReducer.list_product_by_view
    );
+
    useEffect(() => {
       dispatch(getListProductByPurchaseAction());
       dispatch(getListProductByDiscountAction());
@@ -293,7 +294,7 @@ const Home = () => {
                                     <ProductCard
                                        item={item}
                                        type={ProductType.purchase}
-                                       letter_length={17}
+                                       letter_length={14}
                                     />
                                  </div>
                               );
@@ -356,7 +357,7 @@ const Home = () => {
                                     <ProductCard
                                        item={item}
                                        type={ProductType.discount}
-                                       letter_length={17}
+                                       letter_length={14}
                                     />
                                  </div>
                               );
@@ -419,7 +420,7 @@ const Home = () => {
                                     <ProductCard
                                        item={item}
                                        type={ProductType.view}
-                                       letter_length={17}
+                                       letter_length={14}
                                     />
                                  </div>
                               );

@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { http } from './axios-interceptor';
 
 export const getListProductService = (pageNumber, pageSize) => {
@@ -39,7 +40,11 @@ export const getProductDetailService = (id) => {
 };
 
 export const createNewProductService = (data) => {
-   return http.post(`/product/create-new-product`, data);
+   return toast.promise(http.post(`/product/create-new-product`, data), {
+      loading: 'Wait a sec!',
+      success: () => 'Product added !',
+      error: ({ message }) => `${message.toString()}`,
+   });
 };
 
 export const updateProductInformationService = (data, id) => {
