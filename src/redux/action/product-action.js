@@ -141,11 +141,10 @@ export const updateProductInformationAction = (data, id) => {
 export const changeProductImageAction = (data, id) => {
    return async (dispatch) => {
       try {
-         toast.loading('Wait a sec!', { duration: 4000 });
+         toast.loading('Wait a sec!');
          await changeProductImageService(data, id);
          const product_detail = await getProductDetailService(id);
-         console.log(product_detail);
-         toast.success('Image changed succesffully !');
+         toast.success('Image changed successfully !');
          dispatch(getProductDetailReducer(product_detail.data));
       } catch (error) {
          console.log(error);

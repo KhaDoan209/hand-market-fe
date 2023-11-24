@@ -26,7 +26,7 @@ const Notification = () => {
             return (
                <div
                   onClick={() => {
-                     navigate(`/shipper/order-detail/item?.Order?.id`);
+                     navigate(`/shipper/order-detail/${item?.Order?.id}`);
                      dispatch(
                         changeReadingStatusAction(signedInUser.id, item.id)
                      );

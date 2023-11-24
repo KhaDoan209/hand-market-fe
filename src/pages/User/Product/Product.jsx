@@ -44,8 +44,7 @@ const Product = () => {
    const listProduct = useSelector(
       (state) => state.productReducer.list_product_for_user
    );
-   console.log(listProduct);
-
+   console.log(chosenCategory);
    const listCategory = useSelector(
       (state) => state.categoryReducer.list_category
    );
@@ -185,6 +184,7 @@ const Product = () => {
                               dispatch(getListProductForUserAction());
                               setChooseProductType(false);
                               setFilterType(null);
+                              setChosenCategory([]);
                            }
                         }}
                      />

@@ -82,7 +82,6 @@ export const arrangeProductByNameService = (
    pageNumber,
    pageSize
 ) => {
-   console.log(types);
    let typeQueries = '';
    if (types.length > 0) {
       typeQueries = types.map((type) => `type=${type.value}`).join('&');
